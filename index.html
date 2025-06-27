@@ -1,4 +1,24 @@
-<!DOCTYPE html>
+const selectRandomGame = (weatherType, avoidTitle = null) => {
+            const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
+            console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
+            
+            // If we only have one game or no game to avoid, just pick randomly
+            if (availableGames.length <= 1 || !avoidTitle) {
+              const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
+              console.log('Selected game:', randomGame.title);
+              return randomGame;
+            }
+            
+            // Filter out the last game to avoid duplicates
+            const filteredGames = availableGames.filter(game => game.title !== avoidTitle);
+            
+            // If filtering removed all games, just use the full list
+            const gamesToChooseFrom = filteredGames.length > 0 ? filteredGames : availableGames;
+            
+            const randomGame = gamesToChooseFrom[Math.floor(Math.random() * gamesToChooseFrom.length)];
+            console.log('Selected game (avoiding duplicates):', randomGame.title);
+            return randomGame;
+          };<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -60,6 +80,7 @@
           const [location, setLocation] = useState(null);
           const [gameRecommendation, setGameRecommendation] = useState(null);
           const [loadingProgress, setLoadingProgress] = useState(0);
+          const [lastGameTitle, setLastGameTitle] = useState(null);
 
           // Enhanced game database
           const gameDatabase = {
@@ -149,22 +170,25 @@
 
           const getWeatherType = (condition, temp = 20) => {
             const lowerCondition = condition.toLowerCase();
+            console.log('Weather condition received:', condition, 'Temperature:', temp);
+            
+            let weatherType = 'clear'; // default
             
             if (lowerCondition.includes('rain') || lowerCondition.includes('drizzle') || 
                 lowerCondition.includes('shower') || lowerCondition.includes('storm')) {
-              return 'rain';
-            }
-            if (lowerCondition.includes('snow') || lowerCondition.includes('blizzard')) {
-              return 'snow';
-            }
-            if (lowerCondition.includes('cloud') || lowerCondition.includes('overcast')) {
-              return 'cloudy';
-            }
-            if (lowerCondition.includes('sun') || lowerCondition.includes('clear') || (temp > 25)) {
-              return 'sunny';
+              weatherType = 'rain';
+            } else if (lowerCondition.includes('snow') || lowerCondition.includes('blizzard')) {
+              weatherType = 'snow';
+            } else if (lowerCondition.includes('cloud') || lowerCondition.includes('overcast')) {
+              weatherType = 'cloudy';
+            } else if (lowerCondition.includes('sun') || lowerCondition.includes('clear') || (temp > 25)) {
+              weatherType = 'sunny';
+            } else if (lowerCondition.includes('fog') || lowerCondition.includes('mist')) {
+              weatherType = 'cloudy';
             }
             
-            return 'clear';
+            console.log('Determined weather type:', weatherType);
+            return weatherType;
           };
 
           const fetchWeather = async (lat, lon) => {
@@ -242,9 +266,9 @@
               setWeather(weatherData);
 
               const weatherType = getWeatherType(weatherData.weather[0].main, weatherData.main.temp);
-              const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
-              const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
+              const randomGame = selectRandomGame(weatherType);
               setGameRecommendation(randomGame);
+              setLastGameTitle(randomGame.title);
 
               setTimeout(() => {
                 setLoadingProgress(100);
@@ -283,9 +307,9 @@
             setTimeout(() => {
               if (weather) {
                 const weatherType = getWeatherType(weather.weather[0].main, weather.main.temp);
-                const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
-                const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
+                const randomGame = selectRandomGame(weatherType, lastGameTitle);
                 setGameRecommendation(randomGame);
+                setLastGameTitle(randomGame.title);
               }
               
               setLoadingProgress(100);
