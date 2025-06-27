@@ -331,7 +331,7 @@
                 <div className="flex-1 flex justify-center">
                   <div className="relative">
                     <img 
-                      src="images/hero-image.png" 
+                      src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/hero-image.png" 
                       alt="Gaming illustration" 
                       className="max-w-full h-auto rounded-2xl shadow-2xl"
                       style={{
@@ -340,11 +340,13 @@
                         display: 'block'
                       }}
                       onError={(e) => {
-                        console.log('Image failed to load:', e.target.src);
-                        e.target.style.display = 'none';
-                      }}
-                      onLoad={(e) => {
-                        console.log('Image loaded successfully:', e.target.src);
+                        console.log('GitHub raw URL failed, trying relative path...');
+                        e.target.src = "./images/hero-image.png";
+                        e.target.onerror = () => {
+                          console.log('All paths failed for hero image');
+                          e.target.style.display = 'none';
+                          e.target.parentNode.innerHTML = '<div style="width: 400px; height: 300px; background: rgba(255,255,255,0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🎮 Gaming Illustration</div>';
+                        };
                       }}
                     />
                   </div>
@@ -395,9 +397,13 @@
                 {/* Loading Image/Animation */}
                 <div className="mb-8">
                   <img 
-                    src="images/loading-gif.png" 
+                    src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/loading-gif.png" 
                     alt="Loading animation" 
-                    className="w-24 h-24 loading-spin"
+                    className="w-24 h-24"
+                    onError={(e) => {
+                      console.log('Loading gif failed, trying relative path...');
+                      e.target.src = "./images/loading-gif.png";
+                    }}
                   />
                 </div>
               </div>
