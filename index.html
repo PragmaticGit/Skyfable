@@ -112,7 +112,17 @@
                 title: "What Remains of Edith Finch",
                 tags: ["Narrative", "Atmospheric", "Mystery"],
                 description: "Overcast skies create the perfect backdrop for mysterious stories. This hauntingly beautiful narrative adventure thrives in contemplative cloudy weather.",
-                reasoning: "Mysterious, atmospheric games for contemplative cloudy moods"
+                reasoning: "Mysterious, atmospheric games for contemplative cloudy moods",
+                steamUrl: "https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/501300/header.jpg"
+              },
+              {
+                title: "Gris",
+                tags: ["Art", "Emotional", "Musical"],
+                description: "The muted tones of cloudy weather perfectly complement this watercolor masterpiece. Gris's emotional journey through grief and healing resonates beautifully with the introspective mood that overcast skies inspire.",
+                reasoning: "Emotional, artistic experiences for reflective weather",
+                steamUrl: "https://store.steampowered.com/app/683320/GRIS/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/683320/header.jpg"
               }
             ],
             snow: [
@@ -120,7 +130,9 @@
                 title: "The Long Dark",
                 tags: ["Survival", "Winter", "Atmospheric"],
                 description: "Snowy weather calls for the ultimate winter survival experience! Feel the chill alongside your character as you navigate the Canadian wilderness.",
-                reasoning: "Immersive winter experiences that complement snowy conditions"
+                reasoning: "Immersive winter experiences that complement snowy conditions",
+                steamUrl: "https://store.steampowered.com/app/305620/The_Long_Dark/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg"
               }
             ],
             clear: [
@@ -128,7 +140,9 @@
                 title: "Journey",
                 tags: ["Transcendent", "Beautiful", "Meditative"],
                 description: "Clear skies inspire clear journeys of the soul. This wordless adventure through mystical landscapes captures the sense of possibility that comes with perfect weather.",
-                reasoning: "Transcendent experiences for perfect weather days"
+                reasoning: "Transcendent experiences for perfect weather days",
+                steamUrl: "https://store.steampowered.com/app/638230/Journey/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg"
               }
             ]
           };
@@ -471,15 +485,16 @@
                 <div className="flex items-center justify-between max-w-7xl w-full">
                   {/* Game Card */}
                   <div className="flex-shrink-0 mr-16">
-                    <div className="w-96 h-80 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
+                    <div className="w-80 h-72 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
                       <img 
                         src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
                         alt={gameRecommendation?.title || "Game cover"}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover rounded-lg"
                         style={{
-                          objectPosition: 'center'
+                          objectPosition: 'center top'
                         }}
                         onError={(e) => {
+                          console.log('Game image failed to load:', e.target.src);
                           // Fallback to orange gradient if image fails
                           e.target.style.display = 'none';
                           e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
@@ -490,10 +505,13 @@
                                 ${(gameRecommendation?.title || 'FIREWATCH').toUpperCase()}
                               </h3>
                               <div class="text-orange-100 font-medium text-sm leading-relaxed">
-                                An atmospheric walking simulator
+                                Game cover unavailable
                               </div>
                             </div>
                           `;
+                        }}
+                        onLoad={(e) => {
+                          console.log('Game image loaded successfully:', gameRecommendation?.title);
                         }}
                       />
                     </div>
