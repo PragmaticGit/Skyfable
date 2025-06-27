@@ -422,12 +422,12 @@
               <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-8">
                 <div className="flex items-center justify-between max-w-7xl w-full">
                   <div className="flex-shrink-0 mr-16">
-                    <div className="w-80 h-72 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
+                    <div className="w-96 h-56 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
                       <img 
                         src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
                         alt={gameRecommendation?.title || "Game cover"}
                         className="w-full h-full object-cover rounded-lg"
-                        style={{objectPosition: 'center top'}}
+                        style={{objectPosition: 'center'}}
                         onError={(e) => {
                           console.log('Game image failed to load:', e.target.src);
                           e.target.style.display = 'none';
