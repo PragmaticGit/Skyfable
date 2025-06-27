@@ -357,9 +357,14 @@ const renderLocationError = () => (
 
               const weatherData = await fetchWeather(userLocation.lat, userLocation.lon);
               setWeather(weatherData);
+              console.log('=== WEATHER DATA ===');
+              console.log('Raw weather:', weatherData);
 
               const weatherType = getWeatherType(weatherData.weather[0].main, weatherData.main.temp);
+              console.log('=== GAME SELECTION ===');
               const randomGame = selectRandomGame(weatherType);
+              console.log('Final selected game:', randomGame);
+              
               setGameRecommendation(randomGame);
               setLastGameTitle(randomGame.title);
 
@@ -612,17 +617,17 @@ const renderLocationError = () => (
                         }}
                         onError={(e) => {
                           console.log('Game image failed to load:', e.target.src);
-                          // Fallback to orange gradient if image fails
+                          // Fallback to gradient with CORRECT game title
                           e.target.style.display = 'none';
                           e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
                           e.target.parentNode.innerHTML = `
                             <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-                              <div class="text-7xl mb-6">🔥</div>
+                              <div class="text-7xl mb-6">🎮</div>
                               <h3 class="text-2xl font-bold text-white mb-4 tracking-wide">
-                                ${(gameRecommendation?.title || 'FIREWATCH').toUpperCase()}
+                                ${(gameRecommendation?.title || 'GAME').toUpperCase()}
                               </h3>
                               <div class="text-orange-100 font-medium text-sm leading-relaxed">
-                                Game cover unavailable
+                                Image unavailable
                               </div>
                             </div>
                           `;
