@@ -16,27 +16,35 @@
         }
         .star-sparkle {
             position: absolute;
-            color: #FFD700;
+            color: #FFF099;
             animation: sparkle 2s ease-in-out infinite;
+            font-size: 24px;
         }
         @keyframes sparkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.4; transform: scale(1) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
         }
         .diamond-sparkle {
-            width: 24px;
-            height: 24px;
-            background: #FFD700;
+            width: 20px;
+            height: 20px;
+            background: #FFF099;
             transform: rotate(45deg);
             position: absolute;
             animation: sparkle 2.5s ease-in-out infinite;
         }
         .pulse-animation {
-            animation: pulse 1.5s ease-in-out infinite;
+            animation: pulse 2s ease-in-out infinite;
         }
         @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
+            0%, 100% { opacity: 0.7; }
             50% { opacity: 1; }
+        }
+        .loading-spin {
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(45deg); }
+            100% { transform: rotate(405deg); }
         }
     </style>
 </head>
@@ -261,28 +269,30 @@
 
           const renderLanding = () => (
             <div className="min-h-screen relative overflow-hidden" style={{
-              background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 25%, #6D28D9 50%, #5B21B6 75%, #4C1D95 100%)'
+              backgroundColor: '#837EB4'
             }}>
               {/* Navigation */}
-              <nav className="flex justify-between items-center px-8 py-6 relative z-10">
+              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{
+                backgroundColor: '#504B81'
+              }}>
                 <div className="text-white text-2xl font-bold">
-                  Sky<span style={{color: '#FEF08A'}}>Fable</span>
+                  Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
                   onClick={handleForecastClick}
                   className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
                   style={{
-                    borderColor: '#FEF08A',
-                    color: '#FEF08A',
+                    borderColor: '#FFF099',
+                    color: '#FFF099',
                     backgroundColor: 'transparent'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#FEF08A';
-                    e.target.style.color = '#5B21B6';
+                    e.target.style.backgroundColor = '#FFF099';
+                    e.target.style.color = '#504B81';
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = '#FEF08A';
+                    e.target.style.color = '#FFF099';
                   }}
                 >
                   Forecast My Game
@@ -293,13 +303,13 @@
               <div className="flex items-center justify-between px-8 py-16 max-w-7xl mx-auto relative z-10">
                 {/* Left Content */}
                 <div className="flex-1 pr-16">
-                  <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight" style={{color: '#FEF08A'}}>
+                  <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight" style={{color: '#FFF099'}}>
                     Find the perfect game based on your local weather
                   </h1>
                   
                   <p className="text-xl mb-8 text-white opacity-90 font-medium leading-relaxed">
                     Right now in <span className="font-bold">{weather?.name || 'Stavanger'}</span>, It's a{' '}
-                    <span className="font-bold" style={{color: '#FEF08A'}}>
+                    <span className="font-bold" style={{color: '#FFF099'}}>
                       {weather ? weather.weather[0].description : 'rainy evening'}
                     </span>{' '}
                     so it's time for something quiet and reflective 🌧️
@@ -309,32 +319,23 @@
                     onClick={handleForecastClick}
                     className="px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg"
                     style={{
-                      backgroundColor: '#FEF08A',
-                      color: '#5B21B6'
+                      backgroundColor: '#FFF099',
+                      color: '#504B81'
                     }}
                   >
                     Forecast My Game
                   </button>
                 </div>
 
-                {/* Right Content - Gaming Illustration */}
+                {/* Right Content - Your Hero Image */}
                 <div className="flex-1 flex justify-center">
-                  <div 
-                    className="relative rounded-full overflow-hidden shadow-2xl"
-                    style={{
-                      width: '500px',
-                      height: '320px',
-                      background: 'linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%)'
-                    }}
-                  >
-                    {/* Placeholder for gaming illustration */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="text-8xl mb-4">🎮</div>
-                        <div className="text-xl font-semibold">Cozy Gaming Vibes</div>
-                        <div className="text-sm opacity-75">Two friends gaming together</div>
-                      </div>
-                    </div>
+                  <div className="relative">
+                    <img 
+                      src="./images/Hero Image.png" 
+                      alt="Gaming illustration" 
+                      className="max-w-full h-auto rounded-2xl shadow-2xl"
+                      style={{maxHeight: '400px'}}
+                    />
                   </div>
                 </div>
               </div>
@@ -348,19 +349,21 @@
           );
 
           const renderLoading = () => (
-            <div className="min-h-screen relative" style={{
-              background: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 25%, #6D28D9 50%, #5B21B6 75%, #4C1D95 100%)'
+            <div className="min-h-screen relative flex flex-col" style={{
+              backgroundColor: '#837EB4'
             }}>
               {/* Navigation */}
-              <nav className="flex justify-between items-center px-8 py-6">
+              <nav className="flex justify-between items-center px-8 py-6" style={{
+                backgroundColor: '#504B81'
+              }}>
                 <div className="text-white text-2xl font-bold">
-                  Sky<span style={{color: '#FEF08A'}}>Fable</span>
+                  Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
                   className="px-6 py-3 border-2 rounded-lg font-semibold opacity-50 cursor-not-allowed"
                   style={{
-                    borderColor: '#FEF08A',
-                    color: '#FEF08A'
+                    borderColor: '#FFF099',
+                    color: '#FFF099'
                   }}
                 >
                   Forecast My Game
@@ -368,41 +371,31 @@
               </nav>
 
               {/* Loading Content */}
-              <div className="flex flex-col items-center justify-center min-h-[80vh] px-8">
+              <div className="flex-1 flex flex-col items-center justify-center px-8">
                 <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white text-center">
-                  Sky<span style={{color: '#FEF08A'}}>Fable</span>
+                  Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </h1>
                 
-                <p className="text-2xl mb-16 text-center font-medium pulse-animation" style={{color: '#FEF08A'}}>
+                <p className="text-2xl mb-16 text-center font-medium pulse-animation" style={{color: '#FFF099'}}>
                   Contacting the nearest cloud spirit and<br />
                   matching you with the perfect game...
                 </p>
 
-                {/* Loading Animation */}
-                <div className="relative mb-8">
-                  <div 
-                    className="w-6 h-6 border-2 border-transparent rounded-sm transform rotate-45"
-                    style={{
-                      borderTopColor: '#FEF08A',
-                      borderRightColor: '#FEF08A',
-                      animation: 'spin 1s linear infinite'
-                    }}
-                  ></div>
+                {/* Loading Image/Animation */}
+                <div className="mb-8">
+                  <img 
+                    src="./images/Loading Gif.png" 
+                    alt="Loading animation" 
+                    className="w-24 h-24 loading-spin"
+                  />
                 </div>
               </div>
-
-              <style jsx>{`
-                @keyframes spin {
-                  0% { transform: rotate(45deg); }
-                  100% { transform: rotate(405deg); }
-                }
-              `}</style>
             </div>
           );
 
           const renderResult = () => (
             <div className="min-h-screen relative overflow-hidden" style={{
-              background: 'linear-gradient(180deg, #F59E0B 0%, #D97706 20%, #8B5CF6 40%, #7C3AED 60%, #6D28D9 80%, #5B21B6 100%)'
+              background: 'linear-gradient(180deg, #F59E0B 0%, #D97706 20%, #837EB4 60%, #504B81 100%)'
             }}>
               {/* Forest Silhouette */}
               <div className="absolute bottom-0 left-0 right-0 h-40" style={{color: 'rgba(0,0,0,0.3)'}}>
@@ -412,16 +405,19 @@
               </div>
 
               {/* Navigation */}
-              <nav className="flex justify-between items-center px-8 py-6 relative z-10">
+              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{
+                backgroundColor: 'rgba(80, 75, 129, 0.9)',
+                backdropFilter: 'blur(10px)'
+              }}>
                 <div className="text-white text-2xl font-bold">
-                  Sky<span style={{color: '#FEF08A'}}>Fable</span>
+                  Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
                   onClick={() => setCurrentScreen('landing')}
                   className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
                   style={{
-                    borderColor: '#FEF08A',
-                    color: '#FEF08A'
+                    borderColor: '#FFF099',
+                    color: '#FFF099'
                   }}
                 >
                   Forecast My Game
@@ -459,9 +455,8 @@
                         key={index}
                         className="px-4 py-2 rounded-full text-sm font-semibold"
                         style={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                          color: 'white',
-                          backdropFilter: 'blur(10px)'
+                          backgroundColor: '#FFF8CC',
+                          color: '#504B81'
                         }}
                       >
                         {tag}
@@ -470,7 +465,7 @@
                   </div>
 
                   {/* Game Title */}
-                  <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{color: '#FEF08A'}}>
+                  <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{color: '#FFF099'}}>
                     {gameRecommendation?.title || 'Firewatch'}
                   </h2>
 
@@ -484,15 +479,28 @@
                     <button 
                       className="px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
                       style={{
-                        backgroundColor: '#FEF08A',
-                        color: '#5B21B6'
+                        backgroundColor: '#FFF099',
+                        color: '#504B81'
                       }}
                     >
                       View On Steam
                     </button>
                     <button 
                       onClick={handleRollAgain}
-                      className="px-8 py-3 border-2 border-white text-white rounded-lg font-bold transition-all duration-300 hover:bg-white hover:text-purple-800"
+                      className="px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                      style={{
+                        borderColor: '#FFF8CC',
+                        color: '#FFF8CC',
+                        backgroundColor: 'transparent'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = '#FFF8CC';
+                        e.target.style.color = '#504B81';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'transparent';
+                        e.target.style.color = '#FFF8CC';
+                      }}
                     >
                       Roll Again
                     </button>
