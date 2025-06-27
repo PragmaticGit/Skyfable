@@ -1,94 +1,4 @@
-const renderLocationError = () => (
-            <div className="min-h-screen relative flex flex-col" style={{
-              backgroundColor: '#837EB4'
-            }}>
-              {/* Navigation */}
-              <nav className="flex justify-between items-center px-8 py-6" style={{
-                backgroundColor: '#504B81'
-              }}>
-                <div 
-                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => setCurrentScreen('landing')}
-                >
-                  Sky<span style={{color: '#FFF099'}}>Fable</span>
-                </div>
-                <button 
-                  onClick={() => setCurrentScreen('landing')}
-                  className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
-                  style={{
-                    borderColor: '#FFF099',
-                    color: '#FFF099'
-                  }}
-                >
-                  Back to Home
-                </button>
-              </nav>
-
-              {/* Error Content */}
-              <div className="flex-1 flex flex-col items-center justify-center px-8">
-                <div className="text-center max-w-md">
-                  <div className="text-6xl mb-6">📍</div>
-                  <h1 className="text-4xl font-bold text-white mb-6">
-                    Location Needed
-                  </h1>
-                  
-                  <p className="text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
-                    SkyFable needs your location to check the weather and find the perfect game for you. 
-                    Please enable location permissions and try again.
-                  </p>
-
-                  <div className="space-y-4">
-                    <button 
-                      onClick={handleForecastClick}
-                      className="w-full px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
-                      style={{
-                        backgroundColor: '#FFF099',
-                        color: '#504B81'
-                      }}
-                    >
-                      Try Again
-                    </button>
-                    
-                    <button 
-                      onClick={() => setCurrentScreen('landing')}
-                      className="w-full px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
-                      style={{
-                        borderColor: '#FFF8CC',
-                        color: '#FFF8CC',
-                        backgroundColor: 'transparent'
-                      }}
-                    >
-                      Back to Home
-                    </button>
-                  </div>
-
-                  <p className="text-sm text-white opacity-60 mt-6">
-                    💡 Tip: Look for the location icon in your browser's address bar
-                  </p>
-                </div>
-              </div>
-            </div>
-          );          const selectRandomGame = (weatherType, avoidTitle = null) => {
-            const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
-            console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
-            
-            // If we only have one game or no game to avoid, just pick randomly
-            if (availableGames.length <= 1 || !avoidTitle) {
-              const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
-              console.log('Selected game:', randomGame.title);
-              return randomGame;
-            }
-            
-            // Filter out the last game to avoid duplicates
-            const filteredGames = availableGames.filter(game => game.title !== avoidTitle);
-            
-            // If filtering removed all games, just use the full list
-            const gamesToChooseFrom = filteredGames.length > 0 ? filteredGames : availableGames;
-            
-            const randomGame = gamesToChooseFrom[Math.floor(Math.random() * gamesToChooseFrom.length)];
-            console.log('Selected game (avoiding duplicates):', randomGame.title);
-            return randomGame;
-          };<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -104,24 +14,6 @@ const renderLocationError = () => (
             font-family: 'Quicksand', sans-serif; 
             margin: 0; 
         }
-        .star-sparkle {
-            position: absolute;
-            color: #FFF099;
-            animation: sparkle 2s ease-in-out infinite;
-            font-size: 24px;
-        }
-        @keyframes sparkle {
-            0%, 100% { opacity: 0.4; transform: scale(1) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
-        }
-        .diamond-sparkle {
-            width: 20px;
-            height: 20px;
-            background: #FFF099;
-            transform: rotate(45deg);
-            position: absolute;
-            animation: sparkle 2.5s ease-in-out infinite;
-        }
         .pulse-animation {
             animation: pulse 2s ease-in-out infinite;
         }
@@ -133,8 +25,8 @@ const renderLocationError = () => (
             animation: spin 2s linear infinite;
         }
         @keyframes spin {
-            0% { transform: rotate(45deg); }
-            100% { transform: rotate(405deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -153,7 +45,7 @@ const renderLocationError = () => (
           const [lastGameTitle, setLastGameTitle] = useState(null);
           const [locationError, setLocationError] = useState(false);
 
-          // Enhanced game database
+          // Game database
           const gameDatabase = {
             rain: [
               {
@@ -243,7 +135,7 @@ const renderLocationError = () => (
             const lowerCondition = condition.toLowerCase();
             console.log('Weather condition received:', condition, 'Temperature:', temp);
             
-            let weatherType = 'clear'; // default
+            let weatherType = 'clear';
             
             if (lowerCondition.includes('rain') || lowerCondition.includes('drizzle') || 
                 lowerCondition.includes('shower') || lowerCondition.includes('storm')) {
@@ -266,17 +158,13 @@ const renderLocationError = () => (
             const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
             console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
             
-            // If we only have one game or no game to avoid, just pick randomly
             if (availableGames.length <= 1 || !avoidTitle) {
               const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
               console.log('Selected game:', randomGame.title);
               return randomGame;
             }
             
-            // Filter out the last game to avoid duplicates
             const filteredGames = availableGames.filter(game => game.title !== avoidTitle);
-            
-            // If filtering removed all games, just use the full list
             const gamesToChooseFrom = filteredGames.length > 0 ? filteredGames : availableGames;
             
             const randomGame = gamesToChooseFrom[Math.floor(Math.random() * gamesToChooseFrom.length)];
@@ -319,19 +207,30 @@ const renderLocationError = () => (
           const getLocation = () => {
             return new Promise((resolve, reject) => {
               if (!navigator.geolocation) {
+                console.log('Geolocation not supported, using fallback');
                 resolve({ lat: 59.9139, lon: 10.7522 });
                 return;
               }
 
               navigator.geolocation.getCurrentPosition(
                 (position) => {
+                  console.log('Location permission granted');
+                  setLocationError(false);
                   resolve({
                     lat: position.coords.latitude,
                     lon: position.coords.longitude
                   });
                 },
                 (error) => {
-                  resolve({ lat: 59.9139, lon: 10.7522 });
+                  console.error('Geolocation error:', error);
+                  if (error.code === error.PERMISSION_DENIED) {
+                    console.log('Location permission denied by user');
+                    setLocationError(true);
+                    reject(new Error('Location permission denied'));
+                  } else {
+                    console.log('Location error, using fallback');
+                    resolve({ lat: 59.9139, lon: 10.7522 });
+                  }
                 }
               );
             });
@@ -340,6 +239,7 @@ const renderLocationError = () => (
           const handleForecastClick = async () => {
             setCurrentScreen('loading');
             setLoadingProgress(0);
+            setLocationError(false);
 
             const progressInterval = setInterval(() => {
               setLoadingProgress(prev => {
@@ -347,9 +247,9 @@ const renderLocationError = () => (
                   clearInterval(progressInterval);
                   return 90;
                 }
-                return prev + Math.random() * 15;
+                return prev + Math.random() * 25;
               });
-            }, 300);
+            }, 150);
 
             try {
               const userLocation = await getLocation();
@@ -372,19 +272,39 @@ const renderLocationError = () => (
                 setLoadingProgress(100);
                 setTimeout(() => {
                   setCurrentScreen('result');
-                }, 800);
-              }, 2000);
+                }, 300);
+              }, 1200);
 
             } catch (error) {
               console.error('Error fetching data:', error);
-              const fallbackGame = gameDatabase.rain[0];
-              setGameRecommendation(fallbackGame);
-              setTimeout(() => {
-                setLoadingProgress(100);
+              clearInterval(progressInterval);
+              
+              if (error.message === 'Location permission denied') {
                 setTimeout(() => {
-                  setCurrentScreen('result');
-                }, 800);
-              }, 2000);
+                  setCurrentScreen('location-error');
+                }, 1000);
+              } else {
+                const allWeatherTypes = ['rain', 'sunny', 'cloudy', 'snow', 'clear'];
+                const randomWeatherType = allWeatherTypes[Math.floor(Math.random() * allWeatherTypes.length)];
+                console.log('Using fallback weather type:', randomWeatherType);
+                
+                const fallbackGame = selectRandomGame(randomWeatherType);
+                setGameRecommendation(fallbackGame);
+                setLastGameTitle(fallbackGame.title);
+                
+                setWeather({
+                  weather: [{ main: 'Unknown', description: 'weather unavailable' }],
+                  name: 'Your Location',
+                  main: { temp: 20 }
+                });
+                
+                setTimeout(() => {
+                  setLoadingProgress(100);
+                  setTimeout(() => {
+                    setCurrentScreen('result');
+                  }, 300);
+                }, 1200);
+              }
             }
           };
 
@@ -413,11 +333,10 @@ const renderLocationError = () => (
               setLoadingProgress(100);
               setTimeout(() => {
                 setCurrentScreen('result');
-              }, 500);
-            }, 1500);
+              }, 300);
+            }, 1200);
           };
 
-          // Load initial weather data
           useEffect(() => {
             const loadInitialWeather = async () => {
               try {
@@ -434,13 +353,8 @@ const renderLocationError = () => (
           }, []);
 
           const renderLanding = () => (
-            <div className="min-h-screen relative overflow-hidden" style={{
-              backgroundColor: '#837EB4'
-            }}>
-              {/* Navigation */}
-              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{
-                backgroundColor: '#504B81'
-              }}>
+            <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
+              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
@@ -468,10 +382,8 @@ const renderLocationError = () => (
                 </button>
               </nav>
 
-              {/* Main Content */}
               <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-8">
                 <div className="flex items-center justify-between max-w-7xl w-full">
-                  {/* Left Content */}
                   <div className="flex-1 pr-16">
                     <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight" style={{color: '#FFF099'}}>
                       Find the perfect game based on your local weather
@@ -497,7 +409,6 @@ const renderLocationError = () => (
                     </button>
                   </div>
 
-                  {/* Right Content - Your Hero Image */}
                   <div className="flex-1 flex justify-center">
                     <img 
                       src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/hero-image.png" 
@@ -525,13 +436,8 @@ const renderLocationError = () => (
           );
 
           const renderLoading = () => (
-            <div className="min-h-screen relative flex flex-col" style={{
-              backgroundColor: '#837EB4'
-            }}>
-              {/* Navigation */}
-              <nav className="flex justify-between items-center px-8 py-6" style={{
-                backgroundColor: '#504B81'
-              }}>
+            <div className="min-h-screen relative flex flex-col" style={{backgroundColor: '#837EB4'}}>
+              <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
@@ -549,7 +455,6 @@ const renderLocationError = () => (
                 </button>
               </nav>
 
-              {/* Loading Content */}
               <div className="flex-1 flex flex-col items-center justify-center px-8">
                 <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white text-center">
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
@@ -560,7 +465,6 @@ const renderLocationError = () => (
                   matching you with the perfect game...
                 </p>
 
-                {/* Loading Image/Animation */}
                 <div className="mb-8">
                   <img 
                     src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/loading-gif.png" 
@@ -577,13 +481,8 @@ const renderLocationError = () => (
           );
 
           const renderResult = () => (
-            <div className="min-h-screen relative overflow-hidden" style={{
-              backgroundColor: '#837EB4'
-            }}>
-              {/* Navigation */}
-              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{
-                backgroundColor: '#504B81'
-              }}>
+            <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
+              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
@@ -602,22 +501,17 @@ const renderLocationError = () => (
                 </button>
               </nav>
 
-              {/* Game Result */}
               <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-8">
                 <div className="flex items-center justify-between max-w-7xl w-full">
-                  {/* Game Card */}
                   <div className="flex-shrink-0 mr-16">
                     <div className="w-80 h-72 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
                       <img 
                         src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
                         alt={gameRecommendation?.title || "Game cover"}
                         className="w-full h-full object-cover rounded-lg"
-                        style={{
-                          objectPosition: 'center top'
-                        }}
+                        style={{objectPosition: 'center top'}}
                         onError={(e) => {
                           console.log('Game image failed to load:', e.target.src);
-                          // Fallback to gradient with CORRECT game title
                           e.target.style.display = 'none';
                           e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
                           e.target.parentNode.innerHTML = `
@@ -639,9 +533,7 @@ const renderLocationError = () => (
                     </div>
                   </div>
 
-                  {/* Game Info */}
                   <div className="flex-1">
-                    {/* Tags */}
                     <div className="flex flex-wrap gap-3 mb-6">
                       {(gameRecommendation?.tags || ['Single-player', 'Atmospheric', 'Story-Rich']).map((tag, index) => (
                         <span 
@@ -657,17 +549,14 @@ const renderLocationError = () => (
                       ))}
                     </div>
 
-                    {/* Game Title */}
                     <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{color: '#FFF099'}}>
                       {gameRecommendation?.title || 'Firewatch'}
                     </h2>
 
-                    {/* Description */}
                     <p className="text-white text-lg leading-relaxed mb-8 opacity-90 font-medium">
-                      {gameRecommendation?.description || "Today's drizzle sets the mood for something quiet and reflective. Firewatch is a first-person mystery in the Wyoming wilderness, where your only lifeline is a voice on the other end of a radio. If you're in the mood for a scenic walk and a story that lingers, this is the perfect rainy day pick"}
+                      {gameRecommendation?.description || "Today's drizzle sets the mood for something quiet and reflective. Firewatch is a first-person mystery in the Wyoming wilderness, where your only lifeline is a voice on the other end of a radio."}
                     </p>
 
-                    {/* Action Buttons */}
                     <div className="flex gap-4">
                       <button 
                         onClick={() => window.open(gameRecommendation?.steamUrl || "https://store.steampowered.com/app/383870/Firewatch/", '_blank')}
@@ -700,6 +589,72 @@ const renderLocationError = () => (
                       </button>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          );
+
+          const renderLocationError = () => (
+            <div className="min-h-screen relative flex flex-col" style={{backgroundColor: '#837EB4'}}>
+              <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
+                <div 
+                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setCurrentScreen('landing')}
+                >
+                  Sky<span style={{color: '#FFF099'}}>Fable</span>
+                </div>
+                <button 
+                  onClick={() => setCurrentScreen('landing')}
+                  className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
+                  style={{
+                    borderColor: '#FFF099',
+                    color: '#FFF099'
+                  }}
+                >
+                  Back to Home
+                </button>
+              </nav>
+
+              <div className="flex-1 flex flex-col items-center justify-center px-8">
+                <div className="text-center max-w-md">
+                  <div className="text-6xl mb-6">📍</div>
+                  <h1 className="text-4xl font-bold text-white mb-6">
+                    Location Needed
+                  </h1>
+                  
+                  <p className="text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
+                    SkyFable needs your location to check the weather and find the perfect game for you. 
+                    Please enable location permissions and try again.
+                  </p>
+
+                  <div className="space-y-4">
+                    <button 
+                      onClick={handleForecastClick}
+                      className="w-full px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+                      style={{
+                        backgroundColor: '#FFF099',
+                        color: '#504B81'
+                      }}
+                    >
+                      Try Again
+                    </button>
+                    
+                    <button 
+                      onClick={() => setCurrentScreen('landing')}
+                      className="w-full px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                      style={{
+                        borderColor: '#FFF8CC',
+                        color: '#FFF8CC',
+                        backgroundColor: 'transparent'
+                      }}
+                    >
+                      Back to Home
+                    </button>
+                  </div>
+
+                  <p className="text-sm text-white opacity-60 mt-6">
+                    💡 Tip: Look for the location icon in your browser's address bar
+                  </p>
                 </div>
               </div>
             </div>
