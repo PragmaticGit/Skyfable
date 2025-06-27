@@ -1,4 +1,74 @@
-const selectRandomGame = (weatherType, avoidTitle = null) => {
+const renderLocationError = () => (
+            <div className="min-h-screen relative flex flex-col" style={{
+              backgroundColor: '#837EB4'
+            }}>
+              {/* Navigation */}
+              <nav className="flex justify-between items-center px-8 py-6" style={{
+                backgroundColor: '#504B81'
+              }}>
+                <div 
+                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setCurrentScreen('landing')}
+                >
+                  Sky<span style={{color: '#FFF099'}}>Fable</span>
+                </div>
+                <button 
+                  onClick={() => setCurrentScreen('landing')}
+                  className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
+                  style={{
+                    borderColor: '#FFF099',
+                    color: '#FFF099'
+                  }}
+                >
+                  Back to Home
+                </button>
+              </nav>
+
+              {/* Error Content */}
+              <div className="flex-1 flex flex-col items-center justify-center px-8">
+                <div className="text-center max-w-md">
+                  <div className="text-6xl mb-6">📍</div>
+                  <h1 className="text-4xl font-bold text-white mb-6">
+                    Location Needed
+                  </h1>
+                  
+                  <p className="text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
+                    SkyFable needs your location to check the weather and find the perfect game for you. 
+                    Please enable location permissions and try again.
+                  </p>
+
+                  <div className="space-y-4">
+                    <button 
+                      onClick={handleForecastClick}
+                      className="w-full px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+                      style={{
+                        backgroundColor: '#FFF099',
+                        color: '#504B81'
+                      }}
+                    >
+                      Try Again
+                    </button>
+                    
+                    <button 
+                      onClick={() => setCurrentScreen('landing')}
+                      className="w-full px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                      style={{
+                        borderColor: '#FFF8CC',
+                        color: '#FFF8CC',
+                        backgroundColor: 'transparent'
+                      }}
+                    >
+                      Back to Home
+                    </button>
+                  </div>
+
+                  <p className="text-sm text-white opacity-60 mt-6">
+                    💡 Tip: Look for the location icon in your browser's address bar
+                  </p>
+                </div>
+              </div>
+            </div>
+          );          const selectRandomGame = (weatherType, avoidTitle = null) => {
             const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
             console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
             
@@ -81,6 +151,7 @@ const selectRandomGame = (weatherType, avoidTitle = null) => {
           const [gameRecommendation, setGameRecommendation] = useState(null);
           const [loadingProgress, setLoadingProgress] = useState(0);
           const [lastGameTitle, setLastGameTitle] = useState(null);
+          const [locationError, setLocationError] = useState(false);
 
           // Enhanced game database
           const gameDatabase = {
@@ -189,6 +260,28 @@ const selectRandomGame = (weatherType, avoidTitle = null) => {
             
             console.log('Determined weather type:', weatherType);
             return weatherType;
+          };
+
+          const selectRandomGame = (weatherType, avoidTitle = null) => {
+            const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
+            console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
+            
+            // If we only have one game or no game to avoid, just pick randomly
+            if (availableGames.length <= 1 || !avoidTitle) {
+              const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
+              console.log('Selected game:', randomGame.title);
+              return randomGame;
+            }
+            
+            // Filter out the last game to avoid duplicates
+            const filteredGames = availableGames.filter(game => game.title !== avoidTitle);
+            
+            // If filtering removed all games, just use the full list
+            const gamesToChooseFrom = filteredGames.length > 0 ? filteredGames : availableGames;
+            
+            const randomGame = gamesToChooseFrom[Math.floor(Math.random() * gamesToChooseFrom.length)];
+            console.log('Selected game (avoiding duplicates):', randomGame.title);
+            return randomGame;
           };
 
           const fetchWeather = async (lat, lon) => {
@@ -612,6 +705,8 @@ const selectRandomGame = (weatherType, avoidTitle = null) => {
               return renderLoading();
             case 'result':
               return renderResult();
+            case 'location-error':
+              return renderLocationError();
             default:
               return renderLanding();
           }
