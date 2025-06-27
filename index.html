@@ -68,19 +68,25 @@
                 title: "Firewatch",
                 tags: ["Single-player", "Atmospheric", "Story-Rich"],
                 description: "Today's drizzle sets the mood for something quiet and reflective. Firewatch is a first-person mystery in the Wyoming wilderness, where your only lifeline is a voice on the other end of a radio. If you're in the mood for a scenic walk and a story that lingers, this is the perfect rainy day pick",
-                reasoning: "Rainy weather calls for introspective, slower-paced experiences"
+                reasoning: "Rainy weather calls for introspective, slower-paced experiences",
+                steamUrl: "https://store.steampowered.com/app/383870/Firewatch/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"
               },
               {
                 title: "Stardew Valley",
                 tags: ["Farming", "Relaxing", "Pixel Art"],
                 description: "There's something magical about tending virtual crops while real rain nourishes the world outside. The cozy pixel art and gentle gameplay create the perfect indoor sanctuary.",
-                reasoning: "Indoor comfort gaming for rainy day coziness"
+                reasoning: "Indoor comfort gaming for rainy day coziness",
+                steamUrl: "https://store.steampowered.com/app/413150/Stardew_Valley/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/413150/header.jpg"
               },
               {
                 title: "Coffee Talk",
                 tags: ["Narrative", "Chill", "Music"],
                 description: "Listen to customers' stories while brewing the perfect coffee. The rainy atmosphere outside matches the warm, intimate café setting perfectly.",
-                reasoning: "Cozy café vibes perfect for rainy evenings"
+                reasoning: "Cozy café vibes perfect for rainy evenings",
+                steamUrl: "https://store.steampowered.com/app/914800/Coffee_Talk/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/914800/header.jpg"
               }
             ],
             sunny: [
@@ -88,13 +94,17 @@
                 title: "No Man's Sky",
                 tags: ["Space", "Exploration", "Colorful"],
                 description: "Brilliant sunshine deserves brilliant alien worlds! Your sunny mood is perfect for exploring vibrant planets, discovering new species, and building bases under exotic skies.",
-                reasoning: "Bright, expansive experiences that match sunny energy"
+                reasoning: "Bright, expansive experiences that match sunny energy",
+                steamUrl: "https://store.steampowered.com/app/275850/No_Mans_Sky/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg"
               },
               {
                 title: "Horizon Zero Dawn",
                 tags: ["Action", "Open World", "Epic"],
                 description: "Sunny weather gives you energy for epic adventures! Join Aloy as she explores stunning post-apocalyptic landscapes with gorgeous outdoor environments.",
-                reasoning: "High-energy adventures that match sunny day motivation"
+                reasoning: "High-energy adventures that match sunny day motivation",
+                steamUrl: "https://store.steampowered.com/app/1151640/Horizon_Zero_Dawn_Complete_Edition/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/1151640/header.jpg"
               }
             ],
             cloudy: [
@@ -243,12 +253,32 @@
           };
 
           const handleRollAgain = () => {
-            if (weather) {
-              const weatherType = getWeatherType(weather.weather[0].main, weather.main.temp);
-              const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
-              const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
-              setGameRecommendation(randomGame);
-            }
+            setCurrentScreen('loading');
+            setLoadingProgress(0);
+
+            const progressInterval = setInterval(() => {
+              setLoadingProgress(prev => {
+                if (prev >= 90) {
+                  clearInterval(progressInterval);
+                  return 90;
+                }
+                return prev + Math.random() * 20;
+              });
+            }, 200);
+
+            setTimeout(() => {
+              if (weather) {
+                const weatherType = getWeatherType(weather.weather[0].main, weather.main.temp);
+                const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
+                const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
+                setGameRecommendation(randomGame);
+              }
+              
+              setLoadingProgress(100);
+              setTimeout(() => {
+                setCurrentScreen('result');
+              }, 500);
+            }, 1500);
           };
 
           // Load initial weather data
@@ -275,7 +305,10 @@
               <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{
                 backgroundColor: '#504B81'
               }}>
-                <div className="text-white text-2xl font-bold">
+                <div 
+                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setCurrentScreen('landing')}
+                >
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
@@ -329,27 +362,25 @@
 
                 {/* Right Content - Your Hero Image */}
                 <div className="flex-1 flex justify-center">
-                  <div className="relative">
-                    <img 
-                      src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/hero-image.png" 
-                      alt="Gaming illustration" 
-                      className="max-w-full h-auto rounded-2xl shadow-2xl"
-                      style={{
-                        maxHeight: '400px',
-                        width: 'auto',
-                        display: 'block'
-                      }}
-                      onError={(e) => {
-                        console.log('GitHub raw URL failed, trying relative path...');
-                        e.target.src = "./images/hero-image.png";
-                        e.target.onerror = () => {
-                          console.log('All paths failed for hero image');
-                          e.target.style.display = 'none';
-                          e.target.parentNode.innerHTML = '<div style="width: 400px; height: 300px; background: rgba(255,255,255,0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🎮 Gaming Illustration</div>';
-                        };
-                      }}
-                    />
-                  </div>
+                  <img 
+                    src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/hero-image.png" 
+                    alt="Gaming illustration" 
+                    className="max-w-full h-auto"
+                    style={{
+                      maxHeight: '400px',
+                      width: 'auto',
+                      display: 'block'
+                    }}
+                    onError={(e) => {
+                      console.log('GitHub raw URL failed, trying relative path...');
+                      e.target.src = "./images/hero-image.png";
+                      e.target.onerror = () => {
+                        console.log('All paths failed for hero image');
+                        e.target.style.display = 'none';
+                        e.target.parentNode.innerHTML = '<div style="width: 400px; height: 300px; background: rgba(255,255,255,0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🎮 Gaming Illustration</div>';
+                      };
+                    }}
+                  />
                 </div>
               </div>
 
@@ -369,7 +400,10 @@
               <nav className="flex justify-between items-center px-8 py-6" style={{
                 backgroundColor: '#504B81'
               }}>
-                <div className="text-white text-2xl font-bold">
+                <div 
+                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setCurrentScreen('landing')}
+                >
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
@@ -426,7 +460,10 @@
                 backgroundColor: 'rgba(80, 75, 129, 0.9)',
                 backdropFilter: 'blur(10px)'
               }}>
-                <div className="text-white text-2xl font-bold">
+                <div 
+                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setCurrentScreen('landing')}
+                >
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
@@ -494,6 +531,7 @@
                   {/* Action Buttons */}
                   <div className="flex gap-4">
                     <button 
+                      onClick={() => window.open(gameRecommendation?.steamUrl || "https://store.steampowered.com/app/383870/Firewatch/", '_blank')}
                       className="px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
                       style={{
                         backgroundColor: '#FFF099',
