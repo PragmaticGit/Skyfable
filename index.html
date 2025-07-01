@@ -156,6 +156,13 @@
             }, 1200);
           };
 
+          const handleManualWeather = (type) => {
+            const g = selectGame(type);
+            setGame(g);
+            setLastGame(g.title);
+            setShowWeatherSelect(false);
+          };
+
           useEffect(() => {
             getLocation().then(loc => fetchWeather(loc.lat, loc.lon)).then(setWeather).catch(() => {});
           }, []);
