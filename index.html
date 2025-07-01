@@ -29,13 +29,43 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .check-animation {
+            animation: checkmark 0.5s ease-in-out;
+        }
+        @keyframes checkmark {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        /* Enhanced mobile touch targets */
+        @media (max-width: 768px) {
+            .mobile-button {
+                min-height: 48px;
+                min-width: 48px;
+            }
+            .mobile-spacing {
+                padding: 1rem;
+            }
+        }
+        /* Better game card sizing */
+        .game-card {
+            width: 100%;
+            max-width: 460px;
+            aspect-ratio: 16/9;
+        }
+        @media (min-width: 1024px) {
+            .game-card {
+                width: 460px;
+                height: 215px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
     
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         const SkyFable = () => {
           const [currentScreen, setCurrentScreen] = useState('landing');
@@ -45,9 +75,27 @@
           const [loadingProgress, setLoadingProgress] = useState(0);
           const [lastGameTitle, setLastGameTitle] = useState(null);
           const [locationError, setLocationError] = useState(false);
+          
+          // Enhanced loading states
+          const [loadingSteps, setLoadingSteps] = useState([]);
+          const [currentStep, setCurrentStep] = useState(0);
+          
+          // Manual weather override
+          const [manualWeather, setManualWeather] = useState(null);
+          const [showWeatherSelect, setShowWeatherSelect] = useState(false);
+          
+          // Performance caching
+          const weatherCacheRef = useRef(new Map());
+          const gamePreloadRef = useRef(new Map());
 
-          // Game database is now loaded from external file
-          // Available as window.gameDatabase
+          // Enhanced loading steps
+          const loadingStepsData = [
+            { text: "Detecting your location...", icon: "📍" },
+            { text: "Checking local weather conditions...", icon: "🌤️" },
+            { text: "Analyzing atmospheric vibes...", icon: "🌈" },
+            { text: "Consulting the game spirits...", icon: "✨" },
+            { text: "Finding your perfect match...", icon: "🎮" }
+          ];
 
           const getWeatherType = (condition, temp = 20) => {
             const lowerCondition = condition.toLowerCase();
@@ -90,7 +138,17 @@
             return randomGame;
           };
 
+          // Enhanced weather fetching with caching
           const fetchWeather = async (lat, lon) => {
+            const cacheKey = `${Math.round(lat * 100) / 100},${Math.round(lon * 100) / 100}`;
+            const cached = weatherCacheRef.current.get(cacheKey);
+            
+            // Return cached data if less than 2 hours old
+            if (cached && (Date.now() - cached.timestamp) < 2 * 60 * 60 * 1000) {
+              console.log('Using cached weather data');
+              return cached.data;
+            }
+
             try {
               const response = await fetch(`https://wttr.in/${lat},${lon}?format=j1`);
               
@@ -102,7 +160,7 @@
               const current = data.current_condition[0];
               const location = data.nearest_area[0];
               
-              return {
+              const weatherData = {
                 weather: [{ 
                   main: current.weatherDesc[0].value,
                   description: current.weatherDesc[0].value.toLowerCase()
@@ -112,6 +170,14 @@
                   temp: parseInt(current.temp_C)
                 }
               };
+
+              // Cache the result
+              weatherCacheRef.current.set(cacheKey, {
+                data: weatherData,
+                timestamp: Date.now()
+              });
+
+              return weatherData;
             } catch (error) {
               console.error('Weather API failed, using fallback:', error);
               return {
@@ -154,57 +220,83 @@
             });
           };
 
+          // Enhanced loading with step-by-step progress
           const handleForecastClick = async () => {
             setCurrentScreen('loading');
             setLoadingProgress(0);
+            setCurrentStep(0);
+            setLoadingSteps([]);
             setLocationError(false);
 
-            const progressInterval = setInterval(() => {
-              setLoadingProgress(prev => {
-                if (prev >= 90) {
-                  clearInterval(progressInterval);
-                  return 90;
-                }
-                return prev + Math.random() * 25;
-              });
-            }, 150);
-
             try {
+              // Step 1: Location
+              setLoadingSteps([{ ...loadingStepsData[0], completed: false }]);
+              await new Promise(resolve => setTimeout(resolve, 800));
+              
               const userLocation = await getLocation();
               setLocation(userLocation);
+              setLoadingSteps(prev => [
+                { ...prev[0], completed: true },
+                { ...loadingStepsData[1], completed: false }
+              ]);
+              setCurrentStep(1);
 
+              // Step 2: Weather
+              await new Promise(resolve => setTimeout(resolve, 600));
               const weatherData = await fetchWeather(userLocation.lat, userLocation.lon);
               setWeather(weatherData);
-              console.log('=== WEATHER DATA ===');
-              console.log('Raw weather:', weatherData);
+              setLoadingSteps(prev => [
+                ...prev.slice(0, 1),
+                { ...prev[1], completed: true },
+                { ...loadingStepsData[2], completed: false }
+              ]);
+              setCurrentStep(2);
 
+              // Step 3: Analysis
+              await new Promise(resolve => setTimeout(resolve, 700));
               const weatherType = getWeatherType(weatherData.weather[0].main, weatherData.main.temp);
-              console.log('=== GAME SELECTION ===');
+              setLoadingSteps(prev => [
+                ...prev.slice(0, 2),
+                { ...prev[2], completed: true },
+                { ...loadingStepsData[3], completed: false }
+              ]);
+              setCurrentStep(3);
+
+              // Step 4: Game selection
+              await new Promise(resolve => setTimeout(resolve, 800));
+              setLoadingSteps(prev => [
+                ...prev.slice(0, 3),
+                { ...prev[3], completed: true },
+                { ...loadingStepsData[4], completed: false }
+              ]);
+              setCurrentStep(4);
+
+              // Step 5: Final selection
+              await new Promise(resolve => setTimeout(resolve, 600));
               const randomGame = selectRandomGame(weatherType);
-              console.log('Final selected game:', randomGame);
-              
               setGameRecommendation(randomGame);
               setLastGameTitle(randomGame.title);
 
+              setLoadingSteps(prev => [
+                ...prev.slice(0, 4),
+                { ...prev[4], completed: true }
+              ]);
+
               setTimeout(() => {
-                setLoadingProgress(100);
-                setTimeout(() => {
-                  setCurrentScreen('result');
-                }, 300);
-              }, 1200);
+                setCurrentScreen('result');
+              }, 800);
 
             } catch (error) {
               console.error('Error fetching data:', error);
-              clearInterval(progressInterval);
               
               if (error.message === 'Location permission denied') {
                 setTimeout(() => {
                   setCurrentScreen('location-error');
                 }, 1000);
               } else {
+                // Fallback game selection
                 const allWeatherTypes = ['rain', 'sunny', 'cloudy', 'snow', 'clear'];
                 const randomWeatherType = allWeatherTypes[Math.floor(Math.random() * allWeatherTypes.length)];
-                console.log('Using fallback weather type:', randomWeatherType);
                 
                 const fallbackGame = selectRandomGame(randomWeatherType);
                 setGameRecommendation(fallbackGame);
@@ -217,11 +309,8 @@
                 });
                 
                 setTimeout(() => {
-                  setLoadingProgress(100);
-                  setTimeout(() => {
-                    setCurrentScreen('result');
-                  }, 300);
-                }, 1200);
+                  setCurrentScreen('result');
+                }, 1500);
               }
             }
           };
@@ -229,16 +318,10 @@
           const handleRollAgain = () => {
             setCurrentScreen('loading');
             setLoadingProgress(0);
-
-            const progressInterval = setInterval(() => {
-              setLoadingProgress(prev => {
-                if (prev >= 90) {
-                  clearInterval(progressInterval);
-                  return 90;
-                }
-                return prev + Math.random() * 20;
-              });
-            }, 200);
+            setCurrentStep(3); // Skip to game selection
+            setLoadingSteps([
+              { ...loadingStepsData[3], completed: false }
+            ]);
 
             setTimeout(() => {
               if (weather) {
@@ -248,11 +331,34 @@
                 setLastGameTitle(randomGame.title);
               }
               
-              setLoadingProgress(100);
+              setLoadingSteps([
+                { ...loadingStepsData[3], completed: true }
+              ]);
+
               setTimeout(() => {
                 setCurrentScreen('result');
-              }, 300);
+              }, 600);
             }, 1200);
+          };
+
+          // Manual weather selection
+          const handleManualWeather = (weatherType) => {
+            const mockWeatherData = {
+              rain: { weather: [{ main: 'Rain', description: 'rainy day' }], name: 'Your Location', main: { temp: 15 } },
+              sunny: { weather: [{ main: 'Clear', description: 'sunny day' }], name: 'Your Location', main: { temp: 25 } },
+              cloudy: { weather: [{ main: 'Clouds', description: 'cloudy day' }], name: 'Your Location', main: { temp: 18 } },
+              snow: { weather: [{ main: 'Snow', description: 'snowy day' }], name: 'Your Location', main: { temp: -2 } },
+              clear: { weather: [{ main: 'Clear', description: 'perfect day' }], name: 'Your Location', main: { temp: 22 } }
+            };
+
+            setManualWeather(weatherType);
+            setWeather(mockWeatherData[weatherType]);
+            setShowWeatherSelect(false);
+            
+            const randomGame = selectRandomGame(weatherType);
+            setGameRecommendation(randomGame);
+            setLastGameTitle(randomGame.title);
+            setCurrentScreen('result');
           };
 
           useEffect(() => {
@@ -272,7 +378,7 @@
 
           const renderLanding = () => (
             <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
-              <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
@@ -281,7 +387,7 @@
                 </div>
                 <button 
                   onClick={handleForecastClick}
-                  className="px-4 sm:px-6 py-2 sm:py-3 border-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                  className="mobile-button px-4 sm:px-6 py-3 sm:py-3 border-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105 text-sm sm:text-base"
                   style={{
                     borderColor: '#FFF099',
                     color: '#FFF099',
@@ -300,42 +406,75 @@
                 </button>
               </nav>
 
-              <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8">
-                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-0">
+              <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8 mobile-spacing">
+                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-12">
                   {/* Left Content */}
-                  <div className="flex-1 text-center lg:text-left lg:pr-16">
+                  <div className="flex-1 text-center lg:text-left lg:pr-8">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style={{color: '#FFF099'}}>
                       Find the perfect game based on your local weather
                     </h1>
                     
                     <p className="text-lg sm:text-xl mb-8 text-white opacity-90 font-medium leading-relaxed">
-                      Right now in <span className="font-bold">{weather?.name || 'Stavanger'}</span>, It's a{' '}
+                      Right now in <span className="font-bold">{weather?.name || 'Stavanger'}</span>, it's a{' '}
                       <span className="font-bold" style={{color: '#FFF099'}}>
                         {weather ? weather.weather[0].description : 'rainy evening'}
                       </span>{' '}
                       so it's time for something quiet and reflective 🌧️
                     </p>
 
-                    <button 
-                      onClick={handleForecastClick}
-                      className="w-full sm:w-auto px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg"
-                      style={{
-                        backgroundColor: '#FFF099',
-                        color: '#504B81'
-                      }}
-                    >
-                      Forecast My Game
-                    </button>
+                    <div className="space-y-4">
+                      <button 
+                        onClick={handleForecastClick}
+                        className="mobile-button w-full sm:w-auto px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg"
+                        style={{
+                          backgroundColor: '#FFF099',
+                          color: '#504B81'
+                        }}
+                      >
+                        Forecast My Game
+                      </button>
+                      
+                      <div className="flex flex-col sm:flex-row gap-2 items-center">
+                        <span className="text-white text-sm opacity-75">Or choose your mood:</span>
+                        <button 
+                          onClick={() => setShowWeatherSelect(!showWeatherSelect)}
+                          className="mobile-button text-sm px-4 py-2 border border-white border-opacity-30 rounded text-white hover:bg-white hover:bg-opacity-10 transition-all"
+                        >
+                          Manual Weather Selection
+                        </button>
+                      </div>
+
+                      {showWeatherSelect && (
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-4">
+                          {[
+                            { type: 'rain', emoji: '🌧️', label: 'Rainy' },
+                            { type: 'sunny', emoji: '☀️', label: 'Sunny' },
+                            { type: 'cloudy', emoji: '☁️', label: 'Cloudy' },
+                            { type: 'snow', emoji: '❄️', label: 'Snowy' },
+                            { type: 'clear', emoji: '🌤️', label: 'Clear' }
+                          ].map(weather => (
+                            <button
+                              key={weather.type}
+                              onClick={() => handleManualWeather(weather.type)}
+                              className="mobile-button flex flex-col items-center p-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-lg transition-all text-white text-sm"
+                            >
+                              <span className="text-2xl mb-1">{weather.emoji}</span>
+                              <span>{weather.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Right Content - Your Hero Image */}
+                  {/* Right Content - Hero Image */}
                   <div className="flex-1 flex justify-center order-first lg:order-last">
                     <img 
                       src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/hero-image.png" 
                       alt="Gaming illustration" 
                       className="max-w-full h-auto"
                       style={{
-                        maxHeight: '300px',
+                        maxHeight: '280px',
                         width: 'auto',
                         display: 'block'
                       }}
@@ -345,7 +484,7 @@
                         e.target.onerror = () => {
                           console.log('All paths failed for hero image');
                           e.target.style.display = 'none';
-                          e.target.parentNode.innerHTML = '<div style="width: 300px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🎮 Gaming</div>';
+                          e.target.parentNode.innerHTML = '<div style="width: 280px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🎮 Gaming</div>';
                         };
                       }}
                     />
@@ -357,15 +496,15 @@
 
           const renderLoading = () => (
             <div className="min-h-screen relative flex flex-col" style={{backgroundColor: '#837EB4'}}>
-              <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6" style={{backgroundColor: '#504B81'}}>
                 <div 
-                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
                 >
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
-                  className="px-6 py-3 border-2 rounded-lg font-semibold opacity-50 cursor-not-allowed"
+                  className="mobile-button px-4 sm:px-6 py-3 border-2 rounded-lg font-semibold opacity-50 cursor-not-allowed text-sm sm:text-base"
                   style={{
                     borderColor: '#FFF099',
                     color: '#FFF099'
@@ -375,21 +514,29 @@
                 </button>
               </nav>
 
-              <div className="flex-1 flex flex-col items-center justify-center px-8">
-                <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white text-center">
+              <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 mobile-spacing">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-8 text-white text-center">
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </h1>
                 
-                <p className="text-2xl mb-16 text-center font-medium pulse-animation" style={{color: '#FFF099'}}>
-                  Contacting the nearest cloud spirit and<br />
-                  matching you with the perfect game...
-                </p>
+                <div className="w-full max-w-md space-y-4 mb-16">
+                  {loadingSteps.map((step, index) => (
+                    <div key={index} className="flex items-center space-x-3 text-white">
+                      <div className={`text-2xl ${step.completed ? 'check-animation' : ''}`}>
+                        {step.completed ? '✅' : step.icon}
+                      </div>
+                      <div className={`text-lg font-medium ${step.completed ? 'opacity-75' : 'opacity-100'}`}>
+                        {step.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
                 <div className="mb-8">
                   <img 
                     src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/loading-gif.png" 
                     alt="Loading animation" 
-                    className="w-24 h-24 loading-spin"
+                    className="w-20 h-20 sm:w-24 sm:h-24 loading-spin"
                     onError={(e) => {
                       console.log('Loading gif failed, trying relative path...');
                       e.target.src = "./images/loading-gif.png";
@@ -402,16 +549,16 @@
 
           const renderResult = () => (
             <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
-              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
-                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
                 >
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
                   onClick={() => setCurrentScreen('landing')}
-                  className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
+                  className="mobile-button px-4 sm:px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300 text-sm sm:text-base"
                   style={{
                     borderColor: '#FFF099',
                     color: '#FFF099'
@@ -421,18 +568,17 @@
                 </button>
               </nav>
 
-              <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8">
-                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-0">
-                  {/* Game Card */}
-                  <div className="flex-shrink-0 order-first lg:order-first lg:mr-16">
-                    <div className="w-80 sm:w-96 h-48 sm:h-56 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
+              <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8 mobile-spacing">
+                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-12">
+                  {/* Enhanced Game Card */}
+                  <div className="flex-shrink-0 order-first lg:order-first">
+                    <div className="game-card rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
                       <img 
-                        src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
+                        src={gameRecommendation?.gameImage}
                         alt={gameRecommendation?.title || "Game cover"}
                         className="w-full h-full object-cover rounded-lg"
                         style={{objectPosition: 'center'}}
                         onError={(e) => {
-                          console.log('Game image failed to load:', e.target.src);
                           e.target.style.display = 'none';
                           e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
                           e.target.parentNode.innerHTML = `
@@ -447,14 +593,11 @@
                             </div>
                           `;
                         }}
-                        onLoad={(e) => {
-                          console.log('Game image loaded successfully:', gameRecommendation?.title);
-                        }}
                       />
                     </div>
                   </div>
 
-                  {/* Game Info */}
+                  {/* Enhanced Game Info */}
                   <div className="flex-1 text-center lg:text-left">
                     {/* Tags */}
                     <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-4 sm:mb-6">
@@ -478,15 +621,26 @@
                     </h2>
 
                     {/* Description */}
-                    <p className="text-white text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 opacity-90 font-medium">
+                    <p className="text-white text-base sm:text-lg leading-relaxed mb-4 sm:mb-6 opacity-90 font-medium">
                       {gameRecommendation?.description || "Today's drizzle sets the mood for something quiet and reflective. Firewatch is a first-person mystery in the Wyoming wilderness, where your only lifeline is a voice on the other end of a radio."}
                     </p>
 
-                    {/* Action Buttons */}
+                    {/* Why This Game - Enhanced explanation */}
+                    <div className="mb-6 sm:mb-8 p-4 rounded-lg" style={{backgroundColor: 'rgba(255,255,255,0.1)'}}>
+                      <h3 className="text-lg font-bold text-white mb-2 flex items-center">
+                        <span className="mr-2">🎯</span>
+                        Why this game for {weather?.weather[0]?.description || 'today\'s weather'}?
+                      </h3>
+                      <p className="text-white opacity-90 text-sm sm:text-base">
+                        {gameRecommendation?.reasoning || "Rainy weather calls for introspective, slower-paced experiences that let you appreciate being cozy indoors."}
+                      </p>
+                    </div>
+
+                    {/* Enhanced Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
                       <button 
                         onClick={() => window.open(gameRecommendation?.steamUrl || "https://store.steampowered.com/app/383870/Firewatch/", '_blank')}
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+                        className="mobile-button w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg text-base sm:text-lg"
                         style={{
                           backgroundColor: '#FFF099',
                           color: '#504B81'
@@ -496,7 +650,7 @@
                       </button>
                       <button 
                         onClick={handleRollAgain}
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                        className="mobile-button w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 rounded-lg font-bold transition-all duration-300 text-base sm:text-lg"
                         style={{
                           borderColor: '#FFF8CC',
                           color: '#FFF8CC',
@@ -514,6 +668,22 @@
                         Roll Again
                       </button>
                     </div>
+
+                    {/* Additional Game Info */}
+                    <div className="mt-6 sm:mt-8 flex flex-wrap gap-4 justify-center lg:justify-start text-sm opacity-75">
+                      <div className="flex items-center text-white">
+                        <span className="mr-1">💰</span>
+                        <span>Check Steam for pricing</span>
+                      </div>
+                      <div className="flex items-center text-white">
+                        <span className="mr-1">🎮</span>
+                        <span>PC, Steam Deck compatible</span>
+                      </div>
+                      <div className="flex items-center text-white">
+                        <span className="mr-1">⏱️</span>
+                        <span>Playtime varies by game</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -522,16 +692,16 @@
 
           const renderLocationError = () => (
             <div className="min-h-screen relative flex flex-col" style={{backgroundColor: '#837EB4'}}>
-              <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6" style={{backgroundColor: '#504B81'}}>
                 <div 
-                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
                 >
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button 
                   onClick={() => setCurrentScreen('landing')}
-                  className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
+                  className="mobile-button px-4 sm:px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300 text-sm sm:text-base"
                   style={{
                     borderColor: '#FFF099',
                     color: '#FFF099'
@@ -541,14 +711,14 @@
                 </button>
               </nav>
 
-              <div className="flex-1 flex flex-col items-center justify-center px-8">
+              <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 mobile-spacing">
                 <div className="text-center max-w-md">
                   <div className="text-6xl mb-6">📍</div>
-                  <h1 className="text-4xl font-bold text-white mb-6">
+                  <h1 className="text-3xl sm:text-4xl font-bold text-white mb-6">
                     Location Needed
                   </h1>
                   
-                  <p className="text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
+                  <p className="text-base sm:text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
                     SkyFable needs your location to check the weather and find the perfect game for you. 
                     Please enable location permissions and try again.
                   </p>
@@ -556,7 +726,7 @@
                   <div className="space-y-4">
                     <button 
                       onClick={handleForecastClick}
-                      className="w-full px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+                      className="mobile-button w-full px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
                       style={{
                         backgroundColor: '#FFF099',
                         color: '#504B81'
@@ -566,8 +736,41 @@
                     </button>
                     
                     <button 
+                      onClick={() => setShowWeatherSelect(true)}
+                      className="mobile-button w-full px-6 sm:px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                      style={{
+                        borderColor: '#FFF8CC',
+                        color: '#FFF8CC',
+                        backgroundColor: 'transparent'
+                      }}
+                    >
+                      Choose Weather Manually
+                    </button>
+
+                    {showWeatherSelect && (
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-4">
+                        {[
+                          { type: 'rain', emoji: '🌧️', label: 'Rainy' },
+                          { type: 'sunny', emoji: '☀️', label: 'Sunny' },
+                          { type: 'cloudy', emoji: '☁️', label: 'Cloudy' },
+                          { type: 'snow', emoji: '❄️', label: 'Snowy' },
+                          { type: 'clear', emoji: '🌤️', label: 'Clear' }
+                        ].map(weather => (
+                          <button
+                            key={weather.type}
+                            onClick={() => handleManualWeather(weather.type)}
+                            className="mobile-button flex flex-col items-center p-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-lg transition-all text-white text-sm"
+                          >
+                            <span className="text-2xl mb-1">{weather.emoji}</span>
+                            <span>{weather.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <button 
                       onClick={() => setCurrentScreen('landing')}
-                      className="w-full px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                      className="mobile-button w-full px-6 sm:px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
                       style={{
                         borderColor: '#FFF8CC',
                         color: '#FFF8CC',
