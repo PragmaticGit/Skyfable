@@ -54,13 +54,21 @@
 
           const fetchWeather = async (lat, lon) => {
             try {
-              const res = await fetch(`https://wttr.in/${lat},${lon}?format=j1`);
+              // Use higher precision coordinates for wttr.in
+              const res = await fetch(`https://wttr.in/${lat.toFixed(4)},${lon.toFixed(4)}?format=j1`);
               const data = await res.json();
               const curr = data.current_condition[0];
               const loc = data.nearest_area[0];
+              
+              // Check if we're near Stavanger and correct if needed
+              const isNearStavanger = Math.abs(lat - 58.97) < 0.5 && Math.abs(lon - 5.73) < 0.5;
+              const cityName = isNearStavanger && loc.areaName[0].value !== 'Stavanger' 
+                ? 'Stavanger' 
+                : loc.areaName[0].value;
+              
               return {
                 weather: [{ main: curr.weatherDesc[0].value, description: curr.weatherDesc[0].value.toLowerCase() }],
-                name: loc.areaName[0].value,
+                name: cityName,
                 main: { temp: parseInt(curr.temp_C) }
               };
             } catch {
@@ -69,10 +77,10 @@
           };
 
           const getLocation = () => new Promise((resolve, reject) => {
-            if (!navigator.geolocation) return resolve({ lat: 59.9139, lon: 10.7522 });
+            if (!navigator.geolocation) return resolve({ lat: 58.9700, lon: 5.7331 });
             navigator.geolocation.getCurrentPosition(
               pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-              err => err.code === 1 ? reject(new Error('denied')) : resolve({ lat: 59.9139, lon: 10.7522 })
+              err => err.code === 1 ? reject(new Error('denied')) : resolve({ lat: 58.9700, lon: 5.7331 })
             );
           });
 
@@ -153,11 +161,6 @@
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-accent">
                       Find the perfect game based on your local weather
                     </h1>
-                    <p className="text-lg sm:text-xl mb-8 text-white opacity-90 font-medium">
-                      Right now in <span className="font-bold">{weather?.name || 'Stavanger'}</span>, It's a{' '}
-                      <span className="font-bold text-accent">{weather?.weather[0].description || 'rainy evening'}</span>{' '}
-                      so it's time for something quiet and reflective 🌧️
-                    </p>
                     <Button onClick={handleForecast} primary className="w-full sm:w-auto">
                       Forecast My Game
                     </Button>
@@ -179,72 +182,133 @@
             </div>
           );
 
-          const Loading = () => (
-            <div className="min-h-screen bg-primary flex flex-col">
-              <Nav showButton={false} />
-              <div className="flex-1 flex flex-col items-center justify-center px-8">
-                <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white">
-                  Sky<span className="text-accent">Fable</span>
-                </h1>
-                <p className="text-2xl mb-16 text-center font-medium text-accent pulse-animation">
-                  Contacting the nearest cloud spirit and<br />matching you with the perfect game...
-                </p>
-                <img src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/loading-gif.png" 
-                     alt="Loading" className="w-24 h-24 loading-spin"
-                     onError={(e) => e.target.style.display = 'none'} />
+          const Loading = () => {
+            const [message, setMessage] = useState(0);
+            const messages = [
+              "Contacting the nearest cloud spirit",
+              "Reading atmospheric pressure patterns",
+              "Consulting with weather wizards",
+              "Matching you with the perfect game"
+            ];
+            
+            useEffect(() => {
+              const interval = setInterval(() => {
+                setMessage(prev => (prev + 1) % messages.length);
+              }, 2000);
+              return () => clearInterval(interval);
+            }, []);
+            
+            return (
+              <div className="min-h-screen bg-primary flex flex-col">
+                <Nav showButton={false} />
+                <div className="flex-1 flex flex-col items-center justify-center px-8">
+                  <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white">
+                    Sky<span className="text-accent">Fable</span>
+                  </h1>
+                  <p className="text-2xl mb-16 text-center font-medium text-accent pulse-animation">
+                    {messages[message]}...
+                  </p>
+                  <img src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/loading-gif.png" 
+                       alt="Loading" className="w-24 h-24 loading-spin"
+                       onError={(e) => e.target.style.display = 'none'} />
+                </div>
               </div>
-            </div>
-          );
+            );
+          };
 
-          const Result = () => (
-            <div className="min-h-screen bg-primary">
-              <Nav />
-              <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8">
-                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8">
-                  <div className="flex-shrink-0 lg:mr-16">
-                    <div className="w-80 sm:w-96 h-48 sm:h-56 rounded-lg shadow-2xl overflow-hidden bg-gray-900">
-                      <img 
-                        src={game?.gameImage}
-                        alt={game?.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.parentNode.innerHTML = `
-                            <div class="h-full flex flex-col items-center justify-center bg-gradient-to-br from-orange-500 to-orange-700 text-white">
-                              <div class="text-6xl mb-4">🎮</div>
-                              <h3 class="text-2xl font-bold">${game?.title?.toUpperCase() || 'GAME'}</h3>
-                            </div>`;
-                        }}
-                      />
+          const getWeatherEmoji = (type) => {
+            const emojis = {
+              rain: '🌧️',
+              sunny: '☀️',
+              cloudy: '☁️',
+              snow: '❄️',
+              clear: '✨'
+            };
+            return emojis[type] || '🌤️';
+          };
+
+          const Result = () => {
+            const weatherType = weather ? getWeatherType(weather.weather[0].main, weather.main.temp) : 'clear';
+            const weatherEmoji = getWeatherEmoji(weatherType);
+            
+            return (
+              <div className="min-h-screen bg-primary">
+                <Nav />
+                <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8 py-8">
+                  <div className="max-w-6xl w-full">
+                    {/* Title Section */}
+                    <div className="mb-8">
+                      <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-accent mb-4">
+                        {game?.title}
+                      </h2>
+                      <div className="flex flex-wrap gap-2">
+                        {(game?.tags || []).map((tag, i) => (
+                          <span key={i} className="px-3 py-1 rounded-full text-xs font-semibold bg-accent/20 text-accent">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-1 text-center lg:text-left">
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-6">
-                      {(game?.tags || []).map((tag, i) => (
-                        <span key={i} className="px-4 py-2 rounded-full text-sm font-semibold bg-accent/20 text-accent">
-                          {tag}
-                        </span>
-                      ))}
+                    
+                    {/* Main Content Grid */}
+                    <div className="grid lg:grid-cols-3 gap-8 mb-8">
+                      {/* Game Image - 2 columns */}
+                      <div className="lg:col-span-2">
+                        <div className="aspect-video rounded-lg shadow-2xl overflow-hidden bg-gray-900">
+                          <img 
+                            src={game?.gameImage}
+                            alt={game?.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.parentNode.innerHTML = `
+                                <div class="h-full flex flex-col items-center justify-center bg-gradient-to-br from-orange-500 to-orange-700 text-white">
+                                  <div class="text-7xl mb-4">🎮</div>
+                                  <h3 class="text-3xl font-bold">${game?.title?.toUpperCase() || 'GAME'}</h3>
+                                </div>`;
+                            }}
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Weather Box - 1 column */}
+                      <div className="lg:col-span-1">
+                        <div className="bg-white/10 rounded-lg p-6 backdrop-blur-sm h-full flex flex-col">
+                          <div className="flex items-center gap-3 mb-4">
+                            <span className="text-4xl">{weatherEmoji}</span>
+                            <div>
+                              <h3 className="text-xl font-bold text-accent">Perfect for {weatherType} weather</h3>
+                              <p className="text-white/70 text-sm">{weather?.name || 'Your location'}</p>
+                            </div>
+                          </div>
+                          <p className="text-white/90 text-sm leading-relaxed flex-grow">{game?.reasoning}</p>
+                          <Button onClick={rollAgain} className="w-full mt-4">
+                            Roll Again
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-accent">
-                      {game?.title}
-                    </h2>
-                    <p className="text-white text-base sm:text-lg mb-8 opacity-90 font-medium">
-                      {game?.description}
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                      <Button onClick={() => window.open(game?.steamUrl, '_blank')} primary className="w-full sm:w-auto">
-                        View On Steam
-                      </Button>
-                      <Button onClick={rollAgain} className="w-full sm:w-auto">
-                        Roll Again
-                      </Button>
+                    
+                    {/* Description and Action Section */}
+                    <div className="grid lg:grid-cols-3 gap-8">
+                      <div className="lg:col-span-2">
+                        <h3 className="text-xl font-bold text-white mb-3">About this game</h3>
+                        <p className="text-white/90 text-base leading-relaxed mb-6">
+                          {game?.description?.split('.')[0] + '.'}
+                        </p>
+                        <Button onClick={() => window.open(game?.steamUrl, '_blank')} primary className="w-full sm:w-auto">
+                          View On Steam
+                        </Button>
+                      </div>
+                      <div className="lg:col-span-1">
+                        {/* Space for potential future features */}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
+            );
+          };
 
           const LocationError = () => (
             <div className="min-h-screen bg-primary flex flex-col">
