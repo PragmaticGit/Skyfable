@@ -1,0 +1,248 @@
+{
+  "weatherType": "snow",
+  "mood": "cozy",
+  "energy": "low",
+  "description": "Winter survival and cozy experiences that complement the beauty and challenge of snowy weather",
+  "games": [
+    {
+      "id": "the_long_dark",
+      "title": "The Long Dark",
+      "tags": ["Survival", "Winter", "Atmospheric"],
+      "description": "Ultimate winter survival in the Canadian wilderness. Feel the chill alongside your character while appreciating your warm shelter.",
+      "steamUrl": "https://store.steampowered.com/app/305620/The_Long_Dark/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg",
+      "weatherScore": 10,
+      "rating": 78
+    },
+    {
+      "id": "frostpunk",
+      "title": "Frostpunk",
+      "tags": ["City Builder", "Survival", "Apocalyptic"],
+      "description": "Build civilization in endless winter. Constant battle against cold makes you appreciate your cozy indoor space.",
+      "steamUrl": "https://store.steampowered.com/app/323190/Frostpunk/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/323190/header.jpg",
+      "weatherScore": 10,
+      "rating": 84
+    },
+    {
+      "id": "never_alone",
+      "title": "Never Alone",
+      "tags": ["Adventure", "Arctic", "Cultural"],
+      "description": "Experience Inuit folklore while navigating beautiful arctic landscapes. Cultural celebration of winter perfectly matches snowy weather.",
+      "steamUrl": "https://store.steampowered.com/app/295790/Never_Alone_Kisima_Ingitchuna/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/295790/header.jpg",
+      "weatherScore": 9,
+      "rating": 78
+    },
+    {
+      "id": "snowrunner",
+      "title": "SnowRunner",
+      "tags": ["Trucks", "Snow", "Simulation"],
+      "description": "Navigate treacherous snowy terrain with heavy machinery. Challenge winter conditions just like dealing with real snow.",
+      "steamUrl": "https://store.steampowered.com/app/1465360/SnowRunner/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1465360/header.jpg",
+      "weatherScore": 10,
+      "rating": 78
+    },
+    {
+      "id": "steep",
+      "title": "Steep",
+      "tags": ["Winter Sports", "Mountain", "Extreme"],
+      "description": "Extreme winter sports in the Alps. Embrace the thrill of snow-covered mountains from your warm indoors.",
+      "steamUrl": "https://store.steampowered.com/app/460920/Steep/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/460920/header.jpg",
+      "weatherScore": 9,
+      "rating": 72
+    },
+    {
+      "id": "kona",
+      "title": "Kona",
+      "tags": ["Mystery", "Winter", "Atmospheric"],
+      "description": "Investigate mysteries in 1970s rural Quebec during a fierce blizzard. Winter mystery perfect for snowy contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/365160/Kona/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/365160/header.jpg",
+      "weatherScore": 9,
+      "rating": 74
+    },
+    {
+      "id": "metro_exodus",
+      "title": "Metro Exodus",
+      "tags": ["Post-Apocalyptic", "Winter", "Survival"],
+      "description": "Journey across post-nuclear Russian winter. Harsh survival in frozen wastelands matches your snowy weather.",
+      "steamUrl": "https://store.steampowered.com/app/412020/Metro_Exodus/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/412020/header.jpg",
+      "weatherScore": 8,
+      "rating": 82
+    },
+    {
+      "id": "alto_collection",
+      "title": "Alto's Collection",
+      "tags": ["Zen", "Beautiful", "Relaxing"],
+      "description": "Meditative snowboarding through beautiful winter landscapes. Peaceful winter sports perfect for snowy day tranquility.",
+      "steamUrl": "https://store.steampowered.com/app/1181430/Alto_Collection/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1181430/header.jpg",
+      "weatherScore": 9,
+      "rating": 82
+    },
+    {
+      "id": "subnautica_below_zero",
+      "title": "Subnautica: Below Zero",
+      "tags": ["Survival", "Arctic", "Underwater"],
+      "description": "Survive in arctic alien waters. Frozen ocean exploration perfect for appreciating winter's harsh beauty.",
+      "steamUrl": "https://store.steampowered.com/app/848450/Subnautica_Below_Zero/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/848450/header.jpg",
+      "weatherScore": 9,
+      "rating": 81
+    },
+    {
+      "id": "wintermoor_tactics",
+      "title": "Wintermoor Tactics Club",
+      "tags": ["Tactics", "Mystery", "Cozy"],
+      "description": "Solve mysteries at a snowy boarding school through tactical combat. Cozy winter mystery perfect for snowy evenings.",
+      "steamUrl": "https://store.steampowered.com/app/1263930/Wintermoor_Tactics_Club/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1263930/header.jpg",
+      "weatherScore": 8,
+      "rating": 83
+    },
+    {
+      "id": "the_forest",
+      "title": "The Forest",
+      "tags": ["Survival", "Crafting", "Horror"],
+      "description": "Survive in a mysterious forest through all seasons including harsh winters. Wilderness survival that matches outdoor conditions.",
+      "steamUrl": "https://store.steampowered.com/app/242760/The_Forest/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/242760/header.jpg",
+      "weatherScore": 7,
+      "rating": 83
+    },
+    {
+      "id": "rise_tomb_raider",
+      "title": "Rise of the Tomb Raider",
+      "tags": ["Adventure", "Siberia", "Survival"],
+      "description": "Survive Siberian wilderness as Lara Croft. Epic winter adventure perfect for appreciating snowy landscapes.",
+      "steamUrl": "https://store.steampowered.com/app/391220/Rise_of_the_Tomb_Raider/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/391220/header.jpg",
+      "weatherScore": 8,
+      "rating": 88
+    },
+    {
+      "id": "ssx_3",
+      "title": "SSX 3",
+      "tags": ["Snowboarding", "Extreme", "Music"],
+      "description": "Classic extreme snowboarding with incredible mountain runs. High-energy winter sports for snowy day excitement.",
+      "steamUrl": "https://store.steampowered.com/app/1172370/SSX_3/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1172370/header.jpg",
+      "weatherScore": 9,
+      "rating": 89
+    },
+    {
+      "id": "immortal_redneck",
+      "title": "Immortal Redneck",
+      "tags": ["FPS", "Egyptian", "Roguelike"],
+      "description": "Fast-paced FPS in ancient Egyptian pyramids. While not winter-themed, the indoor tomb exploration feels perfect for staying warm.",
+      "steamUrl": "https://store.steampowered.com/app/595140/Immortal_Redneck/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/595140/header.jpg",
+      "weatherScore": 6,
+      "rating": 78
+    },
+    {
+      "id": "ski_region_simulator",
+      "title": "Ski Region Simulator",
+      "tags": ["Simulation", "Management", "Winter"],
+      "description": "Manage a ski resort through snowy seasons. Perfect winter management simulation for snowy weather appreciation.",
+      "steamUrl": "https://store.steampowered.com/app/322920/Ski_Region_Simulator/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/322920/header.jpg",
+      "weatherScore": 8,
+      "rating": 71
+    },
+    {
+      "id": "winter_survival",
+      "title": "Winter Survival Simulator",
+      "tags": ["Survival", "Realistic", "Winter"],
+      "description": "Realistic winter survival simulation. Experience the challenges of winter while staying cozy indoors.",
+      "steamUrl": "https://store.steampowered.com/app/1204130/Winter_Survival_Simulator/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1204130/header.jpg",
+      "weatherScore": 9,
+      "rating": 72
+    },
+    {
+      "id": "northern_tale",
+      "title": "Northern Tale",
+      "tags": ["Strategy", "Vikings", "Winter"],
+      "description": "Viking strategy adventure through harsh northern winters. Nordic strategy perfect for snowy weather planning.",
+      "steamUrl": "https://store.steampowered.com/app/718350/Northern_Tale/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/718350/header.jpg",
+      "weatherScore": 8,
+      "rating": 73
+    },
+    {
+      "id": "sheltered",
+      "title": "Sheltered",
+      "tags": ["Survival", "Bunker", "Management"],
+      "description": "Manage survivors in a post-apocalyptic bunker. Underground survival perfect for winter shelter appreciation.",
+      "steamUrl": "https://store.steampowered.com/app/356040/Sheltered/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/356040/header.jpg",
+      "weatherScore": 7,
+      "rating": 76
+    },
+    {
+      "id": "frostpunk_2",
+      "title": "Frostpunk 2",
+      "tags": ["City Builder", "Survival", "Winter"],
+      "description": "Expanded winter city survival with even greater challenges. Ultimate test of civilization against endless winter.",
+      "steamUrl": "https://store.steampowered.com/app/1601580/Frostpunk_2/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1601580/header.jpg",
+      "weatherScore": 10,
+      "rating": 85
+    },
+    {
+      "id": "project_winter",
+      "title": "Project Winter",
+      "tags": ["Multiplayer", "Survival", "Betrayal"],
+      "description": "Multiplayer survival with traitors in a winter setting. Social survival perfect for snowy day group gaming.",
+      "steamUrl": "https://store.steampowered.com/app/774861/Project_Winter/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/774861/header.jpg",
+      "weatherScore": 8,
+      "rating": 79
+    },
+    {
+      "id": "winter_ember",
+      "title": "Winter Ember",
+      "tags": ["Stealth", "Fantasy", "Winter"],
+      "description": "Stealth action in a Victorian winter setting. Dark winter adventure perfect for snowy evening intrigue.",
+      "steamUrl": "https://store.steampowered.com/app/1179090/Winter_Ember/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1179090/header.jpg",
+      "weatherScore": 8,
+      "rating": 74
+    },
+    {
+      "id": "white_noise_2",
+      "title": "White Noise 2",
+      "tags": ["Horror", "Multiplayer", "Winter"],
+      "description": "Multiplayer horror in snowy environments. Chilling horror perfect for winter's frightening beauty.",
+      "steamUrl": "https://store.steampowered.com/app/503350/White_Noise_2/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/503350/header.jpg",
+      "weatherScore": 8,
+      "rating": 72
+    },
+    {
+      "id": "frozen_synapse",
+      "title": "Frozen Synapse",
+      "tags": ["Strategy", "Tactical", "Cyberpunk"],
+      "description": "Tactical strategy with a cold, calculating feel. Strategic planning perfect for methodical snowy day thinking.",
+      "steamUrl": "https://store.steampowered.com/app/98200/Frozen_Synapse/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/98200/header.jpg",
+      "weatherScore": 7,
+      "rating": 84
+    },
+    {
+      "id": "icewind_dale",
+      "title": "Icewind Dale: Enhanced Edition",
+      "tags": ["RPG", "D&D", "Winter"],
+      "description": "Classic D&D adventure in the frozen north. Epic winter RPG perfect for long snowy gaming sessions.",
+      "steamUrl": "https://store.steampowered.com/app/321800/Icewind_Dale_Enhanced_Edition/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/321800/header.jpg",
+      "weatherScore": 9,
+      "rating": 82
+    }
+  ]
+}

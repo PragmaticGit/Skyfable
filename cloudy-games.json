@@ -1,0 +1,248 @@
+{
+  "weatherType": "cloudy",
+  "mood": "contemplative",
+  "energy": "medium",
+  "description": "Mysterious and atmospheric experiences that match the contemplative uncertainty of overcast skies",
+  "games": [
+    {
+      "id": "what_remains_edith_finch_cloudy",
+      "title": "What Remains of Edith Finch",
+      "tags": ["Narrative", "Atmospheric", "Mystery"],
+      "description": "Overcast skies create the perfect backdrop for this haunting family mystery. Every room holds secrets waiting to be discovered.",
+      "steamUrl": "https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/501300/header.jpg",
+      "weatherScore": 10,
+      "rating": 88
+    },
+    {
+      "id": "control",
+      "title": "Control",
+      "tags": ["Supernatural", "Mysterious", "Paranormal"],
+      "description": "Navigate a brutalist building filled with supernatural phenomena. Mind-bending mystery perfect for uncertain cloudy weather.",
+      "steamUrl": "https://store.steampowered.com/app/870780/Control_Ultimate_Edition/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/870780/header.jpg",
+      "weatherScore": 9,
+      "rating": 82
+    },
+    {
+      "id": "kentucky_route_zero",
+      "title": "Kentucky Route Zero",
+      "tags": ["Surreal", "Literary", "Atmospheric"],
+      "description": "Magical realist adventure through underground highways. Dreamlike uncertainty that matches overcast contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/231200/Kentucky_Route_Zero_PC_Edition/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/231200/header.jpg",
+      "weatherScore": 9,
+      "rating": 83
+    },
+    {
+      "id": "disco_elysium_cloudy",
+      "title": "Disco Elysium",
+      "tags": ["Detective", "Literary", "Deep"],
+      "description": "Solve crimes while battling inner demons. Complex philosophical depth for contemplative overcast days.",
+      "steamUrl": "https://store.steampowered.com/app/632470/Disco_Elysium_The_Final_Cut/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/632470/header.jpg",
+      "weatherScore": 9,
+      "rating": 97
+    },
+    {
+      "id": "alan_wake",
+      "title": "Alan Wake",
+      "tags": ["Horror", "Mystery", "Writer"],
+      "description": "Writer battles darkness in a mysterious town. Perfect psychological thriller for moody cloudy atmosphere.",
+      "steamUrl": "https://store.steampowered.com/app/108710/Alan_Wake/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/108710/header.jpg",
+      "weatherScore": 9,
+      "rating": 83
+    },
+    {
+      "id": "the_witness",
+      "title": "The Witness",
+      "tags": ["Puzzle", "Mysterious", "Philosophical"],
+      "description": "Solve intricate puzzles on a mysterious island. Mental challenges perfect for contemplative cloudy thinking.",
+      "steamUrl": "https://store.steampowered.com/app/210970/The_Witness/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/210970/header.jpg",
+      "weatherScore": 8,
+      "rating": 87
+    },
+    {
+      "id": "outer_wilds",
+      "title": "Outer Wilds",
+      "tags": ["Space", "Mystery", "Time Loop"],
+      "description": "Explore a time-looped solar system full of mysteries. Cosmic contemplation perfect for overcast wonder.",
+      "steamUrl": "https://store.steampowered.com/app/753640/Outer_Wilds/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/753640/header.jpg",
+      "weatherScore": 8,
+      "rating": 85
+    },
+    {
+      "id": "silent_hill_2",
+      "title": "Silent Hill 2",
+      "tags": ["Horror", "Psychological", "Atmospheric"],
+      "description": "Psychological horror masterpiece in a fog-covered town. Atmospheric terror perfect for moody cloudy weather.",
+      "steamUrl": "https://store.steampowered.com/app/2124490/SILENT_HILL_2/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/2124490/header.jpg",
+      "weatherScore": 10,
+      "rating": 89
+    },
+    {
+      "id": "limbo",
+      "title": "LIMBO",
+      "tags": ["Puzzle", "Dark", "Atmospheric"],
+      "description": "Dark monochrome puzzle adventure through uncertain landscapes. Mysterious journey perfect for cloudy contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/48000/LIMBO/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/48000/header.jpg",
+      "weatherScore": 9,
+      "rating": 88
+    },
+    {
+      "id": "inside",
+      "title": "INSIDE",
+      "tags": ["Puzzle", "Dark", "Mysterious"],
+      "description": "Haunting puzzle platformer with disturbing mysteries. Dark atmospheric experience for overcast moods.",
+      "steamUrl": "https://store.steampowered.com/app/304430/INSIDE/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/304430/header.jpg",
+      "weatherScore": 9,
+      "rating": 93
+    },
+    {
+      "id": "amnesia_dark_descent",
+      "title": "Amnesia: The Dark Descent",
+      "tags": ["Horror", "Atmospheric", "Mystery"],
+      "description": "Classic atmospheric horror in a mysterious castle. Terrifying uncertainty perfect for cloudy day chills.",
+      "steamUrl": "https://store.steampowered.com/app/57300/Amnesia_The_Dark_Descent/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/57300/header.jpg",
+      "weatherScore": 8,
+      "rating": 85
+    },
+    {
+      "id": "layers_of_fear",
+      "title": "Layers of Fear",
+      "tags": ["Horror", "Art", "Psychological"],
+      "description": "Psychological horror through an artist's deteriorating mind. Disturbing artistry perfect for moody contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/391720/Layers_of_Fear/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/391720/header.jpg",
+      "weatherScore": 8,
+      "rating": 81
+    },
+    {
+      "id": "detention",
+      "title": "Detention",
+      "tags": ["Horror", "Historical", "Atmospheric"],
+      "description": "Atmospheric horror set in 1960s Taiwan under martial law. Historical mystery perfect for cloudy contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/555220/Detention/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/555220/header.jpg",
+      "weatherScore": 8,
+      "rating": 81
+    },
+    {
+      "id": "soma",
+      "title": "SOMA",
+      "tags": ["Horror", "Sci-Fi", "Philosophical"],
+      "description": "Philosophical sci-fi horror exploring consciousness. Deep existential questions for contemplative cloudy days.",
+      "steamUrl": "https://store.steampowered.com/app/282140/SOMA/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/282140/header.jpg",
+      "weatherScore": 8,
+      "rating": 84
+    },
+    {
+      "id": "little_nightmares",
+      "title": "Little Nightmares",
+      "tags": ["Horror", "Atmospheric", "Puzzle"],
+      "description": "Dark fairy tale horror with atmospheric puzzles. Unsettling beauty perfect for moody overcast weather.",
+      "steamUrl": "https://store.steampowered.com/app/424840/Little_Nightmares/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/424840/header.jpg",
+      "weatherScore": 8,
+      "rating": 81
+    },
+    {
+      "id": "return_obra_dinn",
+      "title": "Return of the Obra Dinn",
+      "tags": ["Mystery", "Detective", "Unique"],
+      "description": "Investigate deaths on a mysterious ship using supernatural powers. Brilliant detective work for cloudy day mysteries.",
+      "steamUrl": "https://store.steampowered.com/app/653530/Return_of_the_Obra_Dinn/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/653530/header.jpg",
+      "weatherScore": 9,
+      "rating": 87
+    },
+    {
+      "id": "twin_peaks_vr",
+      "title": "Twin Peaks VR",
+      "tags": ["Mystery", "Surreal", "Atmospheric"],
+      "description": "Explore the mysterious world of Twin Peaks. Surreal investigation perfect for cloudy day mystery moods.",
+      "steamUrl": "https://store.steampowered.com/app/1552050/Twin_Peaks_VR/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1552050/header.jpg",
+      "weatherScore": 9,
+      "rating": 75
+    },
+    {
+      "id": "the_vanishing_ethan_carter",
+      "title": "The Vanishing of Ethan Carter",
+      "tags": ["Mystery", "Detective", "Atmospheric"],
+      "description": "Supernatural detective story in a mysterious valley. Atmospheric investigation perfect for contemplative weather.",
+      "steamUrl": "https://store.steampowered.com/app/258520/The_Vanishing_of_Ethan_Carter/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/258520/header.jpg",
+      "weatherScore": 8,
+      "rating": 82
+    },
+    {
+      "id": "deadly_premonition",
+      "title": "Deadly Premonition",
+      "tags": ["Mystery", "Cult", "Weird"],
+      "description": "Bizarre murder mystery in a small town. Cult classic weirdness perfect for strange cloudy day moods.",
+      "steamUrl": "https://store.steampowered.com/app/247660/Deadly_Premonition_The_Directors_Cut/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/247660/header.jpg",
+      "weatherScore": 8,
+      "rating": 68
+    },
+    {
+      "id": "life_is_strange_cloudy",
+      "title": "Life is Strange",
+      "tags": ["Photography", "Supernatural", "Emotional"],
+      "description": "Time-travel drama in the moody Pacific Northwest. Emotional depth perfect for overcast contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/319630/Life_is_Strange__Episode_1/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/319630/header.jpg",
+      "weatherScore": 9,
+      "rating": 83
+    },
+    {
+      "id": "myst",
+      "title": "Myst",
+      "tags": ["Puzzle", "Mystery", "Atmospheric"],
+      "description": "Classic mysterious island puzzle adventure. Contemplative exploration perfect for cloudy day puzzle-solving.",
+      "steamUrl": "https://store.steampowered.com/app/244430/Myst_Masterpiece_Edition/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/244430/header.jpg",
+      "weatherScore": 8,
+      "rating": 89
+    },
+    {
+      "id": "observer",
+      "title": "Observer",
+      "tags": ["Cyberpunk", "Horror", "Detective"],
+      "description": "Cyberpunk detective horror in a dystopian future. Dark investigation perfect for moody overcast atmosphere.",
+      "steamUrl": "https://store.steampowered.com/app/514900/Observer/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/514900/header.jpg",
+      "weatherScore": 8,
+      "rating": 78
+    },
+    {
+      "id": "fahrenheit",
+      "title": "Fahrenheit: Indigo Prophecy",
+      "tags": ["Thriller", "Supernatural", "Cinematic"],
+      "description": "Supernatural thriller with multiple perspectives. Dark cinematic experience for contemplative cloudy moods.",
+      "steamUrl": "https://store.steampowered.com/app/312840/Fahrenheit_Indigo_Prophecy__Remastered/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/312840/header.jpg",
+      "weatherScore": 8,
+      "rating": 76
+    },
+    {
+      "id": "murdered_soul_suspect",
+      "title": "Murdered: Soul Suspect",
+      "tags": ["Ghost", "Detective", "Supernatural"],
+      "description": "Solve your own murder as a ghost detective. Supernatural mystery perfect for cloudy day contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/233290/Murdered_Soul_Suspect/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/233290/header.jpg",
+      "weatherScore": 8,
+      "rating": 71
+    }
+  ]
+}

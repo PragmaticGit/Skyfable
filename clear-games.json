@@ -1,0 +1,248 @@
+{
+  "weatherType": "clear",
+  "mood": "transcendent",
+  "energy": "balanced",
+  "description": "Perfect experiences for perfect weather - transcendent adventures that match the clarity and possibility of beautiful clear skies",
+  "games": [
+    {
+      "id": "journey_clear",
+      "title": "Journey",
+      "tags": ["Transcendent", "Beautiful", "Meditative"],
+      "description": "Clear skies inspire clear journeys of the soul. This wordless adventure captures the sense of possibility and wonder that comes with perfect weather.",
+      "steamUrl": "https://store.steampowered.com/app/638230/Journey/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg",
+      "weatherScore": 10,
+      "rating": 92
+    },
+    {
+      "id": "no_mans_sky_clear",
+      "title": "No Man's Sky",
+      "tags": ["Space", "Exploration", "Infinite"],
+      "description": "Perfect weather deserves infinite exploration. Discover endless alien worlds under crystal clear skies that mirror your perfect conditions.",
+      "steamUrl": "https://store.steampowered.com/app/275850/No_Mans_Sky/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg",
+      "weatherScore": 10,
+      "rating": 71
+    },
+    {
+      "id": "outer_wilds_clear",
+      "title": "Outer Wilds",
+      "tags": ["Space", "Mystery", "Exploration"],
+      "description": "Explore a miniature solar system caught in a time loop. Cosmic wonder and discovery perfectly match the expansive feeling of infinite clear skies.",
+      "steamUrl": "https://store.steampowered.com/app/753640/Outer_Wilds/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/753640/header.jpg",
+      "weatherScore": 9,
+      "rating": 85
+    },
+    {
+      "id": "abzu_clear",
+      "title": "ABZÛ",
+      "tags": ["Underwater", "Meditative", "Beautiful"],
+      "description": "Dive into crystal clear underwater worlds with perfect visibility. Serene exploration that matches the clarity of your weather outside.",
+      "steamUrl": "https://store.steampowered.com/app/384190/ABZU/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/384190/header.jpg",
+      "weatherScore": 9,
+      "rating": 76
+    },
+    {
+      "id": "the_witness_clear",
+      "title": "The Witness",
+      "tags": ["Puzzle", "Beautiful", "Zen"],
+      "description": "Clear skies, clear mind! This gorgeous puzzle island is perfect when clear weather has you feeling mentally sharp and ready for challenges.",
+      "steamUrl": "https://store.steampowered.com/app/210970/The_Witness/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/210970/header.jpg",
+      "weatherScore": 9,
+      "rating": 87
+    },
+    {
+      "id": "astroneer_clear",
+      "title": "ASTRONEER",
+      "tags": ["Space", "Exploration", "Crafting"],
+      "description": "Explore and reshape distant worlds under alien skies. Infinite possibility and creative freedom match the boundless feeling of perfect clear weather.",
+      "steamUrl": "https://store.steampowered.com/app/361420/ASTRONEER/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/361420/header.jpg",
+      "weatherScore": 8,
+      "rating": 84
+    },
+    {
+      "id": "sky_children_light",
+      "title": "Sky: Children of the Light",
+      "tags": ["Beautiful", "Social", "Flying"],
+      "description": "Soar through beautiful cloudscapes and help other players. Uplifting social adventure perfect for clear, optimistic weather.",
+      "steamUrl": "https://store.steampowered.com/app/2325290/Sky_Children_of_the_Light/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/2325290/header.jpg",
+      "weatherScore": 10,
+      "rating": 89
+    },
+    {
+      "id": "flower",
+      "title": "Flower",
+      "tags": ["Zen", "Nature", "Peaceful"],
+      "description": "Control the wind and bring life to landscapes as a flower petal. Pure natural beauty that complements perfect outdoor conditions.",
+      "steamUrl": "https://store.steampowered.com/app/966330/Flower/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/966330/header.jpg",
+      "weatherScore": 9,
+      "rating": 81
+    },
+    {
+      "id": "gris_clear",
+      "title": "GRIS",
+      "tags": ["Art", "Emotional", "Musical"],
+      "description": "A watercolor journey through emotional healing. The artistic beauty and hopeful progression match the clarity of perfect weather.",
+      "steamUrl": "https://store.steampowered.com/app/683320/GRIS/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/683320/header.jpg",
+      "weatherScore": 8,
+      "rating": 83
+    },
+    {
+      "id": "rime",
+      "title": "RiME",
+      "tags": ["Adventure", "Puzzle", "Beautiful"],
+      "description": "Explore a mysterious island with stunning vistas and emotional storytelling. Perfect contemplative adventure for clear-minded exploration.",
+      "steamUrl": "https://store.steampowered.com/app/493200/RiME/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/493200/header.jpg",
+      "weatherScore": 8,
+      "rating": 77
+    },
+    {
+      "id": "fe",
+      "title": "Fe",
+      "tags": ["Nature", "Exploration", "Musical"],
+      "description": "Sing to communicate with forest creatures in a magical world. Natural harmony perfect for clear, peaceful weather connection.",
+      "steamUrl": "https://store.steampowered.com/app/546920/Fe/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/546920/header.jpg",
+      "weatherScore": 8,
+      "rating": 76
+    },
+    {
+      "id": "everything",
+      "title": "Everything",
+      "tags": ["Philosophical", "Simulation", "Zen"],
+      "description": "Be anything in the universe from atoms to galaxies. Cosmic perspective perfect for clear weather contemplation of existence.",
+      "steamUrl": "https://store.steampowered.com/app/582270/Everything/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/582270/header.jpg",
+      "weatherScore": 8,
+      "rating": 78
+    },
+    {
+      "id": "alba_wildlife",
+      "title": "Alba: A Wildlife Adventure",
+      "tags": ["Nature", "Conservation", "Wholesome"],
+      "description": "Help save an island's wildlife through environmental activism. Wholesome nature conservation perfect for appreciating clear outdoor beauty.",
+      "steamUrl": "https://store.steampowered.com/app/1337010/Alba_A_Wildlife_Adventure/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1337010/header.jpg",
+      "weatherScore": 9,
+      "rating": 85
+    },
+    {
+      "id": "cloud_gardens",
+      "title": "Cloud Gardens",
+      "tags": ["Zen", "Nature", "Meditative"],
+      "description": "Grow plants in urban ruins to create beautiful dioramas. Peaceful gardening perfect for clear weather appreciation of growth and beauty.",
+      "steamUrl": "https://store.steampowered.com/app/1372320/Cloud_Gardens/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1372320/header.jpg",
+      "weatherScore": 8,
+      "rating": 83
+    },
+    {
+      "id": "manifold_garden",
+      "title": "Manifold Garden",
+      "tags": ["Puzzle", "Architecture", "Infinite"],
+      "description": "Navigate impossible architecture in infinite space. Mind-expanding puzzles perfect for clear thinking and spatial contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/473950/Manifold_Garden/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/473950/header.jpg",
+      "weatherScore": 8,
+      "rating": 82
+    },
+    {
+      "id": "entwined",
+      "title": "Entwined",
+      "tags": ["Musical", "Abstract", "Beautiful"],
+      "description": "Guide two souls through abstract musical landscapes to unite them. Transcendent musical journey perfect for clear, harmonious weather.",
+      "steamUrl": "https://store.steampowered.com/app/1175010/Entwined/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1175010/header.jpg",
+      "weatherScore": 8,
+      "rating": 79
+    },
+    {
+      "id": "bound",
+      "title": "Bound",
+      "tags": ["Dance", "Art", "Emotional"],
+      "description": "Express emotions through interpretive dance in surreal landscapes. Artistic expression perfect for clear weather inspiration.",
+      "steamUrl": "https://store.steampowered.com/app/805050/Bound/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/805050/header.jpg",
+      "weatherScore": 7,
+      "rating": 74
+    },
+    {
+      "id": "proteus",
+      "title": "Proteus",
+      "tags": ["Exploration", "Musical", "Abstract"],
+      "description": "Explore a pixelated island where your movement creates music. Pure exploration perfect for clear weather wandering and discovery.",
+      "steamUrl": "https://store.steampowered.com/app/219680/Proteus/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/219680/header.jpg",
+      "weatherScore": 8,
+      "rating": 75
+    },
+    {
+      "id": "zen_bound_2",
+      "title": "Zen Bound 2",
+      "tags": ["Zen", "Puzzle", "Meditative"],
+      "description": "Wrap rope around wooden sculptures in a meditative puzzle experience. Perfect mindful activity for clear, peaceful weather.",
+      "steamUrl": "https://store.steampowered.com/app/61600/Zen_Bound_2/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/61600/header.jpg",
+      "weatherScore": 8,
+      "rating": 76
+    },
+    {
+      "id": "mountain",
+      "title": "Mountain",
+      "tags": ["Zen", "Ambient", "Philosophical"],
+      "description": "Contemplate a mountain that lives its own life over geological time. Peaceful meditation perfect for clear weather contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/313340/Mountain/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/313340/header.jpg",
+      "weatherScore": 7,
+      "rating": 72
+    },
+    {
+      "id": "waking_mars",
+      "title": "Waking Mars",
+      "tags": ["Exploration", "Ecosystem", "Science"],
+      "description": "Explore Mars and cultivate alien ecosystems. Scientific wonder and life creation perfect for clear weather optimism.",
+      "steamUrl": "https://store.steampowered.com/app/227200/Waking_Mars/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/227200/header.jpg",
+      "weatherScore": 7,
+      "rating": 81
+    },
+    {
+      "id": "art_of_rally",
+      "title": "art of rally",
+      "tags": ["Racing", "Zen", "Beautiful"],
+      "description": "Meditative rally racing through beautiful landscapes. Peaceful driving perfect for clear weather road trip feelings.",
+      "steamUrl": "https://store.steampowered.com/app/550320/art_of_rally/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/550320/header.jpg",
+      "weatherScore": 8,
+      "rating": 84
+    },
+    {
+      "id": "valleys",
+      "title": "Valleys Between",
+      "tags": ["Puzzle", "Nature", "Seasons"],
+      "description": "Manipulate landscapes through the seasons to guide animals home. Natural harmony perfect for clear weather appreciation of cycles.",
+      "steamUrl": "https://store.steampowered.com/app/1050940/Valleys_Between/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1050940/header.jpg",
+      "weatherScore": 8,
+      "rating": 79
+    },
+    {
+      "id": "okami_hd",
+      "title": "Okami HD",
+      "tags": ["Adventure", "Art", "Japanese"],
+      "description": "Restore life to the world as the sun goddess Amaterasu. Life-giving adventure perfect for clear, life-affirming weather.",
+      "steamUrl": "https://store.steampowered.com/app/587620/Okami_HD/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/587620/header.jpg",
+      "weatherScore": 9,
+      "rating": 93
+    }
+  ]
+}

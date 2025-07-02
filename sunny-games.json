@@ -1,0 +1,258 @@
+{
+  "weatherType": "sunny",
+  "mood": "energetic",
+  "energy": "high",
+  "description": "High-energy adventures and colorful experiences that match your sunny disposition",
+  "games": [
+    {
+      "id": "no_mans_sky",
+      "title": "No Man's Sky",
+      "tags": ["Space", "Exploration", "Colorful"],
+      "description": "Explore vibrant alien worlds under exotic skies. Boundless optimism that matches perfect sunny weather.",
+      "steamUrl": "https://store.steampowered.com/app/275850/No_Mans_Sky/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg",
+      "weatherScore": 9,
+      "rating": 71
+    },
+    {
+      "id": "horizon_zero_dawn",
+      "title": "Horizon Zero Dawn",
+      "tags": ["Action", "Open World", "Epic"],
+      "description": "Epic post-apocalyptic adventure with stunning outdoor environments. High-energy exploration for sunny day motivation.",
+      "steamUrl": "https://store.steampowered.com/app/1151640/Horizon_Zero_Dawn_Complete_Edition/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1151640/header.jpg",
+      "weatherScore": 8,
+      "rating": 84
+    },
+    {
+      "id": "spider_man_remastered",
+      "title": "Spider-Man Remastered",
+      "tags": ["Action", "Open World", "Heroic"],
+      "description": "Swing through sunny New York City as your friendly neighborhood Spider-Man. Pure heroic energy for bright days.",
+      "steamUrl": "https://store.steampowered.com/app/1817070/Marvels_SpiderMan_Remastered/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1817070/header.jpg",
+      "weatherScore": 9,
+      "rating": 87
+    },
+    {
+      "id": "slime_rancher",
+      "title": "Slime Rancher",
+      "tags": ["Cute", "Farming", "Cheerful"],
+      "description": "Raise adorable slimes on a colorful ranch. Pure joy and optimism that sunshine brings to your day.",
+      "steamUrl": "https://store.steampowered.com/app/433340/Slime_Rancher/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/433340/header.jpg",
+      "weatherScore": 9,
+      "rating": 84
+    },
+    {
+      "id": "hat_in_time",
+      "title": "A Hat in Time",
+      "tags": ["Platformer", "Colorful", "Whimsical"],
+      "description": "Delightful 3D platformer with incredible charm. Playful energy that matches boundless sunny weather possibilities.",
+      "steamUrl": "https://store.steampowered.com/app/253230/A_Hat_in_Time/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/253230/header.jpg",
+      "weatherScore": 8,
+      "rating": 88
+    },
+    {
+      "id": "rocket_league",
+      "title": "Rocket League",
+      "tags": ["Sports", "Cars", "Fast-paced"],
+      "description": "Fast-paced car soccer in bright arenas. High-energy competitive action for active sunny moods.",
+      "steamUrl": "https://store.steampowered.com/app/252950/Rocket_League/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/252950/header.jpg",
+      "weatherScore": 8,
+      "rating": 87
+    },
+    {
+      "id": "subnautica",
+      "title": "Subnautica",
+      "tags": ["Underwater", "Exploration", "Colorful"],
+      "description": "Dive into crystal clear alien ocean worlds. Bright underwater landscapes match your sunny disposition.",
+      "steamUrl": "https://store.steampowered.com/app/264710/Subnautica/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/264710/header.jpg",
+      "weatherScore": 8,
+      "rating": 87
+    },
+    {
+      "id": "forza_horizon_5",
+      "title": "Forza Horizon 5",
+      "tags": ["Racing", "Tropical", "Bright"],
+      "description": "Race through vibrant Mexican landscapes under brilliant blue skies. Perfect sunny day energy and wanderlust.",
+      "steamUrl": "https://store.steampowered.com/app/1551360/Forza_Horizon_5/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1551360/header.jpg",
+      "weatherScore": 10,
+      "rating": 92
+    },
+    {
+      "id": "rayman_legends",
+      "title": "Rayman Legends",
+      "tags": ["Platformer", "Adventure", "Joyful"],
+      "description": "Vibrant platforming adventure with incredible art and music. Pure joy and exploration perfect for sunny days.",
+      "steamUrl": "https://store.steampowered.com/app/242550/Rayman_Legends/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/242550/header.jpg",
+      "weatherScore": 9,
+      "rating": 86
+    },
+    {
+      "id": "ori_will_wisps",
+      "title": "Ori and the Will of the Wisps",
+      "tags": ["Platformer", "Beautiful", "Musical"],
+      "description": "Stunning sequel with vibrant forest worlds. Beautiful exploration perfect for energetic sunny moods.",
+      "steamUrl": "https://store.steampowered.com/app/1057090/Ori_and_the_Will_of_the_Wisps/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1057090/header.jpg",
+      "weatherScore": 8,
+      "rating": 90
+    },
+    {
+      "id": "assassins_creed_odyssey",
+      "title": "Assassin's Creed Odyssey",
+      "tags": ["Action", "Historical", "Epic"],
+      "description": "Epic adventure through sunny ancient Greece. Massive exploration perfect for high-energy sunny days.",
+      "steamUrl": "https://store.steampowered.com/app/812140/Assassins_Creed_Odyssey/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/812140/header.jpg",
+      "weatherScore": 8,
+      "rating": 84
+    },
+    {
+      "id": "the_witcher_3",
+      "title": "The Witcher 3: Wild Hunt",
+      "tags": ["Open World", "Adventure", "Beautiful"],
+      "description": "Epic fantasy adventure through vast beautiful landscapes. Massive exploration perfect for high-energy sunny days.",
+      "steamUrl": "https://store.steampowered.com/app/292030/The_Witcher_3_Wild_Hunt/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/292030/header.jpg",
+      "weatherScore": 9,
+      "rating": 93
+    },
+    {
+      "id": "sunset_overdrive",
+      "title": "Sunset Overdrive",
+      "tags": ["Action", "Colorful", "Energetic"],
+      "description": "Over-the-top action in a vibrant apocalyptic world. Pure energetic fun perfect for sunny day enthusiasm.",
+      "steamUrl": "https://store.steampowered.com/app/847370/Sunset_Overdrive/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/847370/header.jpg",
+      "weatherScore": 9,
+      "rating": 81
+    },
+    {
+      "id": "just_cause_4",
+      "title": "Just Cause 4",
+      "tags": ["Action", "Open World", "Tropical"],
+      "description": "Explosive action across a beautiful tropical island. High-octane thrills for high-energy sunny weather.",
+      "steamUrl": "https://store.steampowered.com/app/517630/Just_Cause_4/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/517630/header.jpg",
+      "weatherScore": 8,
+      "rating": 71
+    },
+    {
+      "id": "astroneer",
+      "title": "ASTRONEER",
+      "tags": ["Space", "Exploration", "Crafting"],
+      "description": "Explore and reshape distant worlds under alien skies. Boundless creative freedom for perfect clear days.",
+      "steamUrl": "https://store.steampowered.com/app/361420/ASTRONEER/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/361420/header.jpg",
+      "weatherScore": 8,
+      "rating": 84
+    },
+    {
+      "id": "sea_of_thieves",
+      "title": "Sea of Thieves",
+      "tags": ["Pirates", "Adventure", "Tropical"],
+      "description": "Sail the tropical seas as a pirate crew. Adventure and treasure hunting perfect for sunny day dreams.",
+      "steamUrl": "https://store.steampowered.com/app/1172620/Sea_of_Thieves/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1172620/header.jpg",
+      "weatherScore": 9,
+      "rating": 79
+    },
+    {
+      "id": "fall_guys",
+      "title": "Fall Guys",
+      "tags": ["Party", "Colorful", "Fun"],
+      "description": "Colorful battle royale party game with adorable bean characters. Pure fun energy for bright sunny moods.",
+      "steamUrl": "https://store.steampowered.com/app/1097150/Fall_Guys/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1097150/header.jpg",
+      "weatherScore": 8,
+      "rating": 79
+    },
+    {
+      "id": "deep_rock_galactic",
+      "title": "Deep Rock Galactic",
+      "tags": ["Coop", "Mining", "Fun"],
+      "description": "Cooperative dwarf mining with explosive action and humor. High-energy teamwork perfect for energetic sunny days.",
+      "steamUrl": "https://store.steampowered.com/app/548430/Deep_Rock_Galactic/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/548430/header.jpg",
+      "weatherScore": 8,
+      "rating": 87
+    },
+    {
+      "id": "crash_bandicoot_4",
+      "title": "Crash Bandicoot 4: It's About Time",
+      "tags": ["Platformer", "Colorful", "Nostalgic"],
+      "description": "Classic platforming action with vibrant cartoon worlds. Energetic fun perfect for sunny day nostalgia.",
+      "steamUrl": "https://store.steampowered.com/app/1481020/Crash_Bandicoot_4_Its_About_Time/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1481020/header.jpg",
+      "weatherScore": 8,
+      "rating": 85
+    },
+    {
+      "id": "psychonauts_2",
+      "title": "Psychonauts 2",
+      "tags": ["Adventure", "Colorful", "Creative"],
+      "description": "Creative adventure through colorful mental worlds. Imaginative exploration perfect for sunny day inspiration.",
+      "steamUrl": "https://store.steampowered.com/app/607080/Psychonauts_2/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/607080/header.jpg",
+      "weatherScore": 8,
+      "rating": 87
+    },
+    {
+      "id": "tony_hawks_pro_skater",
+      "title": "Tony Hawk's Pro Skater 1 + 2",
+      "tags": ["Sports", "Energetic", "Nostalgic"],
+      "description": "Classic skateboarding action with sunny California vibes. High-energy sports perfect for active sunny moods.",
+      "steamUrl": "https://store.steampowered.com/app/2395060/Tony_Hawks_Pro_Skater_1__2/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/2395060/header.jpg",
+      "weatherScore": 9,
+      "rating": 88
+    },
+    {
+      "id": "ratchet_clank",
+      "title": "Ratchet & Clank: Rift Apart",
+      "tags": ["Action", "Colorful", "Sci-Fi"],
+      "description": "Dimension-hopping adventure with stunning visuals. Spectacular action perfect for energetic sunny days.",
+      "steamUrl": "https://store.steampowered.com/app/1895880/Ratchet__Clank_Rift_Apart/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1895880/header.jpg",
+      "weatherScore": 8,
+      "rating": 88
+    },
+    {
+      "id": "hollow_knight",
+      "title": "Hollow Knight",
+      "tags": ["Metroidvania", "Beautiful", "Adventure"],
+      "description": "Stunning hand-drawn adventure through a vast underground kingdom. Beautiful exploration perfect for energetic sunny moods.",
+      "steamUrl": "https://store.steampowered.com/app/367520/Hollow_Knight/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/367520/header.jpg",
+      "weatherScore": 7,
+      "rating": 90
+    },
+    {
+      "id": "terraria",
+      "title": "Terraria",
+      "tags": ["Sandbox", "Adventure", "Crafting"],
+      "description": "2D sandbox adventure with endless exploration. Creative building perfect for energetic sunny day projects.",
+      "steamUrl": "https://store.steampowered.com/app/105600/Terraria/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/105600/header.jpg",
+      "weatherScore": 7,
+      "rating": 94
+    },
+    {
+      "id": "valheim",
+      "title": "Valheim",
+      "tags": ["Survival", "Viking", "Exploration"],
+      "description": "Viking survival adventure with beautiful Norse landscapes. Epic exploration and building perfect for energetic sunny days.",
+      "steamUrl": "https://store.steampowered.com/app/892970/Valheim/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/892970/header.jpg",
+      "weatherScore": 8,
+      "rating": 88
+    }
+  ]
+}

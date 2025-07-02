@@ -1,0 +1,258 @@
+{
+  "weatherType": "rain",
+  "mood": "cozy",
+  "energy": "low",
+  "description": "Perfect for introspective, atmospheric experiences when the rain keeps you indoors",
+  "games": [
+    {
+      "id": "firewatch",
+      "title": "Firewatch",
+      "tags": ["Single-player", "Atmospheric", "Story-Rich"],
+      "description": "A first-person mystery in the Wyoming wilderness where your only lifeline is a voice on the radio. Perfect for rainy day contemplation.",
+      "steamUrl": "https://store.steampowered.com/app/383870/Firewatch/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg",
+      "weatherScore": 9,
+      "rating": 79
+    },
+    {
+      "id": "stardew_valley",
+      "title": "Stardew Valley",
+      "tags": ["Farming", "Relaxing", "Pixel Art"],
+      "description": "Build your dream farm while real rain nourishes the world outside. The ultimate cozy indoor sanctuary.",
+      "steamUrl": "https://store.steampowered.com/app/413150/Stardew_Valley/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/413150/header.jpg",
+      "weatherScore": 8,
+      "rating": 89
+    },
+    {
+      "id": "coffee_talk",
+      "title": "Coffee Talk",
+      "tags": ["Narrative", "Chill", "Music"],
+      "description": "Brew coffee and listen to stories in a warm café while rain patters outside. Pure cozy evening vibes.",
+      "steamUrl": "https://store.steampowered.com/app/914800/Coffee_Talk/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/914800/header.jpg",
+      "weatherScore": 9,
+      "rating": 81
+    },
+    {
+      "id": "rain_world",
+      "title": "Rain World",
+      "tags": ["Survival", "Artistic", "Challenging"],
+      "description": "Survive in a harsh ecosystem where rain cycles affect everything. Embrace the storm both inside and out.",
+      "steamUrl": "https://store.steampowered.com/app/312520/Rain_World/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/312520/header.jpg",
+      "weatherScore": 10,
+      "rating": 84
+    },
+    {
+      "id": "spiritfarer",
+      "title": "Spiritfarer",
+      "tags": ["Emotional", "Beautiful", "Heartfelt"],
+      "description": "Care for spirits before releasing them into the afterlife. A moving meditation perfect for reflective rainy days.",
+      "steamUrl": "https://store.steampowered.com/app/972660/Spiritfarer_Farewell_Edition/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/972660/header.jpg",
+      "weatherScore": 8,
+      "rating": 87
+    },
+    {
+      "id": "unpacking",
+      "title": "Unpacking",
+      "tags": ["Zen", "Meditative", "Narrative"],
+      "description": "Methodically unpack belongings and piece together life stories. Incredibly soothing during storms.",
+      "steamUrl": "https://store.steampowered.com/app/1135690/Unpacking/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1135690/header.jpg",
+      "weatherScore": 8,
+      "rating": 85
+    },
+    {
+      "id": "night_in_the_woods",
+      "title": "Night in the Woods",
+      "tags": ["Story-Rich", "Drama", "Mystery"],
+      "description": "Explore a dying rust belt town with deep characters and mysterious happenings. Perfect rainy day introspection.",
+      "steamUrl": "https://store.steampowered.com/app/481510/Night_in_the_Woods/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/481510/header.jpg",
+      "weatherScore": 8,
+      "rating": 88
+    },
+    {
+      "id": "ori_blind_forest",
+      "title": "Ori and the Blind Forest",
+      "tags": ["Platformer", "Emotional", "Musical"],
+      "description": "A stunning forest adventure with emotional storytelling. Lush environments perfect for nature-loving rainy days.",
+      "steamUrl": "https://store.steampowered.com/app/261570/Ori_and_the_Blind_Forest_Definitive_Edition/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/261570/header.jpg",
+      "weatherScore": 7,
+      "rating": 90
+    },
+    {
+      "id": "my_time_at_portia",
+      "title": "My Time at Portia",
+      "tags": ["Life Sim", "Crafting", "Relaxing"],
+      "description": "Build your workshop and befriend townspeople in this charming life sim. Perfect cozy crafting for rainy days.",
+      "steamUrl": "https://store.steampowered.com/app/666140/My_Time_at_Portia/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/666140/header.jpg",
+      "weatherScore": 9,
+      "rating": 78
+    },
+    {
+      "id": "undertale",
+      "title": "Undertale",
+      "tags": ["RPG", "Emotional", "Indie"],
+      "description": "A heartfelt RPG where your choices truly matter. Perfect for deep emotional engagement on contemplative rainy days.",
+      "steamUrl": "https://store.steampowered.com/app/391540/Undertale/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/391540/header.jpg",
+      "weatherScore": 8,
+      "rating": 92
+    },
+    {
+      "id": "celeste",
+      "title": "Celeste",
+      "tags": ["Platformer", "Mental Health", "Emotional"],
+      "description": "Climb a mountain while confronting anxiety and depression. A powerful, introspective journey for rainy day reflection.",
+      "steamUrl": "https://store.steampowered.com/app/504230/Celeste/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/504230/header.jpg",
+      "weatherScore": 8,
+      "rating": 94
+    },
+    {
+      "id": "papers_please",
+      "title": "Papers, Please",
+      "tags": ["Simulation", "Story-Rich", "Dystopian"],
+      "description": "Work as an immigration inspector in a dystopian state. Thought-provoking gameplay perfect for contemplative rainy moods.",
+      "steamUrl": "https://store.steampowered.com/app/239030/Papers_Please/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/239030/header.jpg",
+      "weatherScore": 7,
+      "rating": 85
+    },
+    {
+      "id": "oxenfree",
+      "title": "Oxenfree",
+      "tags": ["Supernatural", "Mystery", "Teen"],
+      "description": "Supernatural mystery on a remote island with incredible dialogue. Perfect atmospheric storytelling for stormy nights.",
+      "steamUrl": "https://store.steampowered.com/app/388880/Oxenfree/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/388880/header.jpg",
+      "weatherScore": 8,
+      "rating": 80
+    },
+    {
+      "id": "gone_home",
+      "title": "Gone Home",
+      "tags": ["Exploration", "Story-Rich", "LGBTQ+"],
+      "description": "Explore an empty house and uncover family secrets. Intimate storytelling perfect for quiet rainy afternoons.",
+      "steamUrl": "https://store.steampowered.com/app/232430/Gone_Home/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/232430/header.jpg",
+      "weatherScore": 8,
+      "rating": 81
+    },
+    {
+      "id": "a_short_hike",
+      "title": "A Short Hike",
+      "tags": ["Exploration", "Relaxing", "Nature"],
+      "description": "Take a peaceful hike up a mountain at your own pace. Meditative exploration perfect for rainy day escapes.",
+      "steamUrl": "https://store.steampowered.com/app/1055540/A_Short_Hike/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/1055540/header.jpg",
+      "weatherScore": 7,
+      "rating": 89
+    },
+    {
+      "id": "disco_elysium",
+      "title": "Disco Elysium",
+      "tags": ["RPG", "Detective", "Literary"],
+      "description": "Solve crimes while battling your own demons. Deep philosophical RPG perfect for contemplative rainy days.",
+      "steamUrl": "https://store.steampowered.com/app/632470/Disco_Elysium_The_Final_Cut/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/632470/header.jpg",
+      "weatherScore": 8,
+      "rating": 97
+    },
+    {
+      "id": "what_remains_edith_finch",
+      "title": "What Remains of Edith Finch",
+      "tags": ["Walking Sim", "Mystery", "Family"],
+      "description": "Explore a cursed family's house and uncover their tragic stories. Haunting narrative perfect for stormy weather.",
+      "steamUrl": "https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/501300/header.jpg",
+      "weatherScore": 9,
+      "rating": 88
+    },
+    {
+      "id": "gris",
+      "title": "GRIS",
+      "tags": ["Art", "Emotional", "Musical"],
+      "description": "A watercolor journey through grief and healing. Gorgeous emotional experience that resonates with rainy day moods.",
+      "steamUrl": "https://store.steampowered.com/app/683320/GRIS/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/683320/header.jpg",
+      "weatherScore": 9,
+      "rating": 83
+    },
+    {
+      "id": "her_story",
+      "title": "Her Story",
+      "tags": ["Mystery", "FMV", "Detective"],
+      "description": "Piece together a mystery through video clips. Innovative detective work perfect for rainy day puzzle-solving.",
+      "steamUrl": "https://store.steampowered.com/app/368370/Her_Story/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/368370/header.jpg",
+      "weatherScore": 7,
+      "rating": 86
+    },
+    {
+      "id": "life_is_strange",
+      "title": "Life is Strange",
+      "tags": ["Adventure", "Time Travel", "Emotional"],
+      "description": "Navigate teenage drama with time-travel powers. Emotional storytelling perfect for introspective rainy weather.",
+      "steamUrl": "https://store.steampowered.com/app/319630/Life_is_Strange__Episode_1/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/319630/header.jpg",
+      "weatherScore": 8,
+      "rating": 83
+    },
+    {
+      "id": "journey",
+      "title": "Journey",
+      "tags": ["Adventure", "Artistic", "Emotional"],
+      "description": "A wordless adventure through mystical landscapes. Transcendent experience perfect for contemplative rainy moments.",
+      "steamUrl": "https://store.steampowered.com/app/638230/Journey/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg",
+      "weatherScore": 8,
+      "rating": 92
+    },
+    {
+      "id": "virginia",
+      "title": "Virginia",
+      "tags": ["Mystery", "Cinematic", "FBI"],
+      "description": "An FBI mystery without dialogue, told entirely through visuals and music. Perfect rainy day noir experience.",
+      "steamUrl": "https://store.steampowered.com/app/374030/Virginia/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/374030/header.jpg",
+      "weatherScore": 8,
+      "rating": 71
+    },
+    {
+      "id": "abzu",
+      "title": "ABZÛ",
+      "tags": ["Underwater", "Meditative", "Beautiful"],
+      "description": "Dive into meditative underwater worlds. Peaceful exploration perfect for rainy day tranquility.",
+      "steamUrl": "https://store.steampowered.com/app/384190/ABZU/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/384190/header.jpg",
+      "weatherScore": 7,
+      "rating": 76
+    },
+    {
+      "id": "stanley_parable",
+      "title": "The Stanley Parable",
+      "tags": ["Narrative", "Comedy", "Meta"],
+      "description": "A narrative comedy about choice and free will. Mind-bending humor perfect for contemplative rainy afternoons.",
+      "steamUrl": "https://store.steampowered.com/app/221910/The_Stanley_Parable/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/221910/header.jpg",
+      "weatherScore": 7,
+      "rating": 88
+    },
+    {
+      "id": "everybody_gone_rapture",
+      "title": "Everybody's Gone to the Rapture",
+      "tags": ["Walking Sim", "Mystery", "Atmospheric"],
+      "description": "Explore an abandoned English village and piece together what happened. Atmospheric mystery perfect for stormy weather.",
+      "steamUrl": "https://store.steampowered.com/app/417880/Everybodys_Gone_to_the_Rapture/",
+      "gameImage": "https://cdn.akamai.steamstatic.com/steam/apps/417880/header.jpg",
+      "weatherScore": 8,
+      "rating": 77
+    }
+  ]
+}
