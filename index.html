@@ -8,7 +8,6 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -34,110 +33,6 @@
 <body>
     <div id="root"></div>
     
-    <!-- Games Database -->
-    <script>
-        window.gameDatabase = {
-          rain: [
-            {
-              title: "Firewatch",
-              tags: ["Single-player", "Atmospheric", "Story-Rich"],
-              description: "Today's drizzle sets the mood for something quiet and reflective. Firewatch is a first-person mystery in the Wyoming wilderness, where your only lifeline is a voice on the other end of a radio. If you're in the mood for a scenic walk and a story that lingers, this is the perfect rainy day pick.",
-              reasoning: "Rainy weather calls for introspective, slower-paced experiences",
-              steamUrl: "https://store.steampowered.com/app/383870/Firewatch/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"
-            },
-            {
-              title: "Stardew Valley",
-              tags: ["Farming", "Relaxing", "Pixel Art"],
-              description: "There's something magical about tending virtual crops while real rain nourishes the world outside. The cozy pixel art and gentle gameplay create the perfect indoor sanctuary, letting you build your dream farm while staying warm and dry.",
-              reasoning: "Indoor comfort gaming for rainy day coziness",
-              steamUrl: "https://store.steampowered.com/app/413150/Stardew_Valley/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/413150/header.jpg"
-            },
-            {
-              title: "Coffee Talk",
-              tags: ["Narrative", "Chill", "Music"],
-              description: "Listen to customers' stories while brewing the perfect coffee. The rainy atmosphere outside matches the warm, intimate café setting perfectly, creating the ultimate cozy evening experience.",
-              reasoning: "Cozy café vibes perfect for rainy evenings",
-              steamUrl: "https://store.steampowered.com/app/914800/Coffee_Talk/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/914800/header.jpg"
-            }
-          ],
-          sunny: [
-            {
-              title: "No Man's Sky",
-              tags: ["Space", "Exploration", "Colorful"],
-              description: "Brilliant sunshine deserves brilliant alien worlds! Your sunny mood is perfect for exploring vibrant planets, discovering new species, and building bases under exotic skies. The game's boundless optimism matches your weather perfectly.",
-              reasoning: "Bright, expansive experiences that match sunny energy",
-              steamUrl: "https://store.steampowered.com/app/275850/No_Mans_Sky/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg"
-            },
-            {
-              title: "Spider-Man Remastered",
-              tags: ["Action", "Open World", "Heroic"],
-              description: "Swing through sunny New York City as your friendly neighborhood Spider-Man. The bright, energetic gameplay and heroic adventure perfectly match the optimistic energy of beautiful sunny weather.",
-              reasoning: "High-energy superhero action for energetic sunny days",
-              steamUrl: "https://store.steampowered.com/app/1817070/Marvels_SpiderMan_Remastered/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/1817070/header.jpg"
-            }
-          ],
-          cloudy: [
-            {
-              title: "What Remains of Edith Finch",
-              tags: ["Narrative", "Atmospheric", "Mystery"],
-              description: "Overcast skies create the perfect backdrop for mysterious stories. This hauntingly beautiful narrative adventure thrives in the contemplative mood that cloudy weather brings, where every room holds secrets waiting to be discovered.",
-              reasoning: "Mysterious, atmospheric games for contemplative cloudy moods",
-              steamUrl: "https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/501300/header.jpg"
-            },
-            {
-              title: "Control",
-              tags: ["Supernatural", "Mysterious", "Paranormal"],
-              description: "Navigate a brutalist government building filled with supernatural phenomena. The mysterious, uncertain atmosphere of this mind-bending adventure matches perfectly with the contemplative uncertainty of cloudy weather.",
-              reasoning: "Supernatural mysteries matching cloudy uncertainty",
-              steamUrl: "https://store.steampowered.com/app/870780/Control_Ultimate_Edition/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/870780/header.jpg"
-            }
-          ],
-          snow: [
-            {
-              title: "The Long Dark",
-              tags: ["Survival", "Winter", "Atmospheric"],
-              description: "Snowy weather calls for the ultimate winter survival experience! Feel the chill alongside your character as you navigate the beautiful but unforgiving Canadian wilderness. Perfect for when you want to appreciate your warm indoor space.",
-              reasoning: "Immersive winter experiences that complement snowy conditions",
-              steamUrl: "https://store.steampowered.com/app/305620/The_Long_Dark/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg"
-            },
-            {
-              title: "Frostpunk",
-              tags: ["City Builder", "Survival", "Apocalyptic"],
-              description: "Build and manage a city in a frozen post-apocalyptic world. The constant battle against the cold perfectly captures the challenge and coziness of snowy weather, making you appreciate your warm shelter.",
-              reasoning: "Civilization survival in endless winter",
-              steamUrl: "https://store.steampowered.com/app/323190/Frostpunk/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/323190/header.jpg"
-            }
-          ],
-          clear: [
-            {
-              title: "Journey",
-              tags: ["Transcendent", "Beautiful", "Meditative"],
-              description: "Clear skies inspire clear journeys of the soul. This wordless adventure through mystical landscapes captures the sense of possibility and wonder that comes with perfect weather. A transformative experience for a perfect day.",
-              reasoning: "Transcendent experiences for perfect weather days",
-              steamUrl: "https://store.steampowered.com/app/638230/Journey/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg"
-            },
-            {
-              title: "Outer Wilds",
-              tags: ["Space", "Mystery", "Exploration"],
-              description: "Explore a miniature solar system caught in a time loop. The sense of cosmic wonder and discovery perfectly matches the expansive feeling of looking up at perfectly clear, infinite skies.",
-              reasoning: "Cosmic exploration under infinite clear skies",
-              steamUrl: "https://store.steampowered.com/app/753640/Outer_Wilds/",
-              gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/753640/header.jpg"
-            }
-          ]
-        };
-    </script>
-
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -149,6 +44,7 @@
           const [loadingProgress, setLoadingProgress] = useState(0);
           const [lastGameTitle, setLastGameTitle] = useState(null);
           const [locationError, setLocationError] = useState(false);
+          const [gameCache, setGameCache] = useState({}); // Cache for loaded game databases
 
           const getWeatherType = (condition, temp = 20) => {
             const lowerCondition = condition.toLowerCase();
@@ -173,8 +69,99 @@
             return weatherType;
           };
 
-          const selectRandomGame = (weatherType, avoidTitle = null) => {
-            const availableGames = window.gameDatabase[weatherType] || window.gameDatabase.clear;
+          // Load games from JSON file for specific weather type
+          const loadGamesForWeather = async (weatherType) => {
+            // Check cache first
+            if (gameCache[weatherType]) {
+              console.log(`Using cached games for ${weatherType}`);
+              return gameCache[weatherType];
+            }
+
+            try {
+              console.log(`Loading games for weather type: ${weatherType}`);
+              const response = await fetch(`${weatherType}-games.json`);
+              
+              if (!response.ok) {
+                throw new Error(`Failed to load ${weatherType} games`);
+              }
+              
+              const data = await response.json();
+              console.log(`Loaded ${data.games.length} games for ${weatherType}`);
+              
+              // Cache the result
+              setGameCache(prev => ({
+                ...prev,
+                [weatherType]: data.games
+              }));
+              
+              return data.games;
+            } catch (error) {
+              console.error(`Error loading ${weatherType} games:`, error);
+              // Return fallback games if JSON loading fails
+              return getFallbackGames(weatherType);
+            }
+          };
+
+          // Fallback games in case JSON files fail to load
+          const getFallbackGames = (weatherType) => {
+            const fallbackGames = {
+              rain: [{
+                id: "firewatch_fallback",
+                title: "Firewatch",
+                tags: ["Single-player", "Atmospheric", "Story-Rich"],
+                description: "A first-person mystery in the Wyoming wilderness. Perfect for rainy day contemplation.",
+                steamUrl: "https://store.steampowered.com/app/383870/Firewatch/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg",
+                weatherScore: 9,
+                rating: 79
+              }],
+              sunny: [{
+                id: "no_mans_sky_fallback",
+                title: "No Man's Sky",
+                tags: ["Space", "Exploration", "Colorful"],
+                description: "Explore vibrant alien worlds under exotic skies. Perfect for sunny day adventures.",
+                steamUrl: "https://store.steampowered.com/app/275850/No_Mans_Sky/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg",
+                weatherScore: 9,
+                rating: 71
+              }],
+              cloudy: [{
+                id: "control_fallback",
+                title: "Control",
+                tags: ["Supernatural", "Mysterious", "Paranormal"],
+                description: "Navigate supernatural phenomena in a mysterious building. Perfect for cloudy contemplation.",
+                steamUrl: "https://store.steampowered.com/app/870780/Control_Ultimate_Edition/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/870780/header.jpg",
+                weatherScore: 9,
+                rating: 82
+              }],
+              snow: [{
+                id: "long_dark_fallback",
+                title: "The Long Dark",
+                tags: ["Survival", "Winter", "Atmospheric"],
+                description: "Ultimate winter survival experience. Perfect for appreciating your warm shelter.",
+                steamUrl: "https://store.steampowered.com/app/305620/The_Long_Dark/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg",
+                weatherScore: 10,
+                rating: 78
+              }],
+              clear: [{
+                id: "journey_fallback",
+                title: "Journey",
+                tags: ["Transcendent", "Beautiful", "Meditative"],
+                description: "A wordless adventure that captures the wonder of perfect weather.",
+                steamUrl: "https://store.steampowered.com/app/638230/Journey/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg",
+                weatherScore: 10,
+                rating: 92
+              }]
+            };
+            
+            return fallbackGames[weatherType] || fallbackGames.clear;
+          };
+
+          const selectRandomGame = async (weatherType, avoidTitle = null) => {
+            const availableGames = await loadGamesForWeather(weatherType);
             console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
             
             if (availableGames.length <= 1 || !avoidTitle) {
@@ -281,7 +268,7 @@
 
               const weatherType = getWeatherType(weatherData.weather[0].main, weatherData.main.temp);
               console.log('=== GAME SELECTION ===');
-              const randomGame = selectRandomGame(weatherType);
+              const randomGame = await selectRandomGame(weatherType);
               console.log('Final selected game:', randomGame);
               
               setGameRecommendation(randomGame);
@@ -307,7 +294,7 @@
                 const randomWeatherType = allWeatherTypes[Math.floor(Math.random() * allWeatherTypes.length)];
                 console.log('Using fallback weather type:', randomWeatherType);
                 
-                const fallbackGame = selectRandomGame(randomWeatherType);
+                const fallbackGame = await selectRandomGame(randomWeatherType);
                 setGameRecommendation(fallbackGame);
                 setLastGameTitle(fallbackGame.title);
                 
@@ -327,7 +314,7 @@
             }
           };
 
-          const handleRollAgain = () => {
+          const handleRollAgain = async () => {
             setCurrentScreen('loading');
             setLoadingProgress(0);
 
@@ -341,10 +328,10 @@
               });
             }, 200);
 
-            setTimeout(() => {
+            setTimeout(async () => {
               if (weather) {
                 const weatherType = getWeatherType(weather.weather[0].main, weather.main.temp);
-                const randomGame = selectRandomGame(weatherType, lastGameTitle);
+                const randomGame = await selectRandomGame(weatherType, lastGameTitle);
                 setGameRecommendation(randomGame);
                 setLastGameTitle(randomGame.title);
               }
@@ -518,86 +505,6 @@
                     color: '#FFF099'
                   }}
                 >
-                  Back to Home
-                </button>
-              </nav>
-
-              <div className="flex-1 flex flex-col items-center justify-center px-8">
-                <div className="text-center max-w-md">
-                  <div className="text-6xl mb-6">📍</div>
-                  <h1 className="text-4xl font-bold text-white mb-6">
-                    Location Needed
-                  </h1>
-                  
-                  <p className="text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
-                    SkyFable needs your location to check the weather and find the perfect game for you. 
-                    Please enable location permissions and try again.
-                  </p>
-
-                  <div className="space-y-4">
-                    <button 
-                      onClick={handleForecastClick}
-                      className="w-full px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
-                      style={{
-                        backgroundColor: '#FFF099',
-                        color: '#504B81'
-                      }}
-                    >
-                      Try Again
-                    </button>
-                    
-                    <button 
-                      onClick={() => setCurrentScreen('landing')}
-                      className="w-full px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
-                      style={{
-                        borderColor: '#FFF8CC',
-                        color: '#FFF8CC',
-                        backgroundColor: 'transparent'
-                      }}
-                    >
-                      Back to Home
-                    </button>
-                  </div>
-
-                  <p className="text-sm text-white opacity-60 mt-6">
-                    💡 Tip: Look for the location icon in your browser's address bar
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-
-          switch (currentScreen) {
-            case 'loading':
-              return renderLoading();
-            case 'result':
-              return renderResult();
-            case 'location-error':
-              return renderLocationError();
-            default:
-              return renderLanding();
-          }
-        };
-
-        ReactDOM.render(React.createElement(SkyFable), document.getElementById('root'));
-    </script>
-
-    <script type='text/javascript'>
-      // Initialize Ko-fi widget when page loads
-      window.addEventListener('load', function() {
-        if (typeof kofiwidget2 !== 'undefined') {
-          kofiwidget2.init('Buy me a coffee!', '#72a4f2', 'H2H21HEPVU');
-          kofiwidget2.draw();
-        }
-      });
-    </script>
-</body>
-</html>py-3 border-2 rounded-lg font-semibold transition-all duration-300"
-                  style={{
-                    borderColor: '#FFF099',
-                    color: '#FFF099'
-                  }}
-                >
                   Forecast My Game
                 </button>
               </nav>
@@ -712,4 +619,74 @@
                 </div>
                 <button 
                   onClick={() => setCurrentScreen('landing')}
-                  className="px-6
+                  className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
+                  style={{
+                    borderColor: '#FFF099',
+                    color: '#FFF099'
+                  }}
+                >
+                  Back to Home
+                </button>
+              </nav>
+
+              <div className="flex-1 flex flex-col items-center justify-center px-8">
+                <div className="text-center max-w-md">
+                  <div className="text-6xl mb-6">📍</div>
+                  <h1 className="text-4xl font-bold text-white mb-6">
+                    Location Needed
+                  </h1>
+                  
+                  <p className="text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
+                    SkyFable needs your location to check the weather and find the perfect game for you. 
+                    Please enable location permissions and try again.
+                  </p>
+
+                  <div className="space-y-4">
+                    <button 
+                      onClick={handleForecastClick}
+                      className="w-full px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+                      style={{
+                        backgroundColor: '#FFF099',
+                        color: '#504B81'
+                      }}
+                    >
+                      Try Again
+                    </button>
+                    
+                    <button 
+                      onClick={() => setCurrentScreen('landing')}
+                      className="w-full px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                      style={{
+                        borderColor: '#FFF8CC',
+                        color: '#FFF8CC',
+                        backgroundColor: 'transparent'
+                      }}
+                    >
+                      Back to Home
+                    </button>
+                  </div>
+
+                  <p className="text-sm text-white opacity-60 mt-6">
+                    💡 Tip: Look for the location icon in your browser's address bar
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+
+          switch (currentScreen) {
+            case 'loading':
+              return renderLoading();
+            case 'result':
+              return renderResult();
+            case 'location-error':
+              return renderLocationError();
+            default:
+              return renderLanding();
+          }
+        };
+
+        ReactDOM.render(React.createElement(SkyFable), document.getElementById('root'));
+    </script>
+</body>
+</html>
