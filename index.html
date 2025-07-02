@@ -699,4 +699,13 @@
     </script>
 
     <script type='text/javascript'>
-      // Initialize Ko-fi widget when page
+      // Initialize Ko-fi widget when page loads
+      window.addEventListener('load', function() {
+        if (typeof kofiwidget2 !== 'undefined') {
+          kofiwidget2.init('Buy me a coffee!', '#72a4f2', 'H2H21HEPVU');
+          kofiwidget2.draw();
+        }
+      });
+    </script>
+</body>
+</html>
