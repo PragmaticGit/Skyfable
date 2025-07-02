@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -358,6 +359,14 @@
             loadInitialWeather();
           }, []);
 
+          // Initialize Ko-fi widget after component mounts
+          useEffect(() => {
+            if (typeof kofiwidget2 !== 'undefined') {
+              kofiwidget2.init('Buy me a coffee!', '#72a4f2', 'H2H21HEPVU');
+              kofiwidget2.draw();
+            }
+          }, []);
+
           const renderLanding = () => (
             <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
               <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
@@ -688,5 +697,6 @@
 
         ReactDOM.render(React.createElement(SkyFable), document.getElementById('root'));
     </script>
-</body>
-</html>
+
+    <script type='text/javascript'>
+      // Initialize Ko-fi widget when page
