@@ -8,7 +8,6 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="games-database.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -45,9 +44,7 @@
           const [loadingProgress, setLoadingProgress] = useState(0);
           const [lastGameTitle, setLastGameTitle] = useState(null);
           const [locationError, setLocationError] = useState(false);
-
-          // Game database is now loaded from external file
-          // Available as window.gameDatabase
+          const [gameCache, setGameCache] = useState({}); // Cache for loaded game databases
 
           const getWeatherType = (condition, temp = 20) => {
             const lowerCondition = condition.toLowerCase();
@@ -72,8 +69,99 @@
             return weatherType;
           };
 
-          const selectRandomGame = (weatherType, avoidTitle = null) => {
-            const availableGames = window.gameDatabase[weatherType] || window.gameDatabase.clear;
+          // Load games from JSON file for specific weather type
+          const loadGamesForWeather = async (weatherType) => {
+            // Check cache first
+            if (gameCache[weatherType]) {
+              console.log(`Using cached games for ${weatherType}`);
+              return gameCache[weatherType];
+            }
+
+            try {
+              console.log(`Loading games for weather type: ${weatherType}`);
+              const response = await fetch(`${weatherType}-games.json`);
+              
+              if (!response.ok) {
+                throw new Error(`Failed to load ${weatherType} games`);
+              }
+              
+              const data = await response.json();
+              console.log(`Loaded ${data.games.length} games for ${weatherType}`);
+              
+              // Cache the result
+              setGameCache(prev => ({
+                ...prev,
+                [weatherType]: data.games
+              }));
+              
+              return data.games;
+            } catch (error) {
+              console.error(`Error loading ${weatherType} games:`, error);
+              // Return fallback games if JSON loading fails
+              return getFallbackGames(weatherType);
+            }
+          };
+
+          // Fallback games in case JSON files fail to load
+          const getFallbackGames = (weatherType) => {
+            const fallbackGames = {
+              rain: [{
+                id: "firewatch_fallback",
+                title: "Firewatch",
+                tags: ["Single-player", "Atmospheric", "Story-Rich"],
+                description: "A first-person mystery in the Wyoming wilderness. Perfect for rainy day contemplation.",
+                steamUrl: "https://store.steampowered.com/app/383870/Firewatch/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg",
+                weatherScore: 9,
+                rating: 79
+              }],
+              sunny: [{
+                id: "no_mans_sky_fallback",
+                title: "No Man's Sky",
+                tags: ["Space", "Exploration", "Colorful"],
+                description: "Explore vibrant alien worlds under exotic skies. Perfect for sunny day adventures.",
+                steamUrl: "https://store.steampowered.com/app/275850/No_Mans_Sky/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg",
+                weatherScore: 9,
+                rating: 71
+              }],
+              cloudy: [{
+                id: "control_fallback",
+                title: "Control",
+                tags: ["Supernatural", "Mysterious", "Paranormal"],
+                description: "Navigate supernatural phenomena in a mysterious building. Perfect for cloudy contemplation.",
+                steamUrl: "https://store.steampowered.com/app/870780/Control_Ultimate_Edition/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/870780/header.jpg",
+                weatherScore: 9,
+                rating: 82
+              }],
+              snow: [{
+                id: "long_dark_fallback",
+                title: "The Long Dark",
+                tags: ["Survival", "Winter", "Atmospheric"],
+                description: "Ultimate winter survival experience. Perfect for appreciating your warm shelter.",
+                steamUrl: "https://store.steampowered.com/app/305620/The_Long_Dark/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg",
+                weatherScore: 10,
+                rating: 78
+              }],
+              clear: [{
+                id: "journey_fallback",
+                title: "Journey",
+                tags: ["Transcendent", "Beautiful", "Meditative"],
+                description: "A wordless adventure that captures the wonder of perfect weather.",
+                steamUrl: "https://store.steampowered.com/app/638230/Journey/",
+                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg",
+                weatherScore: 10,
+                rating: 92
+              }]
+            };
+            
+            return fallbackGames[weatherType] || fallbackGames.clear;
+          };
+
+          const selectRandomGame = async (weatherType, avoidTitle = null) => {
+            const availableGames = await loadGamesForWeather(weatherType);
             console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
             
             if (availableGames.length <= 1 || !avoidTitle) {
@@ -180,7 +268,7 @@
 
               const weatherType = getWeatherType(weatherData.weather[0].main, weatherData.main.temp);
               console.log('=== GAME SELECTION ===');
-              const randomGame = selectRandomGame(weatherType);
+              const randomGame = await selectRandomGame(weatherType);
               console.log('Final selected game:', randomGame);
               
               setGameRecommendation(randomGame);
@@ -206,7 +294,7 @@
                 const randomWeatherType = allWeatherTypes[Math.floor(Math.random() * allWeatherTypes.length)];
                 console.log('Using fallback weather type:', randomWeatherType);
                 
-                const fallbackGame = selectRandomGame(randomWeatherType);
+                const fallbackGame = await selectRandomGame(randomWeatherType);
                 setGameRecommendation(fallbackGame);
                 setLastGameTitle(fallbackGame.title);
                 
@@ -226,7 +314,7 @@
             }
           };
 
-          const handleRollAgain = () => {
+          const handleRollAgain = async () => {
             setCurrentScreen('loading');
             setLoadingProgress(0);
 
@@ -240,10 +328,10 @@
               });
             }, 200);
 
-            setTimeout(() => {
+            setTimeout(async () => {
               if (weather) {
                 const weatherType = getWeatherType(weather.weather[0].main, weather.main.temp);
-                const randomGame = selectRandomGame(weatherType, lastGameTitle);
+                const randomGame = await selectRandomGame(weatherType, lastGameTitle);
                 setGameRecommendation(randomGame);
                 setLastGameTitle(randomGame.title);
               }
