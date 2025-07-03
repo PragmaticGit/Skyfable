@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="games-database.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -44,12 +44,75 @@
           const [gameRecommendation, setGameRecommendation] = useState(null);
           const [loadingProgress, setLoadingProgress] = useState(0);
           const [lastGameTitle, setLastGameTitle] = useState(null);
-          const [locationError, setLocationError] = useState(false);
+          const [gameDatabase, setGameDatabase] = useState(null);
+          const [databaseLoading, setDatabaseLoading] = useState(true);
 
-          // Game database is now loaded from external file
-          // Available as window.gameDatabase
+          const loadGameDatabase = async () => {
+            try {
+              console.log('Loading game databases...');
+              const [rainGames, sunnyGames, cloudyGames, snowGames, clearGames] = await Promise.all([
+                fetch('./rain-games.json').then(r => r.json()),
+                fetch('./sunny-games.json').then(r => r.json()),
+                fetch('./cloudy-games.json').then(r => r.json()),
+                fetch('./snow-games.json').then(r => r.json()),
+                fetch('./clear-games.json').then(r => r.json())
+              ]);
 
-          const getWeatherType = (condition, temp = 20) => {
+              const database = {
+                rain: rainGames,
+                sunny: sunnyGames,
+                cloudy: cloudyGames,
+                snow: snowGames,
+                clear: clearGames
+              };
+
+              console.log('Game database loaded successfully:', database);
+              setGameDatabase(database);
+              setDatabaseLoading(false);
+            } catch (error) {
+              console.error('Failed to load game databases:', error);
+              // Create fallback database
+              const fallbackDatabase = {
+                rain: [{
+                  title: "Firewatch",
+                  tags: ["Single-player", "Atmospheric", "Story-Rich"],
+                  description: "A mysterious adventure in the Wyoming wilderness.",
+                  steamUrl: "https://store.steampowered.com/app/383870/Firewatch/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"
+                }],
+                sunny: [{
+                  title: "No Man's Sky",
+                  tags: ["Space", "Exploration", "Colorful"],
+                  description: "Explore vibrant alien worlds under exotic skies.",
+                  steamUrl: "https://store.steampowered.com/app/275850/No_Mans_Sky/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg"
+                }],
+                cloudy: [{
+                  title: "What Remains of Edith Finch",
+                  tags: ["Narrative", "Atmospheric", "Mystery"],
+                  description: "A hauntingly beautiful narrative adventure.",
+                  steamUrl: "https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/501300/header.jpg"
+                }],
+                snow: [{
+                  title: "The Long Dark",
+                  tags: ["Survival", "Winter", "Atmospheric"],
+                  description: "Survive the Canadian wilderness in winter.",
+                  steamUrl: "https://store.steampowered.com/app/305620/The_Long_Dark/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg"
+                }],
+                clear: [{
+                  title: "Journey",
+                  tags: ["Adventure", "Beautiful", "Meditative"],
+                  description: "A transcendent adventure through mystical landscapes.",
+                  steamUrl: "https://store.steampowered.com/app/638230/Journey/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg"
+                }]
+              };
+              setGameDatabase(fallbackDatabase);
+              setDatabaseLoading(false);
+            }
+          };
             const lowerCondition = condition.toLowerCase();
             console.log('Weather condition received:', condition, 'Temperature:', temp);
             
@@ -73,7 +136,7 @@
           };
 
           const selectRandomGame = (weatherType, avoidTitle = null) => {
-            const availableGames = window.gameDatabase[weatherType] || window.gameDatabase.clear;
+            const availableGames = gameDatabase[weatherType] || gameDatabase.clear;
             console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
             
             if (availableGames.length <= 1 || !avoidTitle) {
@@ -92,7 +155,17 @@
 
           const fetchWeather = async (lat, lon) => {
             try {
-              const response = await fetch(`https://wttr.in/${lat},${lon}?format=j1`);
+              console.log('Fetching weather for:', lat, lon);
+              
+              // Add timeout to weather fetch
+              const controller = new AbortController();
+              const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+              
+              const response = await fetch(`https://wttr.in/${lat},${lon}?format=j1`, {
+                signal: controller.signal
+              });
+              
+              clearTimeout(timeoutId);
               
               if (!response.ok) {
                 throw new Error('Weather fetch failed');
@@ -101,6 +174,8 @@
               const data = await response.json();
               const current = data.current_condition[0];
               const location = data.nearest_area[0];
+              
+              console.log('Weather data received:', current.weatherDesc[0].value);
               
               return {
                 weather: [{ 
@@ -130,8 +205,15 @@
                 return;
               }
 
+              // Add timeout to prevent hanging
+              const timeout = setTimeout(() => {
+                console.log('Geolocation timeout, using fallback');
+                resolve({ lat: 59.9139, lon: 10.7522 });
+              }, 10000); // 10 second timeout
+
               navigator.geolocation.getCurrentPosition(
                 (position) => {
+                  clearTimeout(timeout);
                   console.log('Location permission granted');
                   setLocationError(false);
                   resolve({
@@ -140,6 +222,7 @@
                   });
                 },
                 (error) => {
+                  clearTimeout(timeout);
                   console.error('Geolocation error:', error);
                   if (error.code === error.PERMISSION_DENIED) {
                     console.log('Location permission denied by user');
@@ -149,12 +232,21 @@
                     console.log('Location error, using fallback');
                     resolve({ lat: 59.9139, lon: 10.7522 });
                   }
-                }
+                },
+                { timeout: 8000, enableHighAccuracy: false } // Add options
               );
             });
           };
 
           const handleForecastClick = async () => {
+            console.log('=== FORECAST CLICKED ===');
+            
+            // Check if database is loaded
+            if (!gameDatabase) {
+              console.log('Game database not loaded yet, waiting...');
+              return;
+            }
+            
             setCurrentScreen('loading');
             setLoadingProgress(0);
             setLocationError(false);
@@ -170,9 +262,12 @@
             }, 150);
 
             try {
+              console.log('Getting location...');
               const userLocation = await getLocation();
               setLocation(userLocation);
+              console.log('Location received:', userLocation);
 
+              console.log('Fetching weather...');
               const weatherData = await fetchWeather(userLocation.lat, userLocation.lon);
               setWeather(weatherData);
               console.log('=== WEATHER DATA ===');
@@ -186,15 +281,17 @@
               setGameRecommendation(randomGame);
               setLastGameTitle(randomGame.title);
 
+              console.log('Setting final progress and switching to result...');
               setTimeout(() => {
                 setLoadingProgress(100);
                 setTimeout(() => {
+                  console.log('Switching to result screen');
                   setCurrentScreen('result');
                 }, 300);
               }, 1200);
 
             } catch (error) {
-              console.error('Error fetching data:', error);
+              console.error('Error in handleForecastClick:', error);
               clearInterval(progressInterval);
               
               if (error.message === 'Location permission denied') {
@@ -202,6 +299,8 @@
                   setCurrentScreen('location-error');
                 }, 1000);
               } else {
+                console.log('Using complete fallback approach...');
+                
                 const allWeatherTypes = ['rain', 'sunny', 'cloudy', 'snow', 'clear'];
                 const randomWeatherType = allWeatherTypes[Math.floor(Math.random() * allWeatherTypes.length)];
                 console.log('Using fallback weather type:', randomWeatherType);
@@ -219,6 +318,7 @@
                 setTimeout(() => {
                   setLoadingProgress(100);
                   setTimeout(() => {
+                    console.log('Switching to result screen (fallback)');
                     setCurrentScreen('result');
                   }, 300);
                 }, 1200);
@@ -256,6 +356,9 @@
           };
 
           useEffect(() => {
+            // Load game databases on component mount
+            loadGameDatabase();
+            
             const loadInitialWeather = async () => {
               try {
                 const userLocation = await getLocation();
@@ -281,22 +384,29 @@
                 </div>
                 <button 
                   onClick={handleForecastClick}
-                  className="px-4 sm:px-6 py-2 sm:py-3 border-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                  disabled={databaseLoading}
+                  className={`px-4 sm:px-6 py-2 sm:py-3 border-2 rounded-lg font-semibold transition-all duration-300 text-sm sm:text-base ${
+                    databaseLoading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+                  }`}
                   style={{
                     borderColor: '#FFF099',
                     color: '#FFF099',
                     backgroundColor: 'transparent'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#FFF099';
-                    e.target.style.color = '#504B81';
+                    if (!databaseLoading) {
+                      e.target.style.backgroundColor = '#FFF099';
+                      e.target.style.color = '#504B81';
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = '#FFF099';
+                    if (!databaseLoading) {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.color = '#FFF099';
+                    }
                   }}
                 >
-                  Forecast My Game
+                  {databaseLoading ? 'Loading Games...' : 'Forecast My Game'}
                 </button>
               </nav>
 
@@ -336,13 +446,16 @@
 
                     <button 
                       onClick={handleForecastClick}
-                      className="w-full sm:w-auto px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg"
+                      disabled={databaseLoading}
+                      className={`w-full sm:w-auto px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 shadow-lg ${
+                        databaseLoading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+                      }`}
                       style={{
                         backgroundColor: '#FFF099',
                         color: '#504B81'
                       }}
                     >
-                      Forecast My Game
+                      {databaseLoading ? 'Loading Games...' : 'Forecast My Game'}
                     </button>
                   </div>
 
