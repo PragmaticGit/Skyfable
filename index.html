@@ -803,7 +803,7 @@
             const root = document.getElementById('weather-particles-root');
             if (root) ReactDOM.render(<WeatherParticles weatherType={weatherType} />, root);
             const overlayRoot = document.getElementById('weather-overlay-root');
-            if (overlayRoot) ReactDOM.render(<WeatherOverlay weatherType={weatherType} />, overlayRoot);
+            if (overlayRoot) React.render(<WeatherOverlay weatherType={weatherType} />, overlayRoot);
             return () => {
               if (root) ReactDOM.unmountComponentAtNode(root);
               if (overlayRoot) ReactDOM.unmountComponentAtNode(overlayRoot);
@@ -828,6 +828,7 @@
             const nextIdx = (currentIdx + 1) % availableWeatherTypes.length;
             const newWeather = availableWeatherTypes[nextIdx];
             setManualWeather(newWeather);
+            setWeatherType(newWeather);
             // Pick a random game for the new weather
             const randomGame = await selectRandomGame(newWeather);
             setGameRecommendation(randomGame);
