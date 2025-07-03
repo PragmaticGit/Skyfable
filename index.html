@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="games-database.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -44,7 +45,9 @@
           const [loadingProgress, setLoadingProgress] = useState(0);
           const [lastGameTitle, setLastGameTitle] = useState(null);
           const [locationError, setLocationError] = useState(false);
-          const [gameCache, setGameCache] = useState({}); // Cache for loaded game databases
+
+          // Game database is now loaded from external file
+          // Available as window.gameDatabase
 
           const getWeatherType = (condition, temp = 20) => {
             const lowerCondition = condition.toLowerCase();
@@ -69,99 +72,8 @@
             return weatherType;
           };
 
-          // Load games from JSON file for specific weather type
-          const loadGamesForWeather = async (weatherType) => {
-            // Check cache first
-            if (gameCache[weatherType]) {
-              console.log(`Using cached games for ${weatherType}`);
-              return gameCache[weatherType];
-            }
-
-            try {
-              console.log(`Loading games for weather type: ${weatherType}`);
-              const response = await fetch(`${weatherType}-games.json`);
-              
-              if (!response.ok) {
-                throw new Error(`Failed to load ${weatherType} games`);
-              }
-              
-              const data = await response.json();
-              console.log(`Loaded ${data.games.length} games for ${weatherType}`);
-              
-              // Cache the result
-              setGameCache(prev => ({
-                ...prev,
-                [weatherType]: data.games
-              }));
-              
-              return data.games;
-            } catch (error) {
-              console.error(`Error loading ${weatherType} games:`, error);
-              // Return fallback games if JSON loading fails
-              return getFallbackGames(weatherType);
-            }
-          };
-
-          // Fallback games in case JSON files fail to load
-          const getFallbackGames = (weatherType) => {
-            const fallbackGames = {
-              rain: [{
-                id: "firewatch_fallback",
-                title: "Firewatch",
-                tags: ["Single-player", "Atmospheric", "Story-Rich"],
-                description: "A first-person mystery in the Wyoming wilderness. Perfect for rainy day contemplation.",
-                steamUrl: "https://store.steampowered.com/app/383870/Firewatch/",
-                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg",
-                weatherScore: 9,
-                rating: 79
-              }],
-              sunny: [{
-                id: "no_mans_sky_fallback",
-                title: "No Man's Sky",
-                tags: ["Space", "Exploration", "Colorful"],
-                description: "Explore vibrant alien worlds under exotic skies. Perfect for sunny day adventures.",
-                steamUrl: "https://store.steampowered.com/app/275850/No_Mans_Sky/",
-                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg",
-                weatherScore: 9,
-                rating: 71
-              }],
-              cloudy: [{
-                id: "control_fallback",
-                title: "Control",
-                tags: ["Supernatural", "Mysterious", "Paranormal"],
-                description: "Navigate supernatural phenomena in a mysterious building. Perfect for cloudy contemplation.",
-                steamUrl: "https://store.steampowered.com/app/870780/Control_Ultimate_Edition/",
-                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/870780/header.jpg",
-                weatherScore: 9,
-                rating: 82
-              }],
-              snow: [{
-                id: "long_dark_fallback",
-                title: "The Long Dark",
-                tags: ["Survival", "Winter", "Atmospheric"],
-                description: "Ultimate winter survival experience. Perfect for appreciating your warm shelter.",
-                steamUrl: "https://store.steampowered.com/app/305620/The_Long_Dark/",
-                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg",
-                weatherScore: 10,
-                rating: 78
-              }],
-              clear: [{
-                id: "journey_fallback",
-                title: "Journey",
-                tags: ["Transcendent", "Beautiful", "Meditative"],
-                description: "A wordless adventure that captures the wonder of perfect weather.",
-                steamUrl: "https://store.steampowered.com/app/638230/Journey/",
-                gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg",
-                weatherScore: 10,
-                rating: 92
-              }]
-            };
-            
-            return fallbackGames[weatherType] || fallbackGames.clear;
-          };
-
-          const selectRandomGame = async (weatherType, avoidTitle = null) => {
-            const availableGames = await loadGamesForWeather(weatherType);
+          const selectRandomGame = (weatherType, avoidTitle = null) => {
+            const availableGames = window.gameDatabase[weatherType] || window.gameDatabase.clear;
             console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
             
             if (availableGames.length <= 1 || !avoidTitle) {
@@ -268,7 +180,7 @@
 
               const weatherType = getWeatherType(weatherData.weather[0].main, weatherData.main.temp);
               console.log('=== GAME SELECTION ===');
-              const randomGame = await selectRandomGame(weatherType);
+              const randomGame = selectRandomGame(weatherType);
               console.log('Final selected game:', randomGame);
               
               setGameRecommendation(randomGame);
@@ -294,7 +206,7 @@
                 const randomWeatherType = allWeatherTypes[Math.floor(Math.random() * allWeatherTypes.length)];
                 console.log('Using fallback weather type:', randomWeatherType);
                 
-                const fallbackGame = await selectRandomGame(randomWeatherType);
+                const fallbackGame = selectRandomGame(randomWeatherType);
                 setGameRecommendation(fallbackGame);
                 setLastGameTitle(fallbackGame.title);
                 
@@ -314,7 +226,7 @@
             }
           };
 
-          const handleRollAgain = async () => {
+          const handleRollAgain = () => {
             setCurrentScreen('loading');
             setLoadingProgress(0);
 
@@ -328,10 +240,10 @@
               });
             }, 200);
 
-            setTimeout(async () => {
+            setTimeout(() => {
               if (weather) {
                 const weatherType = getWeatherType(weather.weather[0].main, weather.main.temp);
-                const randomGame = await selectRandomGame(weatherType, lastGameTitle);
+                const randomGame = selectRandomGame(weatherType, lastGameTitle);
                 setGameRecommendation(randomGame);
                 setLastGameTitle(randomGame.title);
               }
@@ -393,16 +305,34 @@
                   {/* Left Content */}
                   <div className="flex-1 text-center lg:text-left lg:pr-16">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style={{color: '#FFF099'}}>
-                      Find the perfect game based on your local weather
+                      Find your perfect game based on the weather
                     </h1>
                     
-                    <p className="text-lg sm:text-xl mb-8 text-white opacity-90 font-medium leading-relaxed">
-                      Right now in <span className="font-bold">{weather?.name || 'Stavanger'}</span>, It's a{' '}
-                      <span className="font-bold" style={{color: '#FFF099'}}>
-                        {weather ? weather.weather[0].description : 'rainy evening'}
-                      </span>{' '}
-                      so it's time for something quiet and reflective 🌧️
+                    <p className="text-lg sm:text-xl mb-6 text-white opacity-90 font-medium leading-relaxed">
+                      Let the weather decide your next gaming adventure
                     </p>
+                    
+                    <div className="flex items-center justify-center lg:justify-start gap-2 mb-8">
+                      <span className="text-white opacity-70 text-sm">How does this work?</span>
+                      <div className="relative group">
+                        <svg 
+                          className="w-4 h-4 text-white opacity-50 cursor-help" 
+                          fill="currentColor" 
+                          viewBox="0 0 20 20"
+                        >
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                        </svg>
+                        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                          <div className="bg-gray-900 text-white p-3 rounded-lg shadow-lg text-sm max-w-xs">
+                            <div className="font-semibold mb-2">Why weather?</div>
+                            <div className="text-gray-200">
+                              Weather affects our mood and energy levels. Rainy days call for cozy, story-driven games. Sunny weather pairs well with upbeat adventures. We match games to your atmospheric vibe.
+                            </div>
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     <button 
                       onClick={handleForecastClick}
