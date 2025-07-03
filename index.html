@@ -243,19 +243,7 @@
               </span>
             );
           } else if (weatherType === 'snow') {
-            return (
-              <span className="weather-headline-snow" style={{position:'relative',display:'inline-block'}}>
-                {children}
-                <span className="sparkle" style={{position:'absolute',left:'0.5em',top:'-0.3em',fontSize:'0.5em',color:'#fff',opacity:0.4,animation:'sparkle-fade 3.2s infinite alternate'}}>*</span>
-                <style>{`
-                  @keyframes sparkle-fade {
-                    0% { opacity: 0.4; transform: scale(1) rotate(0deg); }
-                    50% { opacity: 0.7; transform: scale(1.1) rotate(10deg); }
-                    100% { opacity: 0.4; transform: scale(1) rotate(0deg); }
-                  }
-                `}</style>
-              </span>
-            );
+            return <span>{children}</span>;
           } else {
             return <span>{children}</span>;
           }
@@ -277,15 +265,19 @@
           }
           // Cloudy: stylized drifting clouds (SVG/CSS), not just mist
           if (weatherType === 'cloudy') {
-            // SVG cloud shapes, animated horizontally
-            const cloudStyles = [
-              { top: '12vh', left: '-18vw', size: '22vw', opacity: 0.55, duration: 38, delay: 0 },
-              { top: '28vh', left: '-30vw', size: '32vw', opacity: 0.38, duration: 52, delay: 8 },
-              { top: '18vh', left: '-10vw', size: '18vw', opacity: 0.32, duration: 44, delay: 4 },
-              { top: '38vh', left: '-25vw', size: '28vw', opacity: 0.28, duration: 60, delay: 12 },
+            // Disperse 8 clouds at various positions, opacities, and animation speeds
+            const cloudConfigs = [
+              { top: '10vh', left: '-20vw', size: '18vw', opacity: 0.55, duration: 38, delay: 0 },
+              { top: '25vh', left: '-10vw', size: '22vw', opacity: 0.38, duration: 52, delay: 8 },
+              { top: '40vh', left: '-30vw', size: '28vw', opacity: 0.32, duration: 44, delay: 4 },
+              { top: '60vh', left: '-15vw', size: '20vw', opacity: 0.28, duration: 60, delay: 12 },
+              { top: '15vh', left: '30vw', size: '16vw', opacity: 0.33, duration: 48, delay: 6 },
+              { top: '50vh', left: '10vw', size: '24vw', opacity: 0.29, duration: 54, delay: 10 },
+              { top: '70vh', left: '-25vw', size: '26vw', opacity: 0.25, duration: 66, delay: 14 },
+              { top: '35vh', left: '50vw', size: '18vw', opacity: 0.22, duration: 58, delay: 16 },
             ];
             return <>
-              {cloudStyles.map((c, i) => (
+              {cloudConfigs.map((c, i) => (
                 <svg key={i} width={c.size} height={c.size} viewBox="0 0 120 60" style={{
                   position: 'fixed',
                   top: c.top,
@@ -315,22 +307,7 @@
               }} />
               <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.18) brightness(0.97) contrast(0.96)'}} />
               <style>{`
-                @keyframes cloud-drift-0 {
-                  0% { transform: translateX(0); }
-                  100% { transform: translateX(120vw); }
-                }
-                @keyframes cloud-drift-1 {
-                  0% { transform: translateX(0); }
-                  100% { transform: translateX(140vw); }
-                }
-                @keyframes cloud-drift-2 {
-                  0% { transform: translateX(0); }
-                  100% { transform: translateX(110vw); }
-                }
-                @keyframes cloud-drift-3 {
-                  0% { transform: translateX(0); }
-                  100% { transform: translateX(130vw); }
-                }
+                ${cloudConfigs.map((c, i) => `@keyframes cloud-drift-${i} { 0% { transform: translateX(0); } 100% { transform: translateX(120vw); } }`).join('\n')}
                 body.cloudy-ui .rounded-lg, body.cloudy-ui .shadow-lg, body.cloudy-ui .shadow-2xl {
                   filter: grayscale(0.18) brightness(0.97) contrast(0.96);
                   box-shadow: none !important;
