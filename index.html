@@ -113,42 +113,52 @@
           const handleImageError = (e) => { e.target.style.display = 'none'; };
           return (
             <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
-              {/* Blur overlay */}
-              <div style={{ position: 'absolute', inset: 0, zIndex: 2, backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', pointerEvents: 'none' }} />
-              {/* Rows of games */}
-              <div className="absolute top-10 left-0 w-full" style={{ zIndex: 1 }}>
-                <div className="flex animate-scroll-right">
-                  {row1Games.map((game, index) => (
-                    <GameCover key={`row1-${index}`} game={game} onError={handleImageError} height={56} />
-                  ))}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 1,
+                background: 'rgba(80,75,129,0.35)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                pointerEvents: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center'
+              }}>
+                <div className="absolute top-10 left-0 w-full">
+                  <div className="flex animate-scroll-right">
+                    {row1Games.map((game, index) => (
+                      <GameCover key={`row1-${index}`} game={game} onError={handleImageError} height={56} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="absolute top-32 left-0 w-full" style={{ zIndex: 1 }}>
-                <div className="flex animate-scroll-left">
-                  {row2Games.map((game, index) => (
-                    <GameCover key={`row2-${index}`} game={game} onError={handleImageError} height={48} />
-                  ))}
+                <div className="absolute top-32 left-0 w-full">
+                  <div className="flex animate-scroll-left">
+                    {row2Games.map((game, index) => (
+                      <GameCover key={`row2-${index}`} game={game} onError={handleImageError} height={48} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="absolute top-52 left-0 w-full" style={{ zIndex: 1 }}>
-                <div className="flex animate-scroll-right-slow">
-                  {row3Games.map((game, index) => (
-                    <GameCover key={`row3-${index}`} game={game} onError={handleImageError} height={64} />
-                  ))}
+                <div className="absolute top-52 left-0 w-full">
+                  <div className="flex animate-scroll-right-slow">
+                    {row3Games.map((game, index) => (
+                      <GameCover key={`row3-${index}`} game={game} onError={handleImageError} height={64} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="absolute bottom-32 left-0 w-full" style={{ zIndex: 1 }}>
-                <div className="flex animate-scroll-left-slow">
-                  {row4Games.map((game, index) => (
-                    <GameCover key={`row4-${index}`} game={game} onError={handleImageError} height={56} />
-                  ))}
+                <div className="absolute bottom-32 left-0 w-full">
+                  <div className="flex animate-scroll-left-slow">
+                    {row4Games.map((game, index) => (
+                      <GameCover key={`row4-${index}`} game={game} onError={handleImageError} height={56} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="absolute bottom-10 left-0 w-full" style={{ zIndex: 1 }}>
-                <div className="flex animate-scroll-right">
-                  {row5Games.map((game, index) => (
-                    <GameCover key={`row5-${index}`} game={game} onError={handleImageError} height={48} />
-                  ))}
+                <div className="absolute bottom-10 left-0 w-full">
+                  <div className="flex animate-scroll-right">
+                    {row5Games.map((game, index) => (
+                      <GameCover key={`row5-${index}`} game={game} onError={handleImageError} height={48} />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
