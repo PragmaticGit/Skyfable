@@ -45,6 +45,14 @@
             bottom: 20px;
             z-index: 9999;
         }
+        /* Clear Weather */
+        .clear-weather {
+            filter: brightness(1.1) contrast(1.1) saturate(1.1);
+        }
+        /* Cloudy Weather */
+        .cloudy-weather {
+            filter: blur(0.5px) brightness(0.95) saturate(0.85);
+        }
     </style>
 </head>
 <body>
@@ -877,8 +885,15 @@
             }
           }, [weatherType]);
 
+          // Compute weather filter class
+          const weatherFilterClass = weatherType === 'clear'
+            ? 'clear-weather'
+            : weatherType === 'cloudy'
+            ? 'cloudy-weather'
+            : '';
+
           const renderLanding = () => (
-            <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
+            <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`} style={{backgroundColor: '#837EB4'}}>
               <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -979,7 +994,7 @@
             );
             const statusMessage = loadingStatuses[statusIndex];
             return (
-              <div className="min-h-screen relative flex flex-col" style={{backgroundColor: '#837EB4'}}>
+              <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`} style={{backgroundColor: '#837EB4'}}>
                 <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
                   <div 
                     className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -1020,7 +1035,7 @@
           };
 
           const renderResult = () => (
-            <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
+            <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`} style={{backgroundColor: '#837EB4'}}>
               <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -1140,7 +1155,7 @@
           );
 
           const renderLocationError = () => (
-            <div className="min-h-screen relative flex flex-col" style={{backgroundColor: '#837EB4'}}>
+            <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`} style={{backgroundColor: '#837EB4'}}>
               <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
