@@ -50,7 +50,7 @@
 <body>
     <div id="root"></div>
     <div id="weather-particles-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></div>
-    <div id="weather-overlay-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
+    <div id="weather-special-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
     
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
@@ -303,6 +303,154 @@
           } else {
             return <span>{children}</span>;
           }
+        };
+
+        // WeatherSpecialEffects: for clear/cloudy backgrounds
+        const WeatherSpecialEffects = ({ weatherType }) => {
+          // Clear: diagonal light shafts, lens flares, sparkles, brightness
+          if (weatherType === 'clear') {
+            // Light shafts config
+            const shafts = [
+              { angle: -18, left: '10vw', delay: 0 },
+              { angle: -10, left: '35vw', delay: 2 },
+              { angle: 8, left: '60vw', delay: 1.2 },
+            ];
+            // Lens flares config
+            const flares = [
+              { top: '22vh', left: '18vw', size: 38, delay: 0 },
+              { top: '38vh', left: '42vw', size: 22, delay: 1.5 },
+              { top: '12vh', left: '68vw', size: 28, delay: 2.2 },
+            ];
+            // Sparkles config
+            const sparkles = [
+              { top: '25vh', left: '13vw', delay: 0 },
+              { top: '30vh', left: '38vw', delay: 1.2 },
+              { top: '18vh', left: '65vw', delay: 2.1 },
+            ];
+            return (
+              <>
+                {/* Light Shafts */}
+                {shafts.map((s, i) => (
+                  <div key={i} style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: s.left,
+                    width: '18vw',
+                    height: '100vh',
+                    pointerEvents: 'none',
+                    zIndex: 1,
+                    opacity: 0.18,
+                    transform: `rotate(${s.angle}deg)`,
+                    background: 'linear-gradient(90deg, rgba(255,255,220,0.00) 0%, rgba(255,255,220,0.18) 50%, rgba(255,255,220,0.00) 100%)',
+                    filter: 'blur(2px)',
+                    animation: `shaft-move 8s linear infinite`,
+                    animationDelay: `${s.delay}s`
+                  }} />
+                ))}
+                {/* Lens Flares */}
+                {flares.map((f, i) => (
+                  <div key={i} style={{
+                    position: 'absolute',
+                    top: f.top,
+                    left: f.left,
+                    width: f.size + 'px',
+                    height: f.size + 'px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,220,0.18) 60%, rgba(255,255,220,0.00) 100%)',
+                    opacity: 0.0,
+                    pointerEvents: 'none',
+                    zIndex: 2,
+                    animation: `flare-fade 5.5s linear infinite`,
+                    animationDelay: `${f.delay}s`
+                  }} />
+                ))}
+                {/* Sparkles */}
+                {sparkles.map((sp, i) => (
+                  <div key={i} style={{
+                    position: 'absolute',
+                    top: sp.top,
+                    left: sp.left,
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, #fffbe0 0%, rgba(255,255,255,0.0) 80%)',
+                    opacity: 0.0,
+                    pointerEvents: 'none',
+                    zIndex: 3,
+                    animation: `sparkle-twinkle 3.5s linear infinite`,
+                    animationDelay: `${sp.delay}s`
+                  }} />
+                ))}
+                {/* Brightness filter overlay */}
+                <div style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100vw',
+                  height: '100vh',
+                  zIndex: 4,
+                  pointerEvents: 'none',
+                  background: 'transparent',
+                  filter: 'brightness(1.05)',
+                  mixBlendMode: 'screen',
+                }} />
+                <style>{`
+                  @keyframes shaft-move {
+                    0% { opacity: 0.13; transform: translateY(0) rotate(var(--angle,0deg)); }
+                    50% { opacity: 0.22; transform: translateY(12vh) rotate(var(--angle,0deg)); }
+                    100% { opacity: 0.13; transform: translateY(0) rotate(var(--angle,0deg)); }
+                  }
+                  @keyframes flare-fade {
+                    0%, 100% { opacity: 0; }
+                    10% { opacity: 0.7; }
+                    40% { opacity: 0.18; }
+                    80% { opacity: 0.0; }
+                  }
+                  @keyframes sparkle-twinkle {
+                    0%, 100% { opacity: 0; transform: scale(0.7); }
+                    20% { opacity: 0.7; transform: scale(1.1); }
+                    60% { opacity: 0.2; transform: scale(0.8); }
+                  }
+                `}</style>
+              </>
+            );
+          }
+          // Cloudy: moving cloud shadows, multi-layer
+          if (weatherType === 'cloudy') {
+            const layers = [
+              { size: '60vw', top: '18vh', left: '-20vw', opacity: 0.13, speed: 38, blur: 32 },
+              { size: '80vw', top: '38vh', left: '-40vw', opacity: 0.09, speed: 52, blur: 44 },
+              { size: '100vw', top: '8vh', left: '-60vw', opacity: 0.07, speed: 70, blur: 60 },
+            ];
+            return (
+              <>
+                {layers.map((l, i) => (
+                  <div key={i} style={{
+                    position: 'absolute',
+                    top: l.top,
+                    left: l.left,
+                    width: l.size,
+                    height: '32vh',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(60,60,80,0.18) 0%, rgba(60,60,80,0.0) 80%)',
+                    opacity: l.opacity,
+                    filter: `blur(${l.blur}px)`,
+                    pointerEvents: 'none',
+                    zIndex: 1,
+                    animation: `cloud-shadow-move ${l.speed}s linear infinite`,
+                    animationDelay: `${i * 2}s`
+                  }} />
+                ))}
+                <style>{`
+                  @keyframes cloud-shadow-move {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(120vw); }
+                  }
+                `}</style>
+              </>
+            );
+          }
+          return null;
         };
 
         const SkyFable = () => {
@@ -654,6 +802,13 @@
               if (root) ReactDOM.unmountComponentAtNode(root);
               if (overlayRoot) ReactDOM.unmountComponentAtNode(overlayRoot);
             };
+          }, [weatherType]);
+
+          // Render special effects globally
+          useEffect(() => {
+            const root = document.getElementById('weather-special-root');
+            if (root) ReactDOM.render(<WeatherSpecialEffects weatherType={weatherType} />, root);
+            return () => { if (root) ReactDOM.unmountComponentAtNode(root); };
           }, [weatherType]);
 
           // In renderLanding, add a button to manually cycle weatherType
