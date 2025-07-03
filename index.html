@@ -50,6 +50,7 @@
 <body>
     <div id="root"></div>
     <div id="weather-particles-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></div>
+    <div id="weather-overlay-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
     
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
@@ -215,6 +216,93 @@
           return (
             <canvas ref={canvasRef} style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:0,pointerEvents:'none'}} />
           );
+        };
+
+        // WeatherOverlay: ambient color gradient overlay
+        const WeatherOverlay = ({ weatherType }) => {
+          // Define gradients for each weather type
+          const gradients = {
+            rain: 'linear-gradient(120deg, rgba(80,90,180,0.18) 0%, rgba(120,180,255,0.22) 100%)',
+            snow: 'linear-gradient(120deg, rgba(200,220,255,0.13) 0%, rgba(180,180,255,0.18) 100%)',
+            sunny: 'linear-gradient(120deg, rgba(255,200,100,0.13) 0%, rgba(255,240,180,0.12) 100%)',
+            cloudy: 'linear-gradient(120deg, rgba(120,120,180,0.13) 0%, rgba(180,180,200,0.13) 100%)',
+            fog: 'linear-gradient(120deg, rgba(180,180,200,0.10) 0%, rgba(200,200,220,0.13) 100%)',
+            clear: 'linear-gradient(120deg, rgba(130,120,255,0.08) 0%, rgba(255,255,255,0.08) 100%)'
+          };
+          const style = {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            zIndex: 1,
+            pointerEvents: 'none',
+            transition: 'background 0.8s cubic-bezier(.4,0,.2,1)',
+            background: gradients[weatherType] || gradients.clear
+          };
+          return <div style={style} />;
+        };
+
+        // WeatherHeadline: main headline with minimal weather effect
+        const WeatherHeadline = ({ weatherType, children }) => {
+          // Rain: subtle drip on descenders; Sunny: gentle glow; Snow: sparkles
+          if (weatherType === 'rain') {
+            return (
+              <span className="weather-headline-rain" style={{position:'relative',display:'inline-block'}}>
+                {children}
+                <style>{`
+                  .weather-headline-rain .drip {
+                    position: absolute;
+                    width: 4px;
+                    height: 18px;
+                    background: linear-gradient(to bottom, #FFF8CC 60%, rgba(255,255,255,0));
+                    border-radius: 2px;
+                    left: 0.32em;
+                    top: 1.1em;
+                    opacity: 0.18;
+                    animation: drip-fall 1.8s infinite linear;
+                  }
+                  @keyframes drip-fall {
+                    0% { opacity: 0.18; transform: translateY(0); }
+                    80% { opacity: 0.18; }
+                    100% { opacity: 0; transform: translateY(18px); }
+                  }
+                `}</style>
+                <span className="drip" />
+              </span>
+            );
+          } else if (weatherType === 'sunny') {
+            return (
+              <span className="weather-headline-sunny" style={{position:'relative',display:'inline-block',textShadow:'0 0 16px #ffe9a0, 0 0 4px #fff099'}}>
+                {children}
+                <style>{`
+                  .weather-headline-sunny {
+                    animation: sunny-glow 2.2s infinite alternate;
+                  }
+                  @keyframes sunny-glow {
+                    0% { text-shadow: 0 0 8px #ffe9a0, 0 0 2px #fff099; }
+                    100% { text-shadow: 0 0 18px #ffe9a0, 0 0 8px #fff099; }
+                  }
+                `}</style>
+              </span>
+            );
+          } else if (weatherType === 'snow') {
+            return (
+              <span className="weather-headline-snow" style={{position:'relative',display:'inline-block'}}>
+                {children}
+                <span className="sparkle" style={{position:'absolute',left:'0.5em',top:'-0.3em',fontSize:'0.6em',color:'#fff',opacity:0.7,animation:'sparkle-fade 2.2s infinite alternate'}}>*</span>
+                <style>{`
+                  @keyframes sparkle-fade {
+                    0% { opacity: 0.7; transform: scale(1) rotate(0deg); }
+                    50% { opacity: 1; transform: scale(1.3) rotate(10deg); }
+                    100% { opacity: 0.7; transform: scale(1) rotate(0deg); }
+                  }
+                `}</style>
+              </span>
+            );
+          } else {
+            return <span>{children}</span>;
+          }
         };
 
         const SkyFable = () => {
@@ -556,12 +644,16 @@
             }
           }, [weather]);
 
-          // Render particles globally
+          // Render particles and overlay globally
           useEffect(() => {
             const root = document.getElementById('weather-particles-root');
-            if (!root) return;
-            ReactDOM.render(<WeatherParticles weatherType={weatherType} />, root);
-            return () => { ReactDOM.unmountComponentAtNode(root); };
+            if (root) ReactDOM.render(<WeatherParticles weatherType={weatherType} />, root);
+            const overlayRoot = document.getElementById('weather-overlay-root');
+            if (overlayRoot) ReactDOM.render(<WeatherOverlay weatherType={weatherType} />, overlayRoot);
+            return () => {
+              if (root) ReactDOM.unmountComponentAtNode(root);
+              if (overlayRoot) ReactDOM.unmountComponentAtNode(overlayRoot);
+            };
           }, [weatherType]);
 
           const renderLanding = () => (
@@ -599,7 +691,9 @@
                   {/* Left Content */}
                   <div className="flex-1 text-center lg:text-left lg:pr-16">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style={{color: '#FFF099'}}>
-                      Find your perfect game based on the weather
+                      <WeatherHeadline weatherType={weatherType}>
+                        Find your perfect game based on the weather
+                      </WeatherHeadline>
                     </h1>
                     
                     <p className="text-lg sm:text-xl mb-6 text-white opacity-90 font-medium leading-relaxed">
