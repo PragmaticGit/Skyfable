@@ -53,6 +53,103 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
+        // AnimatedGameBackground component and CSS
+        const animationCSS = `
+@keyframes scroll-right {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.animate-scroll-right { animation: scroll-right 60s linear infinite; }
+.animate-scroll-left { animation: scroll-left 45s linear infinite; }
+.animate-scroll-right-slow { animation: scroll-right 80s linear infinite; }
+.animate-scroll-left-slow { animation: scroll-left 70s linear infinite; }
+`;
+        if (typeof document !== 'undefined' && !document.getElementById('animated-game-bg-css')) {
+          const style = document.createElement('style');
+          style.id = 'animated-game-bg-css';
+          style.innerHTML = animationCSS;
+          document.head.appendChild(style);
+        }
+
+        const AnimatedGameBackground = () => {
+          // Fallback games
+          const fallbackGames = [
+            { title: "Firewatch", gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg" },
+            { title: "No Man's Sky", gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg" },
+            { title: "Control", gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/870780/header.jpg" },
+            { title: "The Long Dark", gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg" },
+            { title: "Journey", gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg" },
+            { title: "Stardew Valley", gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/413150/header.jpg" },
+            { title: "Ori and the Blind Forest", gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/261570/header.jpg" },
+            { title: "What Remains of Edith Finch", gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/501300/header.jpg" }
+          ];
+
+          // Duplicate and shuffle for smooth scroll
+          const createGameRow = (games) => {
+            const shuffled = [...games].sort(() => Math.random() - 0.5);
+            return [...shuffled, ...shuffled, ...shuffled];
+          };
+          const row1Games = createGameRow(fallbackGames);
+          const row2Games = createGameRow(fallbackGames);
+          const row3Games = createGameRow(fallbackGames);
+
+          const GameCover = ({ game, onError }) => (
+            <div className="flex-shrink-0 mx-2">
+              <img
+                src={game.gameImage}
+                alt={game.title}
+                className="h-16 w-28 object-cover rounded-lg shadow-md opacity-30 hover:opacity-50 transition-opacity duration-300"
+                onError={onError}
+                style={{ filter: 'blur(0.5px) brightness(0.7)' }}
+              />
+            </div>
+          );
+          const handleImageError = (e) => { e.target.style.display = 'none'; };
+          return (
+            <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
+              <div className="absolute top-20 left-0 w-full">
+                <div className="flex animate-scroll-right">
+                  {row1Games.map((game, index) => (
+                    <GameCover key={`row1-${index}`} game={game} onError={handleImageError} />
+                  ))}
+                </div>
+              </div>
+              <div className="absolute top-40 left-0 w-full">
+                <div className="flex animate-scroll-left">
+                  {row2Games.map((game, index) => (
+                    <GameCover key={`row2-${index}`} game={game} onError={handleImageError} />
+                  ))}
+                </div>
+              </div>
+              <div className="absolute top-60 left-0 w-full">
+                <div className="flex animate-scroll-right-slow">
+                  {row3Games.map((game, index) => (
+                    <GameCover key={`row3-${index}`} game={game} onError={handleImageError} />
+                  ))}
+                </div>
+              </div>
+              <div className="absolute bottom-20 left-0 w-full">
+                <div className="flex animate-scroll-left-slow">
+                  {row1Games.map((game, index) => (
+                    <GameCover key={`row4-${index}`} game={game} onError={handleImageError} />
+                  ))}
+                </div>
+              </div>
+              <div className="absolute bottom-4 left-0 w-full">
+                <div className="flex animate-scroll-right">
+                  {row2Games.map((game, index) => (
+                    <GameCover key={`row5-${index}`} game={game} onError={handleImageError} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        };
+
         const SkyFable = () => {
           const [currentScreen, setCurrentScreen] = useState('landing');
           const [weather, setWeather] = useState(null);
@@ -729,7 +826,12 @@
             case 'location-error':
               return renderLocationError();
             default:
-              return renderLanding();
+              return (
+                <>
+                  <AnimatedGameBackground />
+                  {renderLanding()}
+                </>
+              );
           }
         };
 
