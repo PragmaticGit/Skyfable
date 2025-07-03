@@ -263,35 +263,33 @@
               `}</style>
             </>;
           }
-          // Cloudy: stylized drifting clouds (SVG/CSS), not just mist
+          // Cloudy: animated mist/fog overlays, no literal clouds
           if (weatherType === 'cloudy') {
-            // Disperse 8 clouds at various positions, opacities, and animation speeds
-            const cloudConfigs = [
-              { top: '10vh', left: '-20vw', size: '18vw', opacity: 0.55, duration: 38, delay: 0 },
-              { top: '25vh', left: '-10vw', size: '22vw', opacity: 0.38, duration: 52, delay: 8 },
-              { top: '40vh', left: '-30vw', size: '28vw', opacity: 0.32, duration: 44, delay: 4 },
-              { top: '60vh', left: '-15vw', size: '20vw', opacity: 0.28, duration: 60, delay: 12 },
-              { top: '15vh', left: '30vw', size: '16vw', opacity: 0.33, duration: 48, delay: 6 },
-              { top: '50vh', left: '10vw', size: '24vw', opacity: 0.29, duration: 54, delay: 10 },
-              { top: '70vh', left: '-25vw', size: '26vw', opacity: 0.25, duration: 66, delay: 14 },
-              { top: '35vh', left: '50vw', size: '18vw', opacity: 0.22, duration: 58, delay: 16 },
+            // Layered, animated mist/fog gradients
+            const fogLayers = [
+              { top: '10vh', left: '-10vw', width: '120vw', height: '30vh', opacity: 0.22, duration: 48, delay: 0, blur: 32 },
+              { top: '40vh', left: '-20vw', width: '140vw', height: '28vh', opacity: 0.18, duration: 62, delay: 8, blur: 44 },
+              { top: '20vh', left: '-30vw', width: '110vw', height: '24vh', opacity: 0.15, duration: 54, delay: 16, blur: 36 },
+              { top: '60vh', left: '-15vw', width: '130vw', height: '32vh', opacity: 0.19, duration: 70, delay: 12, blur: 52 },
+              { top: '0vh', left: '-25vw', width: '150vw', height: '22vh', opacity: 0.13, duration: 80, delay: 20, blur: 60 },
             ];
             return <>
-              {cloudConfigs.map((c, i) => (
-                <svg key={i} width={c.size} height={c.size} viewBox="0 0 120 60" style={{
+              {fogLayers.map((f, i) => (
+                <div key={i} style={{
                   position: 'fixed',
-                  top: c.top,
-                  left: c.left,
-                  opacity: c.opacity,
+                  top: f.top,
+                  left: f.left,
+                  width: f.width,
+                  height: f.height,
+                  opacity: f.opacity,
                   zIndex: 2,
                   pointerEvents: 'none',
-                  animation: `cloud-drift-${i} ${c.duration}s linear infinite`,
-                  animationDelay: `${c.delay}s`,
-                }}>
-                  <ellipse cx="40" cy="40" rx="32" ry="18" fill="#bfc3d6" />
-                  <ellipse cx="70" cy="32" rx="28" ry="16" fill="#d2d6e6" />
-                  <ellipse cx="90" cy="44" rx="18" ry="12" fill="#c7cbe0" />
-                </svg>
+                  background: 'radial-gradient(ellipse at 50% 50%, rgba(200,210,230,0.85) 0%, rgba(180,180,200,0.0) 80%)',
+                  filter: `blur(${f.blur}px)`,
+                  animation: `fog-drift-${i} ${f.duration}s linear infinite`,
+                  animationDelay: `${f.delay}s`,
+                  transition: 'opacity 1.2s cubic-bezier(.4,0,.2,1)'
+                }} />
               ))}
               {/* Mist/fog overlay at the bottom */}
               <div style={{
@@ -307,7 +305,7 @@
               }} />
               <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.18) brightness(0.97) contrast(0.96)'}} />
               <style>{`
-                ${cloudConfigs.map((c, i) => `@keyframes cloud-drift-${i} { 0% { transform: translateX(0); } 100% { transform: translateX(120vw); } }`).join('\n')}
+                ${fogLayers.map((f, i) => `@keyframes fog-drift-${i} { 0% { transform: translateX(0); opacity: ${f.opacity}; } 50% { opacity: ${f.opacity * 1.2}; } 100% { transform: translateX(40vw); opacity: ${f.opacity}; } }`).join('\n')}
                 body.cloudy-ui .rounded-lg, body.cloudy-ui .shadow-lg, body.cloudy-ui .shadow-2xl {
                   filter: grayscale(0.18) brightness(0.97) contrast(0.96);
                   box-shadow: none !important;
@@ -957,7 +955,7 @@
                             fill="currentColor" 
                             viewBox="0 0 20 20"
                           >
-                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                            <path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                           </svg>
                           <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                             <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg text-sm w-72">
