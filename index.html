@@ -253,19 +253,19 @@
                 <style>{`
                   .weather-headline-rain .drip {
                     position: absolute;
-                    width: 4px;
-                    height: 18px;
+                    width: 3px;
+                    height: 12px;
                     background: linear-gradient(to bottom, #FFF8CC 60%, rgba(255,255,255,0));
                     border-radius: 2px;
                     left: 0.32em;
                     top: 1.1em;
-                    opacity: 0.18;
-                    animation: drip-fall 1.8s infinite linear;
+                    opacity: 0.10;
+                    animation: drip-fall 2.8s infinite linear;
                   }
                   @keyframes drip-fall {
-                    0% { opacity: 0.18; transform: translateY(0); }
-                    80% { opacity: 0.18; }
-                    100% { opacity: 0; transform: translateY(18px); }
+                    0% { opacity: 0.10; transform: translateY(0); }
+                    80% { opacity: 0.10; }
+                    100% { opacity: 0; transform: translateY(12px); }
                   }
                 `}</style>
                 <span className="drip" />
@@ -273,15 +273,15 @@
             );
           } else if (weatherType === 'sunny') {
             return (
-              <span className="weather-headline-sunny" style={{position:'relative',display:'inline-block',textShadow:'0 0 16px #ffe9a0, 0 0 4px #fff099'}}>
+              <span className="weather-headline-sunny" style={{position:'relative',display:'inline-block',textShadow:'0 0 4px #ffe9a0, 0 0 1px #fff099'}}>
                 {children}
                 <style>{`
                   .weather-headline-sunny {
-                    animation: sunny-glow 2.2s infinite alternate;
+                    animation: sunny-glow 3.5s infinite alternate;
                   }
                   @keyframes sunny-glow {
-                    0% { text-shadow: 0 0 8px #ffe9a0, 0 0 2px #fff099; }
-                    100% { text-shadow: 0 0 18px #ffe9a0, 0 0 8px #fff099; }
+                    0% { text-shadow: 0 0 2px #ffe9a0, 0 0 1px #fff099; }
+                    100% { text-shadow: 0 0 8px #ffe9a0, 0 0 3px #fff099; }
                   }
                 `}</style>
               </span>
@@ -290,12 +290,12 @@
             return (
               <span className="weather-headline-snow" style={{position:'relative',display:'inline-block'}}>
                 {children}
-                <span className="sparkle" style={{position:'absolute',left:'0.5em',top:'-0.3em',fontSize:'0.6em',color:'#fff',opacity:0.7,animation:'sparkle-fade 2.2s infinite alternate'}}>*</span>
+                <span className="sparkle" style={{position:'absolute',left:'0.5em',top:'-0.3em',fontSize:'0.5em',color:'#fff',opacity:0.4,animation:'sparkle-fade 3.2s infinite alternate'}}>*</span>
                 <style>{`
                   @keyframes sparkle-fade {
-                    0% { opacity: 0.7; transform: scale(1) rotate(0deg); }
-                    50% { opacity: 1; transform: scale(1.3) rotate(10deg); }
-                    100% { opacity: 0.7; transform: scale(1) rotate(0deg); }
+                    0% { opacity: 0.4; transform: scale(1) rotate(0deg); }
+                    50% { opacity: 0.7; transform: scale(1.1) rotate(10deg); }
+                    100% { opacity: 0.4; transform: scale(1) rotate(0deg); }
                   }
                 `}</style>
               </span>
@@ -656,6 +656,17 @@
             };
           }, [weatherType]);
 
+          // In renderLanding, add a button to manually cycle weatherType
+          const availableWeatherTypes = ['rain', 'sunny', 'cloudy', 'snow', 'clear'];
+          const [manualWeather, setManualWeather] = useState(null);
+          const effectiveWeatherType = manualWeather || weatherType;
+
+          const handleCycleWeather = () => {
+            const currentIdx = availableWeatherTypes.indexOf(effectiveWeatherType);
+            const nextIdx = (currentIdx + 1) % availableWeatherTypes.length;
+            setManualWeather(availableWeatherTypes[nextIdx]);
+          };
+
           const renderLanding = () => (
             <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
               <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
@@ -684,6 +695,14 @@
                 >
                   Forecast My Game
                 </button>
+                <button
+                  onClick={handleCycleWeather}
+                  className="ml-4 px-3 py-2 rounded-lg font-semibold text-xs border border-yellow-200 bg-white bg-opacity-10 text-yellow-100 hover:bg-opacity-20 transition-all duration-200"
+                  style={{minWidth:'120px'}}
+                  title="Manually cycle weather for preview"
+                >
+                  Weather: {effectiveWeatherType.charAt(0).toUpperCase() + effectiveWeatherType.slice(1)}
+                </button>
               </nav>
 
               <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8">
@@ -691,7 +710,7 @@
                   {/* Left Content */}
                   <div className="flex-1 text-center lg:text-left lg:pr-16">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style={{color: '#FFF099'}}>
-                      <WeatherHeadline weatherType={weatherType}>
+                      <WeatherHeadline weatherType={effectiveWeatherType}>
                         Find your perfect game based on the weather
                       </WeatherHeadline>
                     </h1>
