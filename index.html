@@ -113,6 +113,73 @@
               setDatabaseLoading(false);
             }
           };
+
+          const getWeatherType = (condition, temp = 20) => {
+            try {
+              console.log('Loading game databases...');
+              const [rainGames, sunnyGames, cloudyGames, snowGames, clearGames] = await Promise.all([
+                fetch('./rain-games.json').then(r => r.json()),
+                fetch('./sunny-games.json').then(r => r.json()),
+                fetch('./cloudy-games.json').then(r => r.json()),
+                fetch('./snow-games.json').then(r => r.json()),
+                fetch('./clear-games.json').then(r => r.json())
+              ]);
+
+              const database = {
+                rain: rainGames,
+                sunny: sunnyGames,
+                cloudy: cloudyGames,
+                snow: snowGames,
+                clear: clearGames
+              };
+
+              console.log('Game database loaded successfully:', database);
+              setGameDatabase(database);
+              setDatabaseLoading(false);
+            } catch (error) {
+              console.error('Failed to load game databases:', error);
+              // Create fallback database
+              const fallbackDatabase = {
+                rain: [{
+                  title: "Firewatch",
+                  tags: ["Single-player", "Atmospheric", "Story-Rich"],
+                  description: "A mysterious adventure in the Wyoming wilderness.",
+                  steamUrl: "https://store.steampowered.com/app/383870/Firewatch/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"
+                }],
+                sunny: [{
+                  title: "No Man's Sky",
+                  tags: ["Space", "Exploration", "Colorful"],
+                  description: "Explore vibrant alien worlds under exotic skies.",
+                  steamUrl: "https://store.steampowered.com/app/275850/No_Mans_Sky/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/275850/header.jpg"
+                }],
+                cloudy: [{
+                  title: "What Remains of Edith Finch",
+                  tags: ["Narrative", "Atmospheric", "Mystery"],
+                  description: "A hauntingly beautiful narrative adventure.",
+                  steamUrl: "https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/501300/header.jpg"
+                }],
+                snow: [{
+                  title: "The Long Dark",
+                  tags: ["Survival", "Winter", "Atmospheric"],
+                  description: "Survive the Canadian wilderness in winter.",
+                  steamUrl: "https://store.steampowered.com/app/305620/The_Long_Dark/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/305620/header.jpg"
+                }],
+                clear: [{
+                  title: "Journey",
+                  tags: ["Adventure", "Beautiful", "Meditative"],
+                  description: "A transcendent adventure through mystical landscapes.",
+                  steamUrl: "https://store.steampowered.com/app/638230/Journey/",
+                  gameImage: "https://cdn.akamai.steamstatic.com/steam/apps/638230/header.jpg"
+                }]
+              };
+              setGameDatabase(fallbackDatabase);
+              setDatabaseLoading(false);
+            }
+          };
             const lowerCondition = condition.toLowerCase();
             console.log('Weather condition received:', condition, 'Temperature:', temp);
             
