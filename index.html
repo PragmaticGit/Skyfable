@@ -263,16 +263,20 @@
               `}</style>
             </>;
           }
-          // Cloudy: animated mist/fog overlays, no literal clouds
+          // Cloudy: intensified animated mist/fog overlays
           if (weatherType === 'cloudy') {
-            // Layered, animated mist/fog gradients
+            // More, larger, and more opaque fog layers for a stronger effect
             const fogLayers = [
-              { top: '10vh', left: '-10vw', width: '120vw', height: '30vh', opacity: 0.22, duration: 48, delay: 0, blur: 32 },
-              { top: '40vh', left: '-20vw', width: '140vw', height: '28vh', opacity: 0.18, duration: 62, delay: 8, blur: 44 },
-              { top: '20vh', left: '-30vw', width: '110vw', height: '24vh', opacity: 0.15, duration: 54, delay: 16, blur: 36 },
-              { top: '60vh', left: '-15vw', width: '130vw', height: '32vh', opacity: 0.19, duration: 70, delay: 12, blur: 52 },
-              { top: '0vh', left: '-25vw', width: '150vw', height: '22vh', opacity: 0.13, duration: 80, delay: 20, blur: 60 },
+              { top: '-10vh', left: '-20vw', width: '160vw', height: '40vh', opacity: 0.32, duration: 54, delay: 0, blur: 60 },
+              { top: '20vh', left: '-10vw', width: '140vw', height: '36vh', opacity: 0.28, duration: 62, delay: 8, blur: 48 },
+              { top: '40vh', left: '-30vw', width: '180vw', height: '44vh', opacity: 0.26, duration: 70, delay: 16, blur: 72 },
+              { top: '60vh', left: '-15vw', width: '150vw', height: '38vh', opacity: 0.29, duration: 60, delay: 12, blur: 56 },
+              { top: '0vh', left: '-25vw', width: '170vw', height: '32vh', opacity: 0.23, duration: 80, delay: 20, blur: 64 },
+              { top: '30vh', left: '10vw', width: '120vw', height: '30vh', opacity: 0.21, duration: 66, delay: 18, blur: 40 },
+              { top: '50vh', left: '-40vw', width: '200vw', height: '50vh', opacity: 0.19, duration: 90, delay: 24, blur: 80 },
+              { top: '70vh', left: '-10vw', width: '160vw', height: '36vh', opacity: 0.22, duration: 74, delay: 28, blur: 60 },
             ];
+            const fogColor = 'rgba(180,190,220,0.95)';
             return <>
               {fogLayers.map((f, i) => (
                 <div key={i} style={{
@@ -284,7 +288,7 @@
                   opacity: f.opacity,
                   zIndex: 2,
                   pointerEvents: 'none',
-                  background: 'radial-gradient(ellipse at 50% 50%, rgba(200,210,230,0.85) 0%, rgba(180,180,200,0.0) 80%)',
+                  background: `radial-gradient(ellipse at 50% 50%, ${fogColor} 0%, rgba(180,180,200,0.0) 80%)`,
                   filter: `blur(${f.blur}px)`,
                   animation: `fog-drift-${i} ${f.duration}s linear infinite`,
                   animationDelay: `${f.delay}s`,
@@ -297,17 +301,17 @@
                 left: 0,
                 bottom: 0,
                 width: '100vw',
-                height: '22vh',
+                height: '28vh',
                 zIndex: 2,
                 pointerEvents: 'none',
-                background: 'linear-gradient(to top, rgba(180,180,200,0.22) 0%, rgba(180,180,200,0.0) 100%)',
-                filter: 'blur(2px)'
+                background: 'linear-gradient(to top, rgba(180,190,220,0.38) 0%, rgba(180,180,200,0.0) 100%)',
+                filter: 'blur(8px)'
               }} />
-              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.18) brightness(0.97) contrast(0.96)'}} />
+              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.22) brightness(0.95) contrast(0.93)'}} />
               <style>{`
-                ${fogLayers.map((f, i) => `@keyframes fog-drift-${i} { 0% { transform: translateX(0); opacity: ${f.opacity}; } 50% { opacity: ${f.opacity * 1.2}; } 100% { transform: translateX(40vw); opacity: ${f.opacity}; } }`).join('\n')}
+                ${fogLayers.map((f, i) => `@keyframes fog-drift-${i} { 0% { transform: translateX(0); opacity: ${f.opacity}; } 50% { opacity: ${Math.min(1, f.opacity * 1.35)}; } 100% { transform: translateX(40vw); opacity: ${f.opacity}; } }`).join('\n')}
                 body.cloudy-ui .rounded-lg, body.cloudy-ui .shadow-lg, body.cloudy-ui .shadow-2xl {
-                  filter: grayscale(0.18) brightness(0.97) contrast(0.96);
+                  filter: grayscale(0.22) brightness(0.95) contrast(0.93);
                   box-shadow: none !important;
                   border: none !important;
                 }
@@ -687,8 +691,6 @@
           const handleForecastClick = async () => {
             setCurrentScreen('loading');
             setLoadingProgress(0);
-            setLocationError(false);
-
             const progressInterval = setInterval(() => {
               setLoadingProgress(prev => {
                 if (prev >= 90) {
@@ -698,31 +700,17 @@
                 return prev + Math.random() * 25;
               });
             }, 150);
-
             try {
-              const userLocation = await getLocation();
-              setLocation(userLocation);
-
-              const weatherData = await fetchWeather(userLocation.lat, userLocation.lon);
-              setWeather(weatherData);
-              console.log('=== WEATHER DATA ===');
-              console.log('Raw weather:', weatherData);
-
-              const weatherType = getWeatherType(weatherData.weather[0].main, weatherData.main.temp);
-              console.log('=== GAME SELECTION ===');
-              const randomGame = await selectRandomGame(weatherType);
-              console.log('Final selected game:', randomGame);
-              
+              // Always use effectiveWeatherType (manual or real)
+              const randomGame = await selectRandomGame(effectiveWeatherType);
               setGameRecommendation(randomGame);
               setLastGameTitle(randomGame.title);
-
               setTimeout(() => {
                 setLoadingProgress(100);
                 setTimeout(() => {
                   setCurrentScreen('result');
                 }, 300);
               }, 1200);
-
             } catch (error) {
               console.error('Error fetching data:', error);
               clearInterval(progressInterval);
@@ -804,10 +792,11 @@
 
           // Update weatherType when weather changes
           useEffect(() => {
+            if (manualWeather) return; // Don't update weatherType if user has manually selected
             if (weather && weather.weather && weather.main) {
               setWeatherType(getWeatherType(weather.weather[0].main, weather.main.temp));
             }
-          }, [weather]);
+          }, [weather, manualWeather]);
 
           // Render particles and overlay globally
           useEffect(() => {
@@ -843,12 +832,7 @@
             const randomGame = await selectRandomGame(newWeather);
             setGameRecommendation(randomGame);
             setLastGameTitle(randomGame.title);
-            // Set weather state to match the manual weather for all effects
-            setWeather({
-              weather: [{ main: newWeather, description: newWeather }],
-              name: 'Manual',
-              main: { temp: 20 }
-            });
+            // Don't update weather state, just lock manualWeather
           };
 
           // Tone down sunny text glow (move here to access weatherType)
