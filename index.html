@@ -263,11 +263,10 @@
 
         // WeatherSpecialEffects: for clear/cloudy backgrounds
         const WeatherSpecialEffects = ({ weatherType }) => {
-          // Clear: cool starfield + geometric sparkles + crisp border glow
+          // Clear: just static filter, no particles or background effects
           if (weatherType === 'clear') {
             return <>
-              <StarfieldCanvas />
-              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'brightness(1.05)'}} />
+              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'brightness(1.1) contrast(1.1) saturate(1.1)'}} />
               <style>{`
                 body.clear-ui .rounded-lg, body.clear-ui .shadow-lg, body.clear-ui .shadow-2xl {
                   box-shadow: 0 0 0 2px #eaf6ff, 0 4px 32px 0 rgba(130,180,255,0.10);
@@ -279,10 +278,10 @@
           // Cloudy: moving cloud shadows, multi-layer
           if (weatherType === 'cloudy') {
             const layers = [
-              { size: '80vw', top: '10vh', left: '-30vw', opacity: 0.22, speed: 22, blur: 44 },
-              { size: '110vw', top: '30vh', left: '-60vw', opacity: 0.16, speed: 32, blur: 60 },
-              { size: '100vw', top: '0vh', left: '-50vw', opacity: 0.13, speed: 28, blur: 52 },
-              { size: '120vw', top: '20vh', left: '-80vw', opacity: 0.11, speed: 38, blur: 70 },
+              { size: '90vw', top: '8vh', left: '-30vw', opacity: 0.38, speed: 18, blur: 54 },
+              { size: '120vw', top: '28vh', left: '-60vw', opacity: 0.28, speed: 24, blur: 70 },
+              { size: '110vw', top: '0vh', left: '-50vw', opacity: 0.22, speed: 20, blur: 62 },
+              { size: '130vw', top: '18vh', left: '-80vw', opacity: 0.19, speed: 28, blur: 80 },
             ];
             return <>
               {layers.map((l, i) => (
@@ -291,9 +290,9 @@
                   top: l.top,
                   left: l.left,
                   width: l.size,
-                  height: '38vh',
+                  height: '44vh',
                   borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(60,60,80,0.38) 0%, rgba(60,60,80,0.0) 80%)',
+                  background: 'radial-gradient(circle, rgba(60,60,80,0.55) 0%, rgba(60,60,80,0.0) 80%)',
                   opacity: l.opacity,
                   filter: `blur(${l.blur}px)`,
                   pointerEvents: 'none',
@@ -302,6 +301,18 @@
                   animationDelay: `${i * 2}s`
                 }} />
               ))}
+              {/* Mist/fog overlay at the bottom */}
+              <div style={{
+                position: 'fixed',
+                left: 0,
+                bottom: 0,
+                width: '100vw',
+                height: '22vh',
+                zIndex: 2,
+                pointerEvents: 'none',
+                background: 'linear-gradient(to top, rgba(180,180,200,0.22) 0%, rgba(180,180,200,0.0) 100%)',
+                filter: 'blur(2px)'
+              }} />
               <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.18) brightness(0.97) contrast(0.96)'}} />
               <style>{`
                 @keyframes cloud-shadow-move {
@@ -323,6 +334,7 @@
         const WeatherParticles = ({ weatherType }) => {
           const canvasRef = useRef(null);
           useEffect(() => {
+            // Only render for rain, snow, sunny
             if (weatherType !== 'rain' && weatherType !== 'snow' && weatherType !== 'sunny') return;
             const canvas = canvasRef.current;
             if (!canvas) return;
