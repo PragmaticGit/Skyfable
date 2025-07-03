@@ -458,44 +458,6 @@
           );
         };
 
-        // Tone down sunny text glow
-        useEffect(() => {
-          const styleId = 'sunny-headline-style';
-          let style = document.getElementById(styleId);
-          if (weatherType === 'sunny') {
-            if (!style) {
-              style = document.createElement('style');
-              style.id = styleId;
-              style.innerHTML = `
-                .weather-headline-sunny {
-                  animation: sunny-glow 3.5s infinite alternate !important;
-                  text-shadow: 0 0 2px #ffe9a0, 0 0 1px #fff099 !important;
-                }
-                @keyframes sunny-glow {
-                  0% { text-shadow: 0 0 2px #ffe9a0, 0 0 1px #fff099; }
-                  100% { text-shadow: 0 0 6px #ffe9a0, 0 0 2px #fff099; }
-                }
-              `;
-              document.head.appendChild(style);
-            }
-          } else {
-            if (style) style.remove();
-          }
-        }, [weatherType]);
-
-        // Add crisp border/shadow to main UI cards/buttons for clear weather
-        // and softening filter for cloudy weather
-        // (inject a class on body based on weatherType)
-        useEffect(() => {
-          const body = document.body;
-          body.classList.remove('clear-ui', 'cloudy-ui');
-          if (weatherType === 'clear') {
-            body.classList.add('clear-ui');
-          } else if (weatherType === 'cloudy') {
-            body.classList.add('cloudy-ui');
-          }
-        }, [weatherType]);
-
         const SkyFable = () => {
           const [currentScreen, setCurrentScreen] = useState('landing');
           const [weather, setWeather] = useState(null);
@@ -876,6 +838,44 @@
               main: { temp: 20 }
             });
           };
+
+          // Tone down sunny text glow (move here to access weatherType)
+          useEffect(() => {
+            const styleId = 'sunny-headline-style';
+            let style = document.getElementById(styleId);
+            if (weatherType === 'sunny') {
+              if (!style) {
+                style = document.createElement('style');
+                style.id = styleId;
+                style.innerHTML = `
+                  .weather-headline-sunny {
+                    animation: sunny-glow 3.5s infinite alternate !important;
+                    text-shadow: 0 0 2px #ffe9a0, 0 0 1px #fff099 !important;
+                  }
+                  @keyframes sunny-glow {
+                    0% { text-shadow: 0 0 2px #ffe9a0, 0 0 1px #fff099; }
+                    100% { text-shadow: 0 0 6px #ffe9a0, 0 0 2px #fff099; }
+                  }
+                `;
+                document.head.appendChild(style);
+              }
+            } else {
+              if (style) style.remove();
+            }
+          }, [weatherType]);
+
+          // Add crisp border/shadow to main UI cards/buttons for clear weather
+          // and softening filter for cloudy weather
+          // (inject a class on body based on weatherType)
+          useEffect(() => {
+            const body = document.body;
+            body.classList.remove('clear-ui', 'cloudy-ui');
+            if (weatherType === 'clear') {
+              body.classList.add('clear-ui');
+            } else if (weatherType === 'cloudy') {
+              body.classList.add('cloudy-ui');
+            }
+          }, [weatherType]);
 
           const renderLanding = () => (
             <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: '#837EB4'}}>
