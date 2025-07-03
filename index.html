@@ -661,22 +661,10 @@
           const [manualWeather, setManualWeather] = useState(null);
           const effectiveWeatherType = manualWeather || weatherType;
 
-          // When manually cycling weather, also update the game recommendation and weather effects
-          const handleCycleWeather = async () => {
+          const handleCycleWeather = () => {
             const currentIdx = availableWeatherTypes.indexOf(effectiveWeatherType);
             const nextIdx = (currentIdx + 1) % availableWeatherTypes.length;
-            const newWeather = availableWeatherTypes[nextIdx];
-            setManualWeather(newWeather);
-            // Pick a random game for the new weather
-            const randomGame = await selectRandomGame(newWeather);
-            setGameRecommendation(randomGame);
-            setLastGameTitle(randomGame.title);
-            // Set weather state to match the manual weather for all effects
-            setWeather({
-              weather: [{ main: newWeather, description: newWeather }],
-              name: 'Manual',
-              main: { temp: 20 }
-            });
+            setManualWeather(availableWeatherTypes[nextIdx]);
           };
 
           const renderLanding = () => (
@@ -688,6 +676,25 @@
                 >
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
+                <button 
+                  onClick={handleForecastClick}
+                  className="px-4 sm:px-6 py-2 sm:py-3 border-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                  style={{
+                    borderColor: '#FFF099',
+                    color: '#FFF099',
+                    backgroundColor: 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = '#FFF099';
+                    e.target.style.color = '#504B81';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.color = '#FFF099';
+                  }}
+                >
+                  Forecast My Game
+                </button>
                 <button
                   onClick={handleCycleWeather}
                   className="ml-4 px-3 py-2 rounded-lg font-semibold text-xs border border-yellow-200 bg-white bg-opacity-10 text-yellow-100 hover:bg-opacity-20 transition-all duration-200"
