@@ -1061,6 +1061,18 @@
             );
           };
 
+          const navButtonStyle = {
+            minWidth: '120px',
+            padding: '0.5rem 1.5rem',
+            fontSize: '1rem',
+            borderRadius: '0.5rem',
+            border: '1.5px solid #FFF099',
+            background: 'transparent',
+            color: '#FFF099',
+            fontWeight: 600,
+            transition: 'all 0.2s',
+          };
+
           const renderLoading = () => {
             // Determine which status to show based on loadingProgress
             const statusIndex = Math.min(
@@ -1078,11 +1090,7 @@
                     Sky<span style={{color: '#FFF099'}}>Fable</span>
                   </div>
                   <button 
-                    className="px-6 py-3 border-2 rounded-lg font-semibold opacity-50 cursor-not-allowed"
-                    style={{
-                      borderColor: '#FFF099',
-                      color: '#FFF099'
-                    }}
+                    style={navButtonStyle}
                   >
                     Forecast My Game
                   </button>
@@ -1120,11 +1128,7 @@
                 </div>
                 <button 
                   onClick={() => setCurrentScreen('landing')}
-                  className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
-                  style={{
-                    borderColor: '#FFF099',
-                    color: '#FFF099'
-                  }}
+                  style={navButtonStyle}
                 >
                   Forecast My Game
                 </button>
@@ -1246,11 +1250,7 @@
                 </div>
                 <button 
                   onClick={() => setCurrentScreen('landing')}
-                  className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
-                  style={{
-                    borderColor: '#FFF099',
-                    color: '#FFF099'
-                  }}
+                  style={navButtonStyle}
                 >
                   Back to Home
                 </button>
