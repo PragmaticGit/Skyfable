@@ -983,11 +983,10 @@
                       <img 
                         src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/hero-image.png" 
                         alt="Gaming illustration" 
-                        className="max-w-[320px] sm:max-w-[400px] lg:max-w-[520px] w-full h-auto"
+                        className="h-auto max-w-[320px] sm:max-w-[400px] lg:max-w-[520px] lg:max-h-[340px] xl:max-w-[600px] xl:max-h-[400px]"
                         style={{
-                          maxHeight: '220px',
-                          width: '100%',
-                          display: 'block'
+                          // No width or display set here!
+                          // Optionally, you can add: objectFit: 'contain'
                         }}
                         onError={(e) => {
                           console.log('GitHub raw URL failed, trying relative path...');
