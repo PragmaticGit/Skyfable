@@ -9,6 +9,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
     <style>
         html, body {
             height: 100%;
@@ -54,6 +55,15 @@
         .cloudy-weather {
             filter: blur(0.5px) brightness(0.95) saturate(0.85);
         }
+        .fantasy-title {
+            font-family: 'UnifrakturCook', cursive;
+            letter-spacing: 1px;
+        }
+        .card-glow-rain { box-shadow: 0 0 24px 4px rgba(59,130,246,0.25); border: 2px solid #3B82F6; }
+        .card-glow-snow { box-shadow: 0 0 24px 4px rgba(219,234,254,0.25); border: 2px solid #DBEAFE; }
+        .card-glow-sunny { box-shadow: 0 0 24px 4px rgba(251,191,36,0.25); border: 2px solid #FBBF24; }
+        .card-glow-cloudy { box-shadow: 0 0 24px 4px rgba(107,114,128,0.25); border: 2px solid #6B7280; }
+        .card-glow-clear { box-shadow: 0 0 32px 6px rgba(234,246,255,0.25); border: 2px solid #EAF6FF; }
     </style>
 </head>
 <body>
@@ -1116,127 +1126,222 @@
             );
           };
 
-          const renderResult = () => (
-            <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
-              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
-                <div 
-                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => setCurrentScreen('landing')}
-                >
-                  Sky<span style={{color: '#FFF099'}}>Fable</span>
-                </div>
-                <button 
-                  onClick={() => setCurrentScreen('landing')}
-                  style={navButtonStyle}
-                >
-                  Forecast My Game
-                </button>
-              </nav>
-
-              <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8">
-                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-0">
-                  {/* Game Card */}
-                  <div className="flex-shrink-0 order-first lg:order-first lg:mr-16">
-                    <div className="w-80 sm:w-96 h-48 sm:h-56 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
-                      <img 
-                        src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
-                        alt={gameRecommendation?.title || "Game cover"}
-                        className="w-full h-full object-cover rounded-lg"
-                        style={{objectPosition: 'center'}}
-                        onError={(e) => {
-                          // Try local placeholder if remote fails
-                          if (!e.target.dataset.triedPlaceholder) {
-                            e.target.src = './images/placeholder.png';
-                            e.target.dataset.triedPlaceholder = 'true';
-                            return;
-                          }
-                          // If placeholder also fails, show fallback UI
-                          e.target.style.display = 'none';
-                          e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
-                          e.target.parentNode.innerHTML = `
-                            <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-                              <div class="text-5xl sm:text-7xl mb-4 sm:mb-6">🎮</div>
-                              <h3 class="text-lg sm:text-2xl font-bold text-white mb-2 sm:mb-4 tracking-wide">
-                                ${(gameRecommendation?.title || 'GAME').toUpperCase()}
-                              </h3>
-                              <div class="text-orange-100 font-medium text-xs sm:text-sm leading-relaxed">
-                                Image unavailable
+          const renderResult = () => {
+            const getWeatherIcon = (weatherType) => {
+              const icons = {
+                rain: '🌧️',
+                snow: '❄️',
+                sunny: '☀️',
+                cloudy: '☁️',
+                clear: '✨',
+                fog: '🌫️'
+              };
+              return icons[weatherType] || '🌤️';
+            };
+            const getWeatherMood = (weatherType) => {
+              const moods = {
+                rain: 'Perfect for cozy gaming',
+                snow: 'Ideal for winter adventures',
+                sunny: 'Great for energetic quests',
+                cloudy: 'Perfect for mysterious stories',
+                clear: 'Ideal for transcendent journeys',
+                fog: 'Great for atmospheric exploration'
+              };
+              return moods[weatherType] || 'Perfect gaming weather';
+            };
+            const getMatchQuality = (weatherScore) => {
+              if (weatherScore >= 9) return { text: 'Perfect Match', color: '#10B981', icon: '⭐' };
+              if (weatherScore >= 8) return { text: 'Great Fit', color: '#F59E0B', icon: '✨' };
+              if (weatherScore >= 7) return { text: 'Good Choice', color: '#6366F1', icon: '👍' };
+              return { text: 'Recommended', color: '#8B5CF6', icon: '🎮' };
+            };
+            const matchQuality = getMatchQuality(gameRecommendation?.weatherScore || 8);
+            const cardGlowClass = `card-glow-${weatherType}`;
+            return (
+              <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
+                <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
+                  <div 
+                    className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setCurrentScreen('landing')}
+                  >
+                    Sky<span style={{color: '#FFF099'}}>Fable</span>
+                  </div>
+                  <button 
+                    onClick={() => setCurrentScreen('landing')}
+                    className="px-6 py-3 border-2 rounded-lg font-semibold transition-all duration-300"
+                    style={{borderColor: '#FFF099', color: '#FFF099'}}
+                  >
+                    New Forecast
+                  </button>
+                </nav>
+                <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8 py-8">
+                  <div className="max-w-6xl w-full">
+                    {/* Enchanted Game Card */}
+                    <div 
+                      className={`relative rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-[1.02] hover:shadow-3xl ${cardGlowClass}`}
+                      style={{
+                        background: weatherType === 'rain' 
+                          ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.1) 50%, rgba(147, 197, 253, 0.05) 100%)'
+                          : weatherType === 'snow'
+                          ? 'linear-gradient(135deg, rgba(219, 234, 254, 0.2) 0%, rgba(191, 219, 254, 0.15) 50%, rgba(147, 197, 253, 0.1) 100%)'
+                          : weatherType === 'sunny'
+                          ? 'linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.1) 50%, rgba(217, 119, 6, 0.05) 100%)'
+                          : 'linear-gradient(135deg, rgba(107, 114, 128, 0.15) 0%, rgba(75, 85, 99, 0.1) 50%, rgba(55, 65, 81, 0.05) 100%)',
+                        border: weatherType === 'clear' ? '2px solid rgba(234, 246, 255, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)',
+                        boxShadow: weatherType === 'clear' 
+                          ? '0 0 40px rgba(234, 246, 255, 0.2), 0 20px 60px rgba(0, 0, 0, 0.3)'
+                          : '0 20px 60px rgba(0, 0, 0, 0.3)'
+                      }}
+                      aria-label="Game recommendation card"
+                    >
+                      {/* Weather Header */}
+                      <div className="px-6 sm:px-8 py-4 border-b border-white border-opacity-10">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl" aria-label="Weather icon">{getWeatherIcon(weatherType)}</span>
+                            <div>
+                              <div className="text-white font-semibold text-lg">
+                                {weather?.name || 'Your Location'} • {weather?.main?.temp || 20}°C
+                              </div>
+                              <div className="text-white text-sm opacity-75">
+                                {getWeatherMood(weatherType)}
                               </div>
                             </div>
-                          `;
-                        }}
-                        onLoad={(e) => {
-                          console.log('Game image loaded successfully:', gameRecommendation?.title);
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Game Info */}
-                  <div className="flex-1 text-center lg:text-left">
-                    {/* Tags */}
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-4 sm:mb-6">
-                      {(gameRecommendation?.tags || ['Single-player', 'Atmospheric', 'Story-Rich']).map((tag, index) => (
-                        <span 
-                          key={index}
-                          className="px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold"
-                          style={{
-                            backgroundColor: '#FFF8CC',
-                            color: '#504B81'
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Game Title */}
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6" style={{color: '#FFF099'}}>
-                      {gameRecommendation?.title || 'Firewatch'}
-                    </h2>
-
-                    {/* Description */}
-                    <p className="text-white text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 opacity-90 font-medium">
-                      {gameRecommendation?.description || "Today's drizzle sets the mood for something quiet and reflective. Firewatch is a first-person mystery in the Wyoming wilderness, where your only lifeline is a voice on the other end of a radio."}
-                    </p>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                      <button 
-                        onClick={() => window.open(gameRecommendation?.steamUrl || "https://store.steampowered.com/app/383870/Firewatch/", '_blank')}
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
-                        style={{
-                          backgroundColor: '#FFF099',
-                          color: '#504B81'
-                        }}
-                      >
-                        View On Steam
-                      </button>
-                      <button 
-                        onClick={handleRollAgain}
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
-                        style={{
-                          borderColor: '#FFF8CC',
-                          color: '#FFF8CC',
-                          backgroundColor: 'transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = '#FFF8CC';
-                          e.target.style.color = '#504B81';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = 'transparent';
-                          e.target.style.color = '#FFF8CC';
-                        }}
-                      >
-                        Roll Again
-                      </button>
+                          </div>
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-full text-sm font-semibold" style={{backgroundColor: `${matchQuality.color}20`, color: matchQuality.color}}>
+                            <span>{matchQuality.icon}</span>
+                            <span>{matchQuality.text}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col lg:flex-row">
+                        {/* Large Game Image */}
+                        <div className="lg:w-3/5 relative group">
+                          <div className="aspect-[16/10] lg:aspect-[3/2] relative overflow-hidden">
+                            <img 
+                              src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
+                              alt={gameRecommendation?.title || "Game cover"}
+                              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
+                              style={{objectPosition: 'center'}}
+                              onError={(e) => {
+                                if (!e.target.dataset.triedPlaceholder) {
+                                  e.target.src = './images/placeholder.png';
+                                  e.target.dataset.triedPlaceholder = 'true';
+                                  return;
+                                }
+                                e.target.style.display = 'none';
+                                e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
+                                e.target.parentNode.innerHTML = `
+                                  <div class='absolute inset-0 flex flex-col items-center justify-center text-center p-8'>
+                                    <div class='text-6xl mb-6'>🎮</div>
+                                    <h3 class='text-2xl font-bold text-white mb-4 tracking-wide'>
+                                      ${(gameRecommendation?.title || 'GAME').toUpperCase()}
+                                    </h3>
+                                    <div class='text-orange-100 font-medium'>
+                                      Image unavailable
+                                    </div>
+                                  </div>
+                                `;
+                              }}
+                            />
+                            {/* Weather Overlay Effect */}
+                            <div 
+                              className="absolute inset-0 pointer-events-none transition-opacity duration-700 group-hover:opacity-75"
+                              style={{
+                                background: weatherType === 'rain' 
+                                  ? 'linear-gradient(45deg, transparent 0%, rgba(59, 130, 246, 0.1) 100%)'
+                                  : weatherType === 'snow'
+                                  ? 'linear-gradient(45deg, transparent 0%, rgba(219, 234, 254, 0.15) 100%)'
+                                  : weatherType === 'sunny'
+                                  ? 'linear-gradient(45deg, transparent 0%, rgba(251, 191, 36, 0.1) 100%)'
+                                  : 'transparent',
+                                opacity: 0.6
+                              }}
+                            />
+                          </div>
+                        </div>
+                        {/* Game Information */}
+                        <div className="lg:w-2/5 p-6 sm:p-8 flex flex-col justify-between">
+                          {/* Tags */}
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {(gameRecommendation?.tags || ['Single-player', 'Atmospheric', 'Story-Rich']).slice(0, 3).map((tag, index) => (
+                              <span 
+                                key={index}
+                                className="px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm"
+                                style={{
+                                  backgroundColor: 'rgba(255, 248, 204, 0.2)',
+                                  color: '#FFF099',
+                                  border: '1px solid rgba(255, 248, 204, 0.3)'
+                                }}
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                          {/* Game Title */}
+                          <h2 className="fantasy-title text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 leading-tight" style={{color: '#FFF099'}}>
+                            {gameRecommendation?.title || 'Firewatch'}
+                          </h2>
+                          {/* Ratings Section */}
+                          <div className="flex items-center gap-4 mb-6">
+                            {/* Game Rating */}
+                            <div className="flex items-center gap-2">
+                              <div className="flex">
+                                {[1,2,3,4,5].map(star => (
+                                  <span 
+                                    key={star} 
+                                    className={`text-lg ${star <= Math.round((gameRecommendation?.rating || 80) / 20) ? 'text-yellow-400' : 'text-gray-600'}`}
+                                  >
+                                    ⭐
+                                  </span>
+                                ))}
+                              </div>
+                              <span className="text-white text-sm font-medium">
+                                {gameRecommendation?.rating || 80}/100
+                              </span>
+                            </div>
+                            {/* Weather Score */}
+                            <div className="flex items-center gap-2 group cursor-help relative">
+                              <button aria-label="Show weather score explanation" className="flex items-center gap-1 focus:outline-none">
+                                <span className="text-blue-400">🌤️</span>
+                                <span className="text-white text-sm font-medium">
+                                  {gameRecommendation?.weatherScore || 8}/10
+                                </span>
+                              </button>
+                              <div className="opacity-0 group-hover:opacity-100 absolute z-10 bg-gray-900 text-white p-3 rounded-lg text-sm transition-opacity duration-200 pointer-events-none transform -translate-x-1/2 -translate-y-full mt-2" style={{width: '200px', left: '50%'}}>
+                                Weather compatibility score based on mood, atmosphere, and seasonal themes
+                              </div>
+                            </div>
+                          </div>
+                          {/* Description */}
+                          <p className="text-white text-sm sm:text-base leading-relaxed mb-6 opacity-90 font-medium flex-grow">
+                            {gameRecommendation?.description || "Today's weather sets the perfect mood for this atmospheric adventure. Immerse yourself in a world that matches your current vibe."}
+                          </p>
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <button 
+                              onClick={() => window.open(gameRecommendation?.steamUrl || "https://store.steampowered.com/app/383870/Firewatch/", '_blank')}
+                              className="flex-1 px-6 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                              style={{backgroundColor: '#FFF099', color: '#504B81'}}
+                            >
+                              View on Steam
+                            </button>
+                            <button 
+                              onClick={handleRollAgain}
+                              className="flex-1 px-6 py-3 border-2 rounded-lg font-bold transition-all duration-300 hover:bg-white hover:bg-opacity-10"
+                              style={{borderColor: 'rgba(255, 248, 204, 0.5)', color: '#FFF8CC', backgroundColor: 'transparent'}}
+                            >
+                              Roll Again
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
+            );
+          };
 
           const renderLocationError = () => (
             <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
