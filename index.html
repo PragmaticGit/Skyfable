@@ -81,16 +81,16 @@
           return match ? match[1] : null;
         };
 
-        // Helper function to get high-resolution game image with fallbacks
-        const getHighResGameImage = (game) => {
+        // Helper function to get header-optimized game image with fallbacks
+        const getOptimizedGameImage = (game) => {
           if (!game) return './images/placeholder.png';
           
           // Try to get Steam app ID from URL
           const steamId = extractSteamAppId(game.steamUrl);
           
           if (steamId) {
-            // Primary: Steam library hero image (1920x620) - much higher resolution
-            return `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/library_hero.jpg`;
+            // Primary: Steam capsule 616x353 (33% higher resolution, same aspect ratio as headers)
+            return `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/capsule_616x353.jpg`;
           }
           
           // Fallback to original gameImage if no Steam ID
