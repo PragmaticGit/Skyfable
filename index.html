@@ -894,27 +894,25 @@
             ? 'cloudy-weather'
             : '';
 
-          const renderLanding = () => {
-            // Always render the main layout, but show a neutral placeholder until weatherLoaded
-            return (
+          const renderLanding = () => (
+            <>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
+                <div 
+                  className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setCurrentScreen('landing')}
+                >
+                  Sky<span style={{color: '#FFF099'}}>Fable</span>
+                </div>
+                <button
+                  onClick={handleCycleWeather}
+                  className="ml-4 px-3 py-2 rounded-lg font-semibold text-xs border border-yellow-200 bg-white bg-opacity-10 text-yellow-100 hover:bg-opacity-20 transition-all duration-200"
+                  style={{minWidth:'120px'}}
+                  title="Manually cycle weather for preview"
+                >
+                  Weather: {effectiveWeatherType.charAt(0).toUpperCase() + effectiveWeatherType.slice(1)}
+                </button>
+              </nav>
               <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
-                <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
-                  <div 
-                    className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={() => setCurrentScreen('landing')}
-                  >
-                    Sky<span style={{color: '#FFF099'}}>Fable</span>
-                  </div>
-                  <button
-                    onClick={handleCycleWeather}
-                    className="ml-4 px-3 py-2 rounded-lg font-semibold text-xs border border-yellow-200 bg-white bg-opacity-10 text-yellow-100 hover:bg-opacity-20 transition-all duration-200"
-                    style={{minWidth:'120px'}}
-                    title="Manually cycle weather for preview"
-                  >
-                    Weather: {effectiveWeatherType.charAt(0).toUpperCase() + effectiveWeatherType.slice(1)}
-                  </button>
-                </nav>
-
                 <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8 transition-all duration-700">
                   <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-0">
                     {/* Left Content */}
@@ -1002,8 +1000,8 @@
                   </div>
                 </div>
               </div>
-            );
-          };
+            </>
+          );
 
           const renderLoading = () => {
             // Determine which status to show based on loadingProgress
@@ -1013,7 +1011,7 @@
             );
             const statusMessage = loadingStatuses[statusIndex];
             return (
-              <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
+              <>
                 <nav className="flex justify-between items-center px-4 sm:px-8 py-6" style={{backgroundColor: '#504B81'}}>
                   <div 
                     className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -1031,7 +1029,6 @@
                     Forecast My Game
                   </button>
                 </nav>
-
                 <div className="flex-1 flex flex-col items-center justify-center px-8">
                   <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white text-center">
                     Sky<span style={{color: '#FFF099'}}>Fable</span>
@@ -1049,12 +1046,12 @@
                     </svg>
                   </div>
                 </div>
-              </div>
+              </>
             );
           };
 
           const renderResult = () => (
-            <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
+            <>
               <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -1073,114 +1070,115 @@
                   Forecast My Game
                 </button>
               </nav>
-
-              <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8">
-                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-0">
-                  {/* Game Card */}
-                  <div className="flex-shrink-0 order-first lg:order-first lg:mr-16">
-                    <div className="w-80 sm:w-96 h-48 sm:h-56 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
-                      <img 
-                        src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
-                        alt={gameRecommendation?.title || "Game cover"}
-                        className="w-full h-full object-cover rounded-lg"
-                        style={{objectPosition: 'center'}}
-                        onError={(e) => {
-                          // Try local placeholder if remote fails
-                          if (!e.target.dataset.triedPlaceholder) {
-                            e.target.src = './images/placeholder.png';
-                            e.target.dataset.triedPlaceholder = 'true';
-                            return;
-                          }
-                          // If placeholder also fails, show fallback UI
-                          e.target.style.display = 'none';
-                          e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
-                          e.target.parentNode.innerHTML = `
-                            <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-                              <div class="text-5xl sm:text-7xl mb-4 sm:mb-6">🎮</div>
-                              <h3 class="text-lg sm:text-2xl font-bold text-white mb-2 sm:mb-4 tracking-wide">
-                                ${(gameRecommendation?.title || 'GAME').toUpperCase()}
-                              </h3>
-                              <div class="text-orange-100 font-medium text-xs sm:text-sm leading-relaxed">
-                                Image unavailable
+              <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
+                <div className="flex items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-8">
+                  <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-0">
+                    {/* Game Card */}
+                    <div className="flex-shrink-0 order-first lg:order-first lg:mr-16">
+                      <div className="w-80 sm:w-96 h-48 sm:h-56 rounded-lg shadow-2xl overflow-hidden relative bg-gray-900">
+                        <img 
+                          src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
+                          alt={gameRecommendation?.title || "Game cover"}
+                          className="w-full h-full object-cover rounded-lg"
+                          style={{objectPosition: 'center'}}
+                          onError={(e) => {
+                            // Try local placeholder if remote fails
+                            if (!e.target.dataset.triedPlaceholder) {
+                              e.target.src = './images/placeholder.png';
+                              e.target.dataset.triedPlaceholder = 'true';
+                              return;
+                            }
+                            // If placeholder also fails, show fallback UI
+                            e.target.style.display = 'none';
+                            e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
+                            e.target.parentNode.innerHTML = `
+                              <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                                <div class="text-5xl sm:text-7xl mb-4 sm:mb-6">🎮</div>
+                                <h3 class="text-lg sm:text-2xl font-bold text-white mb-2 sm:mb-4 tracking-wide">
+                                  ${(gameRecommendation?.title || 'GAME').toUpperCase()}
+                                </h3>
+                                <div class="text-orange-100 font-medium text-xs sm:text-sm leading-relaxed">
+                                  Image unavailable
+                                </div>
                               </div>
-                            </div>
-                          `;
-                        }}
-                        onLoad={(e) => {
-                          console.log('Game image loaded successfully:', gameRecommendation?.title);
-                        }}
-                      />
+                            `;
+                          }}
+                          onLoad={(e) => {
+                            console.log('Game image loaded successfully:', gameRecommendation?.title);
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Game Info */}
-                  <div className="flex-1 text-center lg:text-left">
-                    {/* Tags */}
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-4 sm:mb-6">
-                      {(gameRecommendation?.tags || ['Single-player', 'Atmospheric', 'Story-Rich']).map((tag, index) => (
-                        <span 
-                          key={index}
-                          className="px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold"
+                    {/* Game Info */}
+                    <div className="flex-1 text-center lg:text-left">
+                      {/* Tags */}
+                      <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-4 sm:mb-6">
+                        {(gameRecommendation?.tags || ['Single-player', 'Atmospheric', 'Story-Rich']).map((tag, index) => (
+                          <span 
+                            key={index}
+                            className="px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-semibold"
+                            style={{
+                              backgroundColor: '#FFF8CC',
+                              color: '#504B81'
+                            }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Game Title */}
+                      <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6" style={{color: '#FFF099'}}>
+                        {gameRecommendation?.title || 'Firewatch'}
+                      </h2>
+
+                      {/* Description */}
+                      <p className="text-white text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 opacity-90 font-medium">
+                        {gameRecommendation?.description || "Today's drizzle sets the mood for something quiet and reflective. Firewatch is a first-person mystery in the Wyoming wilderness, where your only lifeline is a voice on the other end of a radio."}
+                      </p>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                        <button 
+                          onClick={() => window.open(gameRecommendation?.steamUrl || "https://store.steampowered.com/app/383870/Firewatch/", '_blank')}
+                          className="w-full sm:w-auto px-6 sm:px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
                           style={{
-                            backgroundColor: '#FFF8CC',
+                            backgroundColor: '#FFF099',
                             color: '#504B81'
                           }}
                         >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Game Title */}
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6" style={{color: '#FFF099'}}>
-                      {gameRecommendation?.title || 'Firewatch'}
-                    </h2>
-
-                    {/* Description */}
-                    <p className="text-white text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 opacity-90 font-medium">
-                      {gameRecommendation?.description || "Today's drizzle sets the mood for something quiet and reflective. Firewatch is a first-person mystery in the Wyoming wilderness, where your only lifeline is a voice on the other end of a radio."}
-                    </p>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                      <button 
-                        onClick={() => window.open(gameRecommendation?.steamUrl || "https://store.steampowered.com/app/383870/Firewatch/", '_blank')}
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
-                        style={{
-                          backgroundColor: '#FFF099',
-                          color: '#504B81'
-                        }}
-                      >
-                        View On Steam
-                      </button>
-                      <button 
-                        onClick={handleRollAgain}
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
-                        style={{
-                          borderColor: '#FFF8CC',
-                          color: '#FFF8CC',
-                          backgroundColor: 'transparent'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = '#FFF8CC';
-                          e.target.style.color = '#504B81';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = 'transparent';
-                          e.target.style.color = '#FFF8CC';
-                        }}
-                      >
-                        Roll Again
-                      </button>
+                          View On Steam
+                        </button>
+                        <button 
+                          onClick={handleRollAgain}
+                          className="w-full sm:w-auto px-6 sm:px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                          style={{
+                            borderColor: '#FFF8CC',
+                            color: '#FFF8CC',
+                            backgroundColor: 'transparent'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = '#FFF8CC';
+                            e.target.style.color = '#504B81';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = 'transparent';
+                            e.target.style.color = '#FFF8CC';
+                          }}
+                        >
+                          Roll Again
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </>
           );
 
           const renderLocationError = () => (
-            <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
+            <>
               <nav className="flex justify-between items-center px-4 sm:px-8 py-6" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -1199,50 +1197,51 @@
                   Back to Home
                 </button>
               </nav>
-
-              <div className="flex-1 flex flex-col items-center justify-center px-8">
-                <div className="text-center max-w-md">
-                  <div className="text-6xl mb-6">📍</div>
-                  <h1 className="text-4xl font-bold text-white mb-6">
-                    Location Needed
-                  </h1>
-                  
-                  <p className="text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
-                    SkyFable needs your location to check the weather and find the perfect game for you. 
-                    Please enable location permissions and try again.
-                  </p>
-
-                  <div className="space-y-4">
-                    <button 
-                      onClick={handleForecastClick}
-                      className="w-full px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
-                      style={{
-                        backgroundColor: '#FFF099',
-                        color: '#504B81'
-                      }}
-                    >
-                      Try Again
-                    </button>
+              <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
+                <div className="flex-1 flex flex-col items-center justify-center px-8">
+                  <div className="text-center max-w-md">
+                    <div className="text-6xl mb-6">📍</div>
+                    <h1 className="text-4xl font-bold text-white mb-6">
+                      Location Needed
+                    </h1>
                     
-                    <button 
-                      onClick={() => setCurrentScreen('landing')}
-                      className="w-full px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
-                      style={{
-                        borderColor: '#FFF8CC',
-                        color: '#FFF8CC',
-                        backgroundColor: 'transparent'
-                      }}
-                    >
-                      Back to Home
-                    </button>
-                  </div>
+                    <p className="text-lg mb-8 text-white opacity-90 font-medium leading-relaxed">
+                      SkyFable needs your location to check the weather and find the perfect game for you. 
+                      Please enable location permissions and try again.
+                    </p>
 
-                  <p className="text-sm text-white opacity-60 mt-6">
-                    💡 Tip: Look for the location icon in your browser's address bar
-                  </p>
+                    <div className="space-y-4">
+                      <button 
+                        onClick={handleForecastClick}
+                        className="w-full px-8 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-105 shadow-lg"
+                        style={{
+                          backgroundColor: '#FFF099',
+                          color: '#504B81'
+                        }}
+                      >
+                        Try Again
+                      </button>
+                      
+                      <button 
+                        onClick={() => setCurrentScreen('landing')}
+                        className="w-full px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                        style={{
+                          borderColor: '#FFF8CC',
+                          color: '#FFF8CC',
+                          backgroundColor: 'transparent'
+                        }}
+                      >
+                        Back to Home
+                      </button>
+                    </div>
+
+                    <p className="text-sm text-white opacity-60 mt-6">
+                      💡 Tip: Look for the location icon in your browser's address bar
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </>
           );
 
           switch (currentScreen) {
