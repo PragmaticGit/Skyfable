@@ -1014,7 +1014,7 @@
             const statusMessage = loadingStatuses[statusIndex];
             return (
               <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
-                <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
+                <nav className="flex justify-between items-center px-4 sm:px-8 py-6" style={{backgroundColor: '#504B81'}}>
                   <div 
                     className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => setCurrentScreen('landing')}
@@ -1055,7 +1055,7 @@
 
           const renderResult = () => (
             <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
-              <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
@@ -1181,7 +1181,7 @@
 
           const renderLocationError = () => (
             <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
-              <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-6" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
