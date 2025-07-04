@@ -293,7 +293,11 @@
                   filter: `blur(${f.blur}px)`,
                   animation: `fog-drift-${i} ${f.duration}s linear infinite`,
                   animationDelay: `${f.delay}s`,
-                  transition: 'opacity 1.2s cubic-bezier(.4,0,.2,1)'
+                  transition: 'opacity 1.2s cubic-bezier(.4,0,.2,1)',
+                  willChange: 'transform',
+                  transform: 'translateZ(0)',
+                  contain: 'layout style paint',
+                  isolation: 'isolate',
                 }} />
               ))}
               {/* Mist/fog overlay at the bottom */}
@@ -306,11 +310,15 @@
                 zIndex: 2,
                 pointerEvents: 'none',
                 background: 'linear-gradient(to top, rgba(180,190,220,0.19) 0%, rgba(180,180,200,0.0) 100%)',
-                filter: 'blur(4px)'
+                filter: 'blur(4px)',
+                willChange: 'transform',
+                transform: 'translateZ(0)',
+                contain: 'layout style paint',
+                isolation: 'isolate',
               }} />
               <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.11) brightness(0.975) contrast(0.965)'}} />
               <style>{`
-                ${fogLayers.map((f, i) => `@keyframes fog-drift-${i} { 0% { transform: translateX(0); opacity: ${f.opacity}; } 50% { opacity: ${Math.min(1, f.opacity * 1.35)}; } 100% { transform: translateX(40vw); opacity: ${f.opacity}; } }`).join('\n')}
+                ${fogLayers.map((f, i) => `@keyframes fog-drift-${i} { 0% { transform: translateX(0) translateZ(0); opacity: ${f.opacity}; } 50% { opacity: ${Math.min(1, f.opacity * 1.35)}; } 100% { transform: translateX(40vw) translateZ(0); opacity: ${f.opacity}; } }`).join('\n')}
                 body.cloudy-ui .rounded-lg, body.cloudy-ui .shadow-lg, body.cloudy-ui .shadow-2xl {
                   filter: grayscale(0.22) brightness(0.95) contrast(0.93);
                   box-shadow: none !important;
