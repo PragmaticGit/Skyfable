@@ -74,29 +74,6 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // Helper function to extract Steam app ID from URL
-        const extractSteamAppId = (steamUrl) => {
-          if (!steamUrl) return null;
-          const match = steamUrl.match(/\/app\/(\d+)/);
-          return match ? match[1] : null;
-        };
-
-        // Helper function to get header-optimized game image with fallbacks
-        const getOptimizedGameImage = (game) => {
-          if (!game) return './images/placeholder.png';
-          
-          // Try to get Steam app ID from URL
-          const steamId = extractSteamAppId(game.steamUrl);
-          
-          if (steamId) {
-            // Primary: Steam capsule 616x353 (33% higher resolution, same aspect ratio as headers)
-            return `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/capsule_616x353.jpg`;
-          }
-          
-          // Fallback to original gameImage if no Steam ID
-          return game.gameImage || './images/placeholder.png';
-        };
-
         // StarfieldCanvas for clear weather
         const StarfieldCanvas = () => {
           const canvasRef = useRef(null);
@@ -569,6 +546,24 @@
           const [gameCache, setGameCache] = useState({}); // Cache for loaded game databases
           const [weatherType, setWeatherType] = useState('clear');
           const [weatherLoaded, setWeatherLoaded] = useState(false);
+
+          // Extract Steam App ID from Steam URL
+          const extractSteamAppId = (steamUrl) => {
+            if (!steamUrl) return null;
+            const match = steamUrl.match(/\/app\/(\d+)\//);
+            return match ? match[1] : null;
+          };
+
+          // Get best header-format image (optimized for 460x215 aspect ratio)
+          const getOptimizedGameImage = (game) => {
+            const steamId = extractSteamAppId(game?.steamUrl);
+            if (steamId) {
+              // Try higher resolution header format first (same 2.14:1 aspect ratio, better quality)
+              return `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/capsule_616x353.jpg`;
+            }
+            // Fallback to original header image
+            return game?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg";
+          };
 
           // Fun status messages for loading
           const loadingStatuses = [
@@ -1212,26 +1207,25 @@
                       }}
                     >
                       <div className="flex flex-col lg:flex-row">
-                        {/* Large Game Image */}
+                        {/* Large Game Image - Header Optimized */}
                         <div className="lg:w-3/5 relative group">
-                          <div className="aspect-[16/10] lg:aspect-[3/2] relative overflow-hidden">
+                          <div className="aspect-[2.14/1] relative overflow-hidden">
                             <img 
-                              src={getHighResGameImage(gameRecommendation)}
+                              src={getOptimizedGameImage(gameRecommendation)}
                               alt={gameRecommendation?.title || "Game cover"}
                               className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
                               style={{objectPosition: 'center'}}
                               onError={(e) => {
-                                console.log('High-res image failed, trying header image...');
-                                // First fallback: try original header image
-                                if (!e.target.dataset.triedHeader) {
-                                  const steamId = extractSteamAppId(gameRecommendation?.steamUrl);
-                                  if (steamId) {
-                                    e.target.src = `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/header.jpg`;
-                                    e.target.dataset.triedHeader = 'true';
-                                    return;
-                                  }
+                                console.log('Optimized header image failed, trying alternatives...');
+                                const steamId = extractSteamAppId(gameRecommendation?.steamUrl);
+                                
+                                // First fallback: try standard header (460x215 - guaranteed to show proper content)
+                                if (!e.target.dataset.triedHeader && steamId) {
+                                  e.target.src = `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/header.jpg`;
+                                  e.target.dataset.triedHeader = 'true';
+                                  return;
                                 }
-                                // Second fallback: try original gameImage
+                                // Second fallback: try original gameImage from JSON
                                 if (!e.target.dataset.triedOriginal && gameRecommendation?.gameImage) {
                                   e.target.src = gameRecommendation.gameImage;
                                   e.target.dataset.triedOriginal = 'true';
@@ -1259,7 +1253,7 @@
                                 `;
                               }}
                               onLoad={() => {
-                                console.log('Game image loaded successfully:', gameRecommendation?.title);
+                                console.log('Header-optimized image loaded:', gameRecommendation?.title);
                               }}
                             />
                             {/* Weather Overlay Effect */}
