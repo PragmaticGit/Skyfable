@@ -257,22 +257,26 @@
             const canvas = canvasRef.current;
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            let width = window.innerWidth;
-            let height = window.innerHeight;
+            let dpr = window.devicePixelRatio || 1;
+            let scale = 0.5; // Render at 50% resolution
+            let width = window.innerWidth * scale;
+            let height = window.innerHeight * scale;
             canvas.width = width;
             canvas.height = height;
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
 
             function handleResize() {
-              width = window.innerWidth;
-              height = window.innerHeight;
+              width = window.innerWidth * scale;
+              height = window.innerHeight * scale;
               canvas.width = width;
               canvas.height = height;
             }
             window.addEventListener('resize', handleResize);
 
-            // Cloud layers: each is a set of animated, soft radial gradients
-            const LAYERS = 4;
-            const CLOUDS_PER_LAYER = 6;
+            // Fewer clouds for better performance
+            const LAYERS = 3;
+            const CLOUDS_PER_LAYER = 4;
             let clouds = [];
             for (let l = 0; l < LAYERS; l++) {
               for (let i = 0; i < CLOUDS_PER_LAYER; i++) {
@@ -280,9 +284,9 @@
                   layer: l,
                   x: Math.random() * width,
                   y: height * (0.1 + 0.8 * Math.random()),
-                  r: 180 + Math.random() * 120 + l * 40,
-                  dx: (0.08 + Math.random() * 0.10) * (l % 2 ? 1 : -1) * (0.7 + l * 0.2),
-                  dy: (Math.random() - 0.5) * 0.04 * (l + 1),
+                  r: (180 + Math.random() * 120 + l * 40) * scale,
+                  dx: (0.08 + Math.random() * 0.10) * (l % 2 ? 1 : -1) * (0.7 + l * 0.2) * scale,
+                  dy: (Math.random() - 0.5) * 0.04 * (l + 1) * scale,
                   alpha: 0.07 + Math.random() * 0.07 + l * 0.02,
                   baseAlpha: 0.07 + Math.random() * 0.07 + l * 0.02,
                   phase: Math.random() * Math.PI * 2,
@@ -292,40 +296,44 @@
             }
 
             let anim;
-            function draw() {
-              ctx.clearRect(0, 0, width, height);
-              for (let c of clouds) {
-                // Animate organic rolling
-                let t = Date.now();
-                let offsetX = Math.sin(t * c.speed + c.phase) * 30 * (1 + c.layer * 0.2);
-                let offsetY = Math.cos(t * c.speed * 0.7 + c.phase) * 18 * (1 + c.layer * 0.1);
-                let x = c.x + offsetX;
-                let y = c.y + offsetY;
-                // Animate horizontal drift
-                c.x += c.dx;
-                c.y += c.dy;
-                if (c.dx > 0 && c.x - c.r > width + 40) c.x = -c.r;
-                if (c.dx < 0 && c.x + c.r < -40) c.x = width + c.r;
-                if (c.y - c.r > height + 40) c.y = -c.r;
-                if (c.y + c.r < -40) c.y = height + c.r;
-                // Alpha pulse for depth
-                let alpha = c.baseAlpha + Math.sin(t * c.speed * 0.6 + c.phase) * 0.03;
-                // Soft radial gradient
-                let grad = ctx.createRadialGradient(x, y, c.r * 0.2, x, y, c.r);
-                grad.addColorStop(0, `rgba(180,190,220,${alpha})`);
-                grad.addColorStop(0.7, `rgba(180,190,220,${alpha * 0.5})`);
-                grad.addColorStop(1, 'rgba(180,190,220,0)');
-                ctx.save();
-                ctx.globalAlpha = 1;
-                ctx.beginPath();
-                ctx.arc(x, y, c.r, 0, 2 * Math.PI);
-                ctx.fillStyle = grad;
-                ctx.fill();
-                ctx.restore();
+            let lastDraw = 0;
+            function draw(now) {
+              if (now - lastDraw > 33) { // ~30fps
+                ctx.clearRect(0, 0, width, height);
+                for (let c of clouds) {
+                  // Animate organic rolling
+                  let t = Date.now();
+                  let offsetX = Math.sin(t * c.speed + c.phase) * 30 * (1 + c.layer * 0.2) * scale;
+                  let offsetY = Math.cos(t * c.speed * 0.7 + c.phase) * 18 * (1 + c.layer * 0.1) * scale;
+                  let x = c.x + offsetX;
+                  let y = c.y + offsetY;
+                  // Animate horizontal drift
+                  c.x += c.dx;
+                  c.y += c.dy;
+                  if (c.dx > 0 && c.x - c.r > width + 40 * scale) c.x = -c.r;
+                  if (c.dx < 0 && c.x + c.r < -40 * scale) c.x = width + c.r;
+                  if (c.y - c.r > height + 40 * scale) c.y = -c.r;
+                  if (c.y + c.r < -40 * scale) c.y = height + c.r;
+                  // Alpha pulse for depth
+                  let alpha = c.baseAlpha + Math.sin(t * c.speed * 0.6 + c.phase) * 0.03;
+                  // Soft radial gradient
+                  let grad = ctx.createRadialGradient(x, y, c.r * 0.2, x, y, c.r);
+                  grad.addColorStop(0, `rgba(180,190,220,${alpha})`);
+                  grad.addColorStop(0.7, `rgba(180,190,220,${alpha * 0.5})`);
+                  grad.addColorStop(1, 'rgba(180,190,220,0)');
+                  ctx.save();
+                  ctx.globalAlpha = 1;
+                  ctx.beginPath();
+                  ctx.arc(x, y, c.r, 0, 2 * Math.PI);
+                  ctx.fillStyle = grad;
+                  ctx.fill();
+                  ctx.restore();
+                }
+                lastDraw = now;
               }
               anim = requestAnimationFrame(draw);
             }
-            draw();
+            draw(performance.now());
             return () => {
               window.removeEventListener('resize', handleResize);
               cancelAnimationFrame(anim);
