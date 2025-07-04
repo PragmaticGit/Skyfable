@@ -1280,12 +1280,28 @@
                                   {gameRecommendation?.weatherScore || 8}/10
                                 </span>
                               </div>
-                              <div className="opacity-0 group-hover:opacity-100 absolute z-20 bg-gray-900 text-white p-4 rounded-lg text-sm transition-opacity duration-200 pointer-events-none transform -translate-x-1/2 -translate-y-full mt-2 shadow-xl border border-gray-700" style={{width: '280px', bottom: '100%', left: '50%', marginBottom: '8px'}}>
-                                <div className="font-semibold mb-2 text-blue-300">Weather Match Score</div>
-                                <div className="text-gray-200 leading-relaxed">
+                              {/* Simple, reliable tooltip */}
+                              <div className="opacity-0 group-hover:opacity-100 absolute z-30 bg-gray-900 text-white p-4 rounded-lg text-sm transition-opacity duration-200 pointer-events-none shadow-xl border border-gray-700 min-w-max" 
+                                   style={{
+                                     width: '300px',
+                                     bottom: '100%',
+                                     left: '50%',
+                                     transform: 'translateX(-50%)',
+                                     marginBottom: '8px'
+                                   }}>
+                                <div className="font-semibold mb-2 text-blue-300">Why this matches your weather</div>
+                                <div className="text-gray-200 leading-relaxed text-xs">
                                   {getWeatherExplanation(effectiveWeatherType, gameRecommendation?.title)}
                                 </div>
-                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                                {/* Simple arrow */}
+                                <div 
+                                  className="absolute border-4 border-transparent border-t-gray-900"
+                                  style={{
+                                    top: '100%',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)'
+                                  }}
+                                ></div>
                               </div>
                             </div>
                           </div>
