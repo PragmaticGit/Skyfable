@@ -1013,31 +1013,41 @@
             );
             const statusMessage = loadingStatuses[statusIndex];
             return (
-              <div style={{
-                minHeight: '100vh',
-                width: '100vw',
-                background: '#23242b',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                zIndex: 9999
-              }}>
-                <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white text-center">
-                  Sky<span style={{color: '#FFF099'}}>Fable</span>
-                </h1>
-                <p className="text-2xl mb-8 text-center font-medium pulse-animation" style={{color: '#FFF099'}}>
-                  {statusMessage}
-                </p>
-                <div className="mb-8">
-                  {/* Minimal SVG spinner */}
-                  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="animate-spin" style={{display: 'block'}}>
-                    <circle cx="48" cy="48" r="40" stroke="#504B81" strokeWidth="8" opacity="0.15" />
-                    <path d="M88 48a40 40 0 1 1-40-40" stroke="#FFF099" strokeWidth="8" strokeLinecap="round" />
-                  </svg>
+              <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
+                <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
+                  <div 
+                    className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setCurrentScreen('landing')}
+                  >
+                    Sky<span style={{color: '#FFF099'}}>Fable</span>
+                  </div>
+                  <button 
+                    className="px-6 py-3 border-2 rounded-lg font-semibold opacity-50 cursor-not-allowed"
+                    style={{
+                      borderColor: '#FFF099',
+                      color: '#FFF099'
+                    }}
+                  >
+                    Forecast My Game
+                  </button>
+                </nav>
+
+                <div className="flex-1 flex flex-col items-center justify-center px-8">
+                  <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white text-center">
+                    Sky<span style={{color: '#FFF099'}}>Fable</span>
+                  </h1>
+                  
+                  <p className="text-2xl mb-8 text-center font-medium pulse-animation" style={{color: '#FFF099'}}>
+                    {statusMessage}
+                  </p>
+
+                  <div className="mb-8">
+                    {/* Minimal SVG spinner */}
+                    <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="animate-spin" style={{display: 'block'}}>
+                      <circle cx="48" cy="48" r="40" stroke="#504B81" strokeWidth="8" opacity="0.15" />
+                      <path d="M88 48a40 40 0 1 1-40-40" stroke="#FFF099" strokeWidth="8" strokeLinecap="round" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             );
