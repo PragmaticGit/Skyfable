@@ -895,7 +895,6 @@
             : '';
 
           const renderLanding = () => {
-            // Always render the main layout, but show a neutral placeholder until weatherLoaded
             return (
               <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
                 <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
@@ -911,7 +910,17 @@
                     style={{minWidth:'120px'}}
                     title="Manually cycle weather for preview"
                   >
-                    Weather: {effectiveWeatherType.charAt(0).toUpperCase() + effectiveWeatherType.slice(1)}
+                    {!weatherLoaded ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" opacity="0.25"/>
+                          <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                        </svg>
+                        Loading...
+                      </span>
+                    ) : (
+                      `Weather: ${effectiveWeatherType.charAt(0).toUpperCase() + effectiveWeatherType.slice(1)}`
+                    )}
                   </button>
                 </nav>
 
@@ -919,63 +928,48 @@
                   <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-0">
                     {/* Left Content */}
                     <div className="flex-1 text-center lg:text-left lg:pr-16">
-                      {!weatherLoaded ? (
-                        <div className="flex flex-col items-center justify-center min-h-[320px] animate-fadein" style={{opacity:0.95,transition:'opacity 0.7s'}}>
-                          <svg width="72" height="72" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="mb-6" style={{display: 'block'}}>
-                            <circle cx="48" cy="48" r="40" stroke="#504B81" strokeWidth="8" opacity="0.15" />
-                            <path d="M88 48a40 40 0 1 1-40-40" stroke="#FFF099" strokeWidth="8" strokeLinecap="round" />
+                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style={{color: '#FFF099'}}>
+                        <WeatherHeadline weatherType={effectiveWeatherType}>
+                          Find your perfect game based on the weather
+                        </WeatherHeadline>
+                      </h1>
+                      
+                      <p className="text-lg sm:text-xl mb-6 text-white opacity-90 font-medium leading-relaxed">
+                        Let the weather decide your next gaming adventure
+                      </p>
+                      
+                      <div className="flex items-center justify-center lg:justify-start gap-2 mb-8">
+                        <span className="text-white opacity-70 text-sm">How does this work?</span>
+                        <div className="relative group">
+                          <svg 
+                            className="w-4 h-4 text-white opacity-50 cursor-help" 
+                            fill="currentColor" 
+                            viewBox="0 0 20 20"
+                          >
+                            <path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                           </svg>
-                          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white text-center">
-                            Sky<span style={{color: '#FFF099'}}>Fable</span>
-                          </h1>
-                          <p className="text-lg sm:text-xl text-white opacity-80 font-medium text-center">Checking the weather...</p>
-                        </div>
-                      ) : (
-                        <>
-                          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight" style={{color: '#FFF099',transition:'opacity 0.7s'}}>
-                            <WeatherHeadline weatherType={effectiveWeatherType}>
-                              Find your perfect game based on the weather
-                            </WeatherHeadline>
-                          </h1>
-                          
-                          <p className="text-lg sm:text-xl mb-6 text-white opacity-90 font-medium leading-relaxed">
-                            Let the weather decide your next gaming adventure
-                          </p>
-                          
-                          <div className="flex items-center justify-center lg:justify-start gap-2 mb-8">
-                            <span className="text-white opacity-70 text-sm">How does this work?</span>
-                            <div className="relative group">
-                              <svg 
-                                className="w-4 h-4 text-white opacity-50 cursor-help" 
-                                fill="currentColor" 
-                                viewBox="0 0 20 20"
-                              >
-                                <path fillRule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                              </svg>
-                              <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                                <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg text-sm w-72">
-                                  <div className="font-semibold mb-2">Why weather?</div>
-                                  <div className="text-gray-200 leading-relaxed">
-                                    Weather affects our mood and energy levels. Rainy days call for cozy, story-driven games. Sunny weather pairs well with upbeat adventures. We match games to your atmospheric vibe.
-                                  </div>
-                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-                                </div>
+                          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                            <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg text-sm w-72">
+                              <div className="font-semibold mb-2">Why weather?</div>
+                              <div className="text-gray-200 leading-relaxed">
+                                Weather affects our mood and energy levels. Rainy days call for cozy, story-driven games. Sunny weather pairs well with upbeat adventures. We match games to your atmospheric vibe.
                               </div>
+                              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                             </div>
                           </div>
+                        </div>
+                      </div>
 
-                          <button 
-                            onClick={handleForecastClick}
-                            className="w-full sm:w-auto px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg"
-                            style={{
-                              backgroundColor: '#FFF099',
-                              color: '#504B81'
-                            }}
-                          >
-                            Forecast My Game
-                          </button>
-                        </>
-                      )}
+                      <button 
+                        onClick={handleForecastClick}
+                        className="w-full sm:w-auto px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg"
+                        style={{
+                          backgroundColor: '#FFF099',
+                          color: '#504B81'
+                        }}
+                      >
+                        Forecast My Game
+                      </button>
                     </div>
 
                     {/* Right Content - Your Hero Image */}
@@ -1001,6 +995,13 @@
                     </div>
                   </div>
                 </div>
+                {/* Fade-in overlay for weather effects */}
+                <style>{`
+                  #weather-particles-root, #weather-special-root, .weather-overlay-fade {
+                    opacity: ${weatherLoaded ? 1 : 0};
+                    transition: opacity 0.8s cubic-bezier(.4,0,.2,1);
+                  }
+                `}</style>
               </div>
             );
           };
