@@ -17,6 +17,7 @@
         }
         body { 
             font-family: 'Quicksand', sans-serif; 
+            background-color: #837EB4;
         }
         .pulse-animation {
             animation: pulse 2s ease-in-out infinite;
@@ -56,9 +57,9 @@
     </style>
 </head>
 <body>
-    <div id="weather-particles-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></div>
+    <div id="weather-particles-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
     <div id="weather-special-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
-    <div id="root" style="position:relative;z-index:10;"></div>
+    <div id="root" style="position:relative;z-index:2;"></div>
     
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
@@ -896,7 +897,7 @@
           const renderLanding = () => {
             // Always render the main layout, but show a neutral placeholder until weatherLoaded
             return (
-              <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`} style={{backgroundColor: '#837EB4'}}>
+              <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
                 <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                   <div 
                     className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -1013,7 +1014,7 @@
             );
             const statusMessage = loadingStatuses[statusIndex];
             return (
-              <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`} style={{backgroundColor: '#837EB4'}}>
+              <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
                 <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
                   <div 
                     className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -1054,7 +1055,7 @@
           };
 
           const renderResult = () => (
-            <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`} style={{backgroundColor: '#837EB4'}}>
+            <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
               <nav className="flex justify-between items-center px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
@@ -1180,7 +1181,7 @@
           );
 
           const renderLocationError = () => (
-            <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`} style={{backgroundColor: '#837EB4'}}>
+            <div className={`min-h-screen relative flex flex-col ${weatherFilterClass}`}>
               <nav className="flex justify-between items-center px-8 py-6" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
