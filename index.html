@@ -56,9 +56,9 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
     <div id="weather-particles-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></div>
     <div id="weather-special-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
+    <div id="root" style="position:relative;z-index:10;"></div>
     
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
@@ -267,14 +267,14 @@
           if (weatherType === 'cloudy') {
             // More, larger, and more opaque fog layers for a stronger effect
             const fogLayers = [
-              { top: '-10vh', left: '-20vw', width: '160vw', height: '40vh', opacity: 0.32, duration: 54, delay: 0, blur: 60 },
-              { top: '20vh', left: '-10vw', width: '140vw', height: '36vh', opacity: 0.28, duration: 62, delay: 8, blur: 48 },
-              { top: '40vh', left: '-30vw', width: '180vw', height: '44vh', opacity: 0.26, duration: 70, delay: 16, blur: 72 },
-              { top: '60vh', left: '-15vw', width: '150vw', height: '38vh', opacity: 0.29, duration: 60, delay: 12, blur: 56 },
-              { top: '0vh', left: '-25vw', width: '170vw', height: '32vh', opacity: 0.23, duration: 80, delay: 20, blur: 64 },
-              { top: '30vh', left: '10vw', width: '120vw', height: '30vh', opacity: 0.21, duration: 66, delay: 18, blur: 40 },
-              { top: '50vh', left: '-40vw', width: '200vw', height: '50vh', opacity: 0.19, duration: 90, delay: 24, blur: 80 },
-              { top: '70vh', left: '-10vw', width: '160vw', height: '36vh', opacity: 0.22, duration: 74, delay: 28, blur: 60 },
+              { top: '-10vh', left: '-20vw', width: '160vw', height: '40vh', opacity: 0.16, duration: 54, delay: 0, blur: 30 },
+              { top: '20vh', left: '-10vw', width: '140vw', height: '36vh', opacity: 0.14, duration: 62, delay: 8, blur: 24 },
+              { top: '40vh', left: '-30vw', width: '180vw', height: '44vh', opacity: 0.13, duration: 70, delay: 16, blur: 36 },
+              { top: '60vh', left: '-15vw', width: '150vw', height: '38vh', opacity: 0.145, duration: 60, delay: 12, blur: 28 },
+              { top: '0vh', left: '-25vw', width: '170vw', height: '32vh', opacity: 0.115, duration: 80, delay: 20, blur: 32 },
+              { top: '30vh', left: '10vw', width: '120vw', height: '30vh', opacity: 0.105, duration: 66, delay: 18, blur: 20 },
+              { top: '50vh', left: '-40vw', width: '200vw', height: '50vh', opacity: 0.095, duration: 90, delay: 24, blur: 40 },
+              { top: '70vh', left: '-10vw', width: '160vw', height: '36vh', opacity: 0.11, duration: 74, delay: 28, blur: 30 },
             ];
             const fogColor = 'rgba(180,190,220,0.95)';
             return <>
@@ -304,10 +304,10 @@
                 height: '28vh',
                 zIndex: 2,
                 pointerEvents: 'none',
-                background: 'linear-gradient(to top, rgba(180,190,220,0.38) 0%, rgba(180,180,200,0.0) 100%)',
-                filter: 'blur(8px)'
+                background: 'linear-gradient(to top, rgba(180,190,220,0.19) 0%, rgba(180,180,200,0.0) 100%)',
+                filter: 'blur(4px)'
               }} />
-              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.22) brightness(0.95) contrast(0.93)'}} />
+              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.11) brightness(0.975) contrast(0.965)'}} />
               <style>{`
                 ${fogLayers.map((f, i) => `@keyframes fog-drift-${i} { 0% { transform: translateX(0); opacity: ${f.opacity}; } 50% { opacity: ${Math.min(1, f.opacity * 1.35)}; } 100% { transform: translateX(40vw); opacity: ${f.opacity}; } }`).join('\n')}
                 body.cloudy-ui .rounded-lg, body.cloudy-ui .shadow-lg, body.cloudy-ui .shadow-2xl {
@@ -606,21 +606,34 @@
             return fallbackGames[weatherType] || fallbackGames.clear;
           };
 
+          // Fisher-Yates shuffle
+          function shuffleArray(array) {
+            const arr = array.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+          }
+
           const selectRandomGame = async (weatherType, avoidTitle = null) => {
             const availableGames = await loadGamesForWeather(weatherType);
-            console.log('Available games for', weatherType, ':', availableGames.map(g => g.title));
-            
+            console.log('[DEBUG] Available games for', weatherType, ':', availableGames.map(g => g.title));
+            console.log('[DEBUG] lastGameTitle to avoid:', avoidTitle);
+            let gamesToChooseFrom;
             if (availableGames.length <= 1 || !avoidTitle) {
-              const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
-              console.log('Selected game:', randomGame.title);
-              return randomGame;
+              gamesToChooseFrom = availableGames;
+            } else {
+              const filteredGames = availableGames.filter(game => game.title !== avoidTitle);
+              gamesToChooseFrom = filteredGames.length > 0 ? filteredGames : availableGames;
             }
-            
-            const filteredGames = availableGames.filter(game => game.title !== avoidTitle);
-            const gamesToChooseFrom = filteredGames.length > 0 ? filteredGames : availableGames;
-            
-            const randomGame = gamesToChooseFrom[Math.floor(Math.random() * gamesToChooseFrom.length)];
-            console.log('Selected game (avoiding duplicates):', randomGame.title);
+            // Shuffle before picking
+            const shuffled = shuffleArray(gamesToChooseFrom);
+            const randomIndex = Math.floor(Math.random() * shuffled.length);
+            const randomGame = shuffled[randomIndex];
+            console.log('[DEBUG] Shuffled games:', shuffled.map(g => g.title));
+            console.log('[DEBUG] Random index chosen:', randomIndex);
+            console.log('[DEBUG] Selected game:', randomGame.title);
             return randomGame;
           };
 
@@ -747,7 +760,6 @@
           const handleRollAgain = async () => {
             setCurrentScreen('loading');
             setLoadingProgress(0);
-
             const progressInterval = setInterval(() => {
               setLoadingProgress(prev => {
                 if (prev >= 90) {
@@ -757,15 +769,15 @@
                 return prev + Math.random() * 20;
               });
             }, 200);
-
             setTimeout(async () => {
               if (weather) {
                 const weatherType = getWeatherType(weather.weather[0].main, weather.main.temp);
+                console.log('[DEBUG] handleRollAgain weatherType:', weatherType);
+                console.log('[DEBUG] handleRollAgain lastGameTitle:', lastGameTitle);
                 const randomGame = await selectRandomGame(weatherType, lastGameTitle);
                 setGameRecommendation(randomGame);
                 setLastGameTitle(randomGame.title);
               }
-              
               setLoadingProgress(100);
               setTimeout(() => {
                 setCurrentScreen('result');
@@ -1073,7 +1085,13 @@
                         className="w-full h-full object-cover rounded-lg"
                         style={{objectPosition: 'center'}}
                         onError={(e) => {
-                          console.log('Game image failed to load:', e.target.src);
+                          // Try local placeholder if remote fails
+                          if (!e.target.dataset.triedPlaceholder) {
+                            e.target.src = './images/placeholder.png';
+                            e.target.dataset.triedPlaceholder = 'true';
+                            return;
+                          }
+                          // If placeholder also fails, show fallback UI
                           e.target.style.display = 'none';
                           e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
                           e.target.parentNode.innerHTML = `
