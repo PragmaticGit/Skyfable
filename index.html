@@ -74,6 +74,29 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
+        // Helper function to extract Steam app ID from URL
+        const extractSteamAppId = (steamUrl) => {
+          if (!steamUrl) return null;
+          const match = steamUrl.match(/\/app\/(\d+)/);
+          return match ? match[1] : null;
+        };
+
+        // Helper function to get high-resolution game image with fallbacks
+        const getHighResGameImage = (game) => {
+          if (!game) return './images/placeholder.png';
+          
+          // Try to get Steam app ID from URL
+          const steamId = extractSteamAppId(game.steamUrl);
+          
+          if (steamId) {
+            // Primary: Steam library hero image (1920x620) - much higher resolution
+            return `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/library_hero.jpg`;
+          }
+          
+          // Fallback to original gameImage if no Steam ID
+          return game.gameImage || './images/placeholder.png';
+        };
+
         // StarfieldCanvas for clear weather
         const StarfieldCanvas = () => {
           const canvasRef = useRef(null);
@@ -1193,16 +1216,34 @@
                         <div className="lg:w-3/5 relative group">
                           <div className="aspect-[16/10] lg:aspect-[3/2] relative overflow-hidden">
                             <img 
-                              src={gameRecommendation?.gameImage || "https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg"}
+                              src={getHighResGameImage(gameRecommendation)}
                               alt={gameRecommendation?.title || "Game cover"}
                               className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
                               style={{objectPosition: 'center'}}
                               onError={(e) => {
+                                console.log('High-res image failed, trying header image...');
+                                // First fallback: try original header image
+                                if (!e.target.dataset.triedHeader) {
+                                  const steamId = extractSteamAppId(gameRecommendation?.steamUrl);
+                                  if (steamId) {
+                                    e.target.src = `https://cdn.akamai.steamstatic.com/steam/apps/${steamId}/header.jpg`;
+                                    e.target.dataset.triedHeader = 'true';
+                                    return;
+                                  }
+                                }
+                                // Second fallback: try original gameImage
+                                if (!e.target.dataset.triedOriginal && gameRecommendation?.gameImage) {
+                                  e.target.src = gameRecommendation.gameImage;
+                                  e.target.dataset.triedOriginal = 'true';
+                                  return;
+                                }
+                                // Third fallback: try local placeholder
                                 if (!e.target.dataset.triedPlaceholder) {
                                   e.target.src = './images/placeholder.png';
                                   e.target.dataset.triedPlaceholder = 'true';
                                   return;
                                 }
+                                // Final fallback: show styled placeholder
                                 e.target.style.display = 'none';
                                 e.target.parentNode.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)';
                                 e.target.parentNode.innerHTML = `
@@ -1216,6 +1257,9 @@
                                     </div>
                                   </div>
                                 `;
+                              }}
+                              onLoad={() => {
+                                console.log('Game image loaded successfully:', gameRecommendation?.title);
                               }}
                             />
                             {/* Weather Overlay Effect */}
