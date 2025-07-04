@@ -250,6 +250,88 @@
           }
         };
 
+        // CloudyCanvas: fun, stylized, subtle animated clouds for cloudy weather
+        const CloudyCanvas = () => {
+          const canvasRef = React.useRef(null);
+          React.useEffect(() => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            // Responsive resize
+            function handleResize() {
+              width = window.innerWidth;
+              height = window.innerHeight;
+              canvas.width = width;
+              canvas.height = height;
+            }
+            window.addEventListener('resize', handleResize);
+
+            // Fun, stylized cloud blobs
+            let clouds = Array.from({ length: 8 }).map((_, i) => ({
+              x: Math.random() * width,
+              y: height * (0.15 + 0.7 * Math.random()),
+              rX: 120 + Math.random() * 100 + (i % 2 ? 60 : 0),
+              rY: 60 + Math.random() * 60 + (i % 3 ? 30 : 0),
+              dx: 0.08 + Math.random() * 0.12 * (Math.random() > 0.5 ? 1 : -1),
+              alpha: 0.10 + Math.random() * 0.10,
+              hue: 220 + Math.random() * 20,
+              sat: 18 + Math.random() * 10,
+              light: 80 + Math.random() * 8,
+              wiggle: Math.random() * Math.PI * 2,
+              wiggleSpeed: 0.003 + Math.random() * 0.003,
+            }));
+
+            let anim;
+            function draw() {
+              ctx.clearRect(0, 0, width, height);
+              for (let c of clouds) {
+                ctx.save();
+                ctx.globalAlpha = c.alpha;
+                ctx.beginPath();
+                // Stylized, wiggly ellipses
+                let wiggleX = Math.sin(Date.now() * c.wiggleSpeed + c.wiggle) * 18;
+                let wiggleY = Math.cos(Date.now() * c.wiggleSpeed * 0.7 + c.wiggle) * 10;
+                ctx.ellipse(c.x + wiggleX, c.y + wiggleY, c.rX, c.rY, 0, 0, 2 * Math.PI);
+                ctx.fillStyle = `hsl(${c.hue},${c.sat}%,${c.light}%)`;
+                ctx.shadowColor = `hsl(${c.hue},${c.sat + 10}%,${c.light - 10}%)`;
+                ctx.shadowBlur = 60;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.restore();
+                c.x += c.dx;
+                if (c.dx > 0 && c.x - c.rX > width + 40) c.x = -c.rX;
+                if (c.dx < 0 && c.x + c.rX < -40) c.x = width + c.rX;
+              }
+              anim = requestAnimationFrame(draw);
+            }
+            draw();
+            return () => {
+              window.removeEventListener('resize', handleResize);
+              cancelAnimationFrame(anim);
+            };
+          }, []);
+          return (
+            <canvas
+              ref={canvasRef}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: 1,
+                pointerEvents: 'none',
+                transition: 'opacity 0.8s',
+              }}
+            />
+          );
+        };
+
         // WeatherSpecialEffects: for clear/cloudy backgrounds
         const WeatherSpecialEffects = ({ weatherType }) => {
           // Clear: just static filter, no particles or background effects
@@ -264,77 +346,9 @@
               `}</style>
             </>;
           }
-          // Cloudy: gradient overlays, no blur
+          // Cloudy: use CloudyCanvas for fun, stylized clouds
           if (weatherType === 'cloudy') {
-            // Layered gradients for depth
-            const cloudLayers = [
-              {
-                background: 'radial-gradient(ellipse 80% 40% at 30% 20%, rgba(180,190,220,0.22) 0%, rgba(180,180,200,0.0) 100%)',
-                top: '-10vh', left: '-10vw', width: '120vw', height: '40vh', opacity: 0.7, duration: 60, delay: 0
-              },
-              {
-                background: 'radial-gradient(ellipse 90% 50% at 70% 30%, rgba(180,190,220,0.18) 0%, rgba(180,180,200,0.0) 100%)',
-                top: '10vh', left: '20vw', width: '100vw', height: '36vh', opacity: 0.6, duration: 80, delay: 10
-              },
-              {
-                background: 'radial-gradient(ellipse 100% 60% at 50% 60%, rgba(180,190,220,0.15) 0%, rgba(180,180,200,0.0) 100%)',
-                top: '40vh', left: '-20vw', width: '140vw', height: '44vh', opacity: 0.5, duration: 100, delay: 20
-              },
-              {
-                background: 'linear-gradient(120deg, rgba(180,190,220,0.10) 0%, rgba(180,180,200,0.0) 100%)',
-                top: '0vh', left: '0vw', width: '100vw', height: '100vh', opacity: 0.4, duration: 120, delay: 30
-              },
-            ];
-            return <>
-              {cloudLayers.map((c, i) => (
-                <div key={i} style={{
-                  position: 'fixed',
-                  top: c.top,
-                  left: c.left,
-                  width: c.width,
-                  height: c.height,
-                  opacity: c.opacity,
-                  zIndex: 2,
-                  pointerEvents: 'none',
-                  background: c.background,
-                  mixBlendMode: 'multiply',
-                  animation: `cloud-move-${i} ${c.duration}s linear infinite`,
-                  animationDelay: `${c.delay}s`,
-                  transition: 'opacity 1.2s cubic-bezier(.4,0,.2,1)',
-                  willChange: 'transform',
-                  transform: 'translateX(0)',
-                  contain: 'layout style paint',
-                  isolation: 'isolate',
-                }} />
-              ))}
-              {/* Subtle bottom mist gradient */}
-              <div style={{
-                position: 'fixed',
-                left: 0,
-                bottom: 0,
-                width: '100vw',
-                height: '28vh',
-                zIndex: 2,
-                pointerEvents: 'none',
-                background: 'linear-gradient(to top, rgba(180,190,220,0.13) 0%, rgba(180,180,200,0.0) 100%)',
-                opacity: 0.7,
-                mixBlendMode: 'multiply',
-                willChange: 'transform',
-                transform: 'translateX(0)',
-                contain: 'layout style paint',
-                isolation: 'isolate',
-              }} />
-              {/* Desaturation overlay using blend mode instead of filter */}
-              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'rgba(180,180,200,0.07)',mixBlendMode:'multiply'}} />
-              <style>{`
-                ${cloudLayers.map((c, i) => `@keyframes cloud-move-${i} { 0% { transform: translateX(0); } 100% { transform: translateX(30vw); } }`).join('\n')}
-                body.cloudy-ui .rounded-lg, body.cloudy-ui .shadow-lg, body.cloudy-ui .shadow-2xl {
-                  filter: grayscale(0.22) brightness(0.95) contrast(0.93);
-                  box-shadow: none !important;
-                  border: none !important;
-                }
-              `}</style>
-            </>;
+            return <CloudyCanvas />;
           }
           return null;
         };
