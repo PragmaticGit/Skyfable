@@ -895,46 +895,7 @@
             : '';
 
           const renderLanding = () => {
-            // Show fullscreen loading overlay until weather is loaded (initial app load only)
-            if (!weatherLoaded) {
-              return (
-                <div style={{
-                  minHeight: '100vh',
-                  width: '100vw',
-                  background: '#23242b',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  zIndex: 9999
-                }}>
-                  <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white text-center">
-                    Sky<span style={{color: '#FFF099'}}>Fable</span>
-                  </h1>
-                  <p className="text-2xl mb-8 text-center font-medium pulse-animation" style={{color: '#FFF099'}}>
-                    Checking the weather...
-                  </p>
-                  <div className="mb-8">
-                    {/* Minimal SVG spinner with working animation */}
-                    <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="animate-spin" style={{display: 'block'}}>
-                      <circle cx="48" cy="48" r="40" stroke="#504B81" strokeWidth="8" opacity="0.15" />
-                      <path d="M88 48a40 40 0 1 1-40-40" stroke="#FFF099" strokeWidth="8" strokeLinecap="round" />
-                    </svg>
-                  </div>
-                </div>
-              );
-            }
-            // Always render the main layout, but show loading spinner/status in left column if loadingProgress > 0 and < 100
-            const isInlineLoading = currentScreen === 'loading';
-            // Determine which status to show based on loadingProgress
-            const statusIndex = Math.min(
-              Math.floor((loadingProgress / 100) * loadingStatuses.length),
-              loadingStatuses.length - 1
-            );
-            const statusMessage = loadingStatuses[statusIndex];
+            // Always render the main layout, but show a neutral placeholder until weatherLoaded
             return (
               <div className={`min-h-screen relative overflow-hidden ${weatherFilterClass}`}>
                 <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
@@ -958,7 +919,7 @@
                   <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-8 lg:gap-0">
                     {/* Left Content */}
                     <div className="flex-1 text-center lg:text-left lg:pr-16">
-                      {isInlineLoading ? (
+                      {!weatherLoaded ? (
                         <div className="flex flex-col items-center justify-center min-h-[320px] animate-fadein" style={{opacity:0.95,transition:'opacity 0.7s'}}>
                           <svg width="72" height="72" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="mb-6" style={{display: 'block'}}>
                             <circle cx="48" cy="48" r="40" stroke="#504B81" strokeWidth="8" opacity="0.15" />
@@ -967,7 +928,7 @@
                           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white text-center">
                             Sky<span style={{color: '#FFF099'}}>Fable</span>
                           </h1>
-                          <p className="text-lg sm:text-xl text-white opacity-80 font-medium text-center">{statusMessage}</p>
+                          <p className="text-lg sm:text-xl text-white opacity-80 font-medium text-center">Checking the weather...</p>
                         </div>
                       ) : (
                         <>
@@ -976,9 +937,11 @@
                               Find your perfect game based on the weather
                             </WeatherHeadline>
                           </h1>
+                          
                           <p className="text-lg sm:text-xl mb-6 text-white opacity-90 font-medium leading-relaxed">
                             Let the weather decide your next gaming adventure
                           </p>
+                          
                           <div className="flex items-center justify-center lg:justify-start gap-2 mb-8">
                             <span className="text-white opacity-70 text-sm">How does this work?</span>
                             <div className="relative group">
@@ -1000,6 +963,7 @@
                               </div>
                             </div>
                           </div>
+
                           <button 
                             onClick={handleForecastClick}
                             className="w-full sm:w-auto px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg"
@@ -1007,7 +971,6 @@
                               backgroundColor: '#FFF099',
                               color: '#504B81'
                             }}
-                            disabled={isInlineLoading}
                           >
                             Forecast My Game
                           </button>
@@ -1021,7 +984,10 @@
                         src="https://raw.githubusercontent.com/PragmaticGit/Skyfable/main/images/hero-image.png" 
                         alt="Gaming illustration" 
                         className="h-auto max-w-[320px] sm:max-w-[400px] lg:max-w-[520px] lg:max-h-[340px] xl:max-w-[600px] xl:max-h-[400px]"
-                        style={{}}
+                        style={{
+                          // No width or display set here!
+                          // Optionally, you can add: objectFit: 'contain'
+                        }}
                         onError={(e) => {
                           console.log('GitHub raw URL failed, trying relative path...');
                           e.target.src = "./images/hero-image.png";
@@ -1034,6 +1000,44 @@
                       />
                     </div>
                   </div>
+                </div>
+              </div>
+            );
+          };
+
+          const renderLoading = () => {
+            // Determine which status to show based on loadingProgress
+            const statusIndex = Math.min(
+              Math.floor((loadingProgress / 100) * loadingStatuses.length),
+              loadingStatuses.length - 1
+            );
+            const statusMessage = loadingStatuses[statusIndex];
+            return (
+              <div style={{
+                minHeight: '100vh',
+                width: '100vw',
+                background: '#23242b',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                zIndex: 9999
+              }}>
+                <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white text-center">
+                  Sky<span style={{color: '#FFF099'}}>Fable</span>
+                </h1>
+                <p className="text-2xl mb-8 text-center font-medium pulse-animation" style={{color: '#FFF099'}}>
+                  {statusMessage}
+                </p>
+                <div className="mb-8">
+                  {/* Minimal SVG spinner */}
+                  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="animate-spin" style={{display: 'block'}}>
+                    <circle cx="48" cy="48" r="40" stroke="#504B81" strokeWidth="8" opacity="0.15" />
+                    <path d="M88 48a40 40 0 1 1-40-40" stroke="#FFF099" strokeWidth="8" strokeLinecap="round" />
+                  </svg>
                 </div>
               </div>
             );
@@ -1141,8 +1145,20 @@
                       </button>
                       <button 
                         onClick={handleRollAgain}
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300 border-yellow-200 text-yellow-900 bg-transparent hover:bg-yellow-100 hover:text-[#504B81] focus:bg-yellow-100 focus:text-[#504B81]"
-                        style={{}}
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 border-2 rounded-lg font-bold transition-all duration-300"
+                        style={{
+                          borderColor: '#FFF8CC',
+                          color: '#FFF8CC',
+                          backgroundColor: 'transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = '#FFF8CC';
+                          e.target.style.color = '#504B81';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = 'transparent';
+                          e.target.style.color = '#FFF8CC';
+                        }}
                       >
                         Roll Again
                       </button>
@@ -1221,7 +1237,7 @@
 
           switch (currentScreen) {
             case 'loading':
-              return renderLanding();
+              return renderLoading();
             case 'result':
               return renderResult();
             case 'location-error':
