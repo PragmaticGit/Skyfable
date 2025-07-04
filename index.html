@@ -250,7 +250,7 @@
           }
         };
 
-        // CloudyCanvas: fun, stylized, subtle animated clouds for cloudy weather
+        // CloudyCanvas: advanced, organic, rolling misty clouds (video-inspired, optimized)
         const CloudyCanvas = () => {
           const canvasRef = React.useRef(null);
           React.useEffect(() => {
@@ -262,7 +262,6 @@
             canvas.width = width;
             canvas.height = height;
 
-            // Responsive resize
             function handleResize() {
               width = window.innerWidth;
               height = window.innerHeight;
@@ -271,41 +270,58 @@
             }
             window.addEventListener('resize', handleResize);
 
-            // Fun, stylized cloud blobs
-            let clouds = Array.from({ length: 8 }).map((_, i) => ({
-              x: Math.random() * width,
-              y: height * (0.15 + 0.7 * Math.random()),
-              rX: 120 + Math.random() * 100 + (i % 2 ? 60 : 0),
-              rY: 60 + Math.random() * 60 + (i % 3 ? 30 : 0),
-              dx: 0.08 + Math.random() * 0.12 * (Math.random() > 0.5 ? 1 : -1),
-              alpha: 0.10 + Math.random() * 0.10,
-              hue: 220 + Math.random() * 20,
-              sat: 18 + Math.random() * 10,
-              light: 80 + Math.random() * 8,
-              wiggle: Math.random() * Math.PI * 2,
-              wiggleSpeed: 0.003 + Math.random() * 0.003,
-            }));
+            // Cloud layers: each is a set of animated, soft radial gradients
+            const LAYERS = 4;
+            const CLOUDS_PER_LAYER = 6;
+            let clouds = [];
+            for (let l = 0; l < LAYERS; l++) {
+              for (let i = 0; i < CLOUDS_PER_LAYER; i++) {
+                clouds.push({
+                  layer: l,
+                  x: Math.random() * width,
+                  y: height * (0.1 + 0.8 * Math.random()),
+                  r: 180 + Math.random() * 120 + l * 40,
+                  dx: (0.08 + Math.random() * 0.10) * (l % 2 ? 1 : -1) * (0.7 + l * 0.2),
+                  dy: (Math.random() - 0.5) * 0.04 * (l + 1),
+                  alpha: 0.07 + Math.random() * 0.07 + l * 0.02,
+                  baseAlpha: 0.07 + Math.random() * 0.07 + l * 0.02,
+                  phase: Math.random() * Math.PI * 2,
+                  speed: 0.0007 + Math.random() * 0.0007 + l * 0.0002,
+                });
+              }
+            }
 
             let anim;
             function draw() {
               ctx.clearRect(0, 0, width, height);
               for (let c of clouds) {
-                ctx.save();
-                ctx.globalAlpha = c.alpha;
-                ctx.beginPath();
-                // Stylized, wiggly ellipses
-                let wiggleX = Math.sin(Date.now() * c.wiggleSpeed + c.wiggle) * 18;
-                let wiggleY = Math.cos(Date.now() * c.wiggleSpeed * 0.7 + c.wiggle) * 10;
-                ctx.ellipse(c.x + wiggleX, c.y + wiggleY, c.rX, c.rY, 0, 0, 2 * Math.PI);
-                ctx.fillStyle = `hsl(${c.hue},${c.sat}%,${c.light}%)`;
-                ctx.shadowColor = `hsl(${c.hue},${c.sat + 10}%,${c.light - 10}%)`;
-                ctx.shadowBlur = 60;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                ctx.restore();
+                // Animate organic rolling
+                let t = Date.now();
+                let offsetX = Math.sin(t * c.speed + c.phase) * 30 * (1 + c.layer * 0.2);
+                let offsetY = Math.cos(t * c.speed * 0.7 + c.phase) * 18 * (1 + c.layer * 0.1);
+                let x = c.x + offsetX;
+                let y = c.y + offsetY;
+                // Animate horizontal drift
                 c.x += c.dx;
-                if (c.dx > 0 && c.x - c.rX > width + 40) c.x = -c.rX;
-                if (c.dx < 0 && c.x + c.rX < -40) c.x = width + c.rX;
+                c.y += c.dy;
+                if (c.dx > 0 && c.x - c.r > width + 40) c.x = -c.r;
+                if (c.dx < 0 && c.x + c.r < -40) c.x = width + c.r;
+                if (c.y - c.r > height + 40) c.y = -c.r;
+                if (c.y + c.r < -40) c.y = height + c.r;
+                // Alpha pulse for depth
+                let alpha = c.baseAlpha + Math.sin(t * c.speed * 0.6 + c.phase) * 0.03;
+                // Soft radial gradient
+                let grad = ctx.createRadialGradient(x, y, c.r * 0.2, x, y, c.r);
+                grad.addColorStop(0, `rgba(180,190,220,${alpha})`);
+                grad.addColorStop(0.7, `rgba(180,190,220,${alpha * 0.5})`);
+                grad.addColorStop(1, 'rgba(180,190,220,0)');
+                ctx.save();
+                ctx.globalAlpha = 1;
+                ctx.beginPath();
+                ctx.arc(x, y, c.r, 0, 2 * Math.PI);
+                ctx.fillStyle = grad;
+                ctx.fill();
+                ctx.restore();
               }
               anim = requestAnimationFrame(draw);
             }
