@@ -1280,26 +1280,34 @@
                                   {gameRecommendation?.weatherScore || 8}/10
                                 </span>
                               </div>
-                              {/* Simple, reliable tooltip */}
-                              <div className="opacity-0 group-hover:opacity-100 absolute z-30 bg-gray-900 text-white p-4 rounded-lg text-sm transition-opacity duration-200 pointer-events-none shadow-xl border border-gray-700 min-w-max" 
+                              {/* Compact multi-line tooltip that fits within card */}
+                              <div className="opacity-0 group-hover:opacity-100 absolute z-30 bg-gray-900 text-white p-3 rounded-lg text-xs transition-opacity duration-200 pointer-events-none shadow-xl border border-gray-700" 
                                    style={{
-                                     width: '300px',
+                                     width: '220px',
                                      bottom: '100%',
-                                     left: '50%',
-                                     transform: 'translateX(-50%)',
+                                     right: '0',
                                      marginBottom: '8px'
                                    }}>
-                                <div className="font-semibold mb-2 text-blue-300">Why this matches your weather</div>
+                                <div className="font-semibold mb-2 text-blue-300 text-xs">Weather Match</div>
                                 <div className="text-gray-200 leading-relaxed text-xs">
-                                  {getWeatherExplanation(effectiveWeatherType, gameRecommendation?.title)}
+                                  {(() => {
+                                    const explanations = {
+                                      rain: "Cozy, introspective atmosphere matches rainy day contemplation perfectly.",
+                                      snow: "Winter themes and survival elements complement cold, challenging snowy weather.",
+                                      sunny: "Bright, energetic gameplay matches the uplifting motivation of sunny weather.",
+                                      cloudy: "Mysterious atmosphere aligns with the contemplative uncertainty of cloudy skies.",
+                                      clear: "Transcendent experience captures the sense of possibility from perfect clear weather.",
+                                      fog: "Atmospheric exploration perfectly matches the mysterious mood of foggy weather."
+                                    };
+                                    return explanations[effectiveWeatherType] || "Perfect gaming experience for your current weather mood.";
+                                  })()}
                                 </div>
-                                {/* Simple arrow */}
+                                {/* Arrow pointing down and positioned to the right */}
                                 <div 
                                   className="absolute border-4 border-transparent border-t-gray-900"
                                   style={{
                                     top: '100%',
-                                    left: '50%',
-                                    transform: 'translateX(-50%)'
+                                    right: '12px'
                                   }}
                                 ></div>
                               </div>
