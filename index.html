@@ -264,43 +264,50 @@
               `}</style>
             </>;
           }
-          // Cloudy: intensified animated mist/fog overlays
+          // Cloudy: gradient overlays, no blur
           if (weatherType === 'cloudy') {
-            // More, larger, and more opaque fog layers for a stronger effect
-            const fogLayers = [
-              { top: '-10vh', left: '-20vw', width: '160vw', height: '40vh', opacity: 0.16, duration: 54, delay: 0, blur: 30 },
-              { top: '20vh', left: '-10vw', width: '140vw', height: '36vh', opacity: 0.14, duration: 62, delay: 8, blur: 24 },
-              { top: '40vh', left: '-30vw', width: '180vw', height: '44vh', opacity: 0.13, duration: 70, delay: 16, blur: 36 },
-              { top: '60vh', left: '-15vw', width: '150vw', height: '38vh', opacity: 0.145, duration: 60, delay: 12, blur: 28 },
-              { top: '0vh', left: '-25vw', width: '170vw', height: '32vh', opacity: 0.115, duration: 80, delay: 20, blur: 32 },
-              { top: '30vh', left: '10vw', width: '120vw', height: '30vh', opacity: 0.105, duration: 66, delay: 18, blur: 20 },
-              { top: '50vh', left: '-40vw', width: '200vw', height: '50vh', opacity: 0.095, duration: 90, delay: 24, blur: 40 },
-              { top: '70vh', left: '-10vw', width: '160vw', height: '36vh', opacity: 0.11, duration: 74, delay: 28, blur: 30 },
+            // Layered gradients for depth
+            const cloudLayers = [
+              {
+                background: 'radial-gradient(ellipse 80% 40% at 30% 20%, rgba(180,190,220,0.22) 0%, rgba(180,180,200,0.0) 100%)',
+                top: '-10vh', left: '-10vw', width: '120vw', height: '40vh', opacity: 0.7, duration: 60, delay: 0
+              },
+              {
+                background: 'radial-gradient(ellipse 90% 50% at 70% 30%, rgba(180,190,220,0.18) 0%, rgba(180,180,200,0.0) 100%)',
+                top: '10vh', left: '20vw', width: '100vw', height: '36vh', opacity: 0.6, duration: 80, delay: 10
+              },
+              {
+                background: 'radial-gradient(ellipse 100% 60% at 50% 60%, rgba(180,190,220,0.15) 0%, rgba(180,180,200,0.0) 100%)',
+                top: '40vh', left: '-20vw', width: '140vw', height: '44vh', opacity: 0.5, duration: 100, delay: 20
+              },
+              {
+                background: 'linear-gradient(120deg, rgba(180,190,220,0.10) 0%, rgba(180,180,200,0.0) 100%)',
+                top: '0vh', left: '0vw', width: '100vw', height: '100vh', opacity: 0.4, duration: 120, delay: 30
+              },
             ];
-            const fogColor = 'rgba(180,190,220,0.95)';
             return <>
-              {fogLayers.map((f, i) => (
+              {cloudLayers.map((c, i) => (
                 <div key={i} style={{
                   position: 'fixed',
-                  top: f.top,
-                  left: f.left,
-                  width: f.width,
-                  height: f.height,
-                  opacity: f.opacity,
+                  top: c.top,
+                  left: c.left,
+                  width: c.width,
+                  height: c.height,
+                  opacity: c.opacity,
                   zIndex: 2,
                   pointerEvents: 'none',
-                  background: `radial-gradient(ellipse at 50% 50%, ${fogColor} 0%, rgba(180,180,200,0.0) 80%)`,
-                  filter: `blur(${f.blur}px)`,
-                  animation: `fog-drift-${i} ${f.duration}s linear infinite`,
-                  animationDelay: `${f.delay}s`,
+                  background: c.background,
+                  mixBlendMode: 'multiply',
+                  animation: `cloud-move-${i} ${c.duration}s linear infinite`,
+                  animationDelay: `${c.delay}s`,
                   transition: 'opacity 1.2s cubic-bezier(.4,0,.2,1)',
                   willChange: 'transform',
-                  transform: 'translateZ(0)',
+                  transform: 'translateX(0)',
                   contain: 'layout style paint',
                   isolation: 'isolate',
                 }} />
               ))}
-              {/* Mist/fog overlay at the bottom */}
+              {/* Subtle bottom mist gradient */}
               <div style={{
                 position: 'fixed',
                 left: 0,
@@ -309,16 +316,18 @@
                 height: '28vh',
                 zIndex: 2,
                 pointerEvents: 'none',
-                background: 'linear-gradient(to top, rgba(180,190,220,0.19) 0%, rgba(180,180,200,0.0) 100%)',
-                filter: 'blur(4px)',
+                background: 'linear-gradient(to top, rgba(180,190,220,0.13) 0%, rgba(180,180,200,0.0) 100%)',
+                opacity: 0.7,
+                mixBlendMode: 'multiply',
                 willChange: 'transform',
-                transform: 'translateZ(0)',
+                transform: 'translateX(0)',
                 contain: 'layout style paint',
                 isolation: 'isolate',
               }} />
-              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'transparent',filter:'grayscale(0.11) brightness(0.975) contrast(0.965)'}} />
+              {/* Desaturation overlay using blend mode instead of filter */}
+              <div style={{position:'fixed',top:0,left:0,width:'100vw',height:'100vh',zIndex:2,pointerEvents:'none',background:'rgba(180,180,200,0.07)',mixBlendMode:'multiply'}} />
               <style>{`
-                ${fogLayers.map((f, i) => `@keyframes fog-drift-${i} { 0% { transform: translateX(0) translateZ(0); opacity: ${f.opacity}; } 50% { opacity: ${Math.min(1, f.opacity * 1.35)}; } 100% { transform: translateX(40vw) translateZ(0); opacity: ${f.opacity}; } }`).join('\n')}
+                ${cloudLayers.map((c, i) => `@keyframes cloud-move-${i} { 0% { transform: translateX(0); } 100% { transform: translateX(30vw); } }`).join('\n')}
                 body.cloudy-ui .rounded-lg, body.cloudy-ui .shadow-lg, body.cloudy-ui .shadow-2xl {
                   filter: grayscale(0.22) brightness(0.95) contrast(0.93);
                   box-shadow: none !important;
