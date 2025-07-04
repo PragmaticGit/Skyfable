@@ -896,16 +896,16 @@
 
           const renderLanding = () => (
             <>
-              <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-6 h-20 min-h-[80px] relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
-                  className="text-white text-xl sm:text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                  className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
                 >
                   Sky<span style={{color: '#FFF099'}}>Fable</span>
                 </div>
                 <button
                   onClick={handleCycleWeather}
-                  className="ml-4 px-3 py-2 rounded-lg font-semibold text-xs border border-yellow-200 bg-white bg-opacity-10 text-yellow-100 hover:bg-opacity-20 transition-all duration-200"
+                  className="min-w-[140px] px-4 py-2 rounded-lg font-semibold text-base border border-yellow-200 bg-white bg-opacity-10 text-yellow-100 hover:bg-opacity-20 transition-all duration-200"
                   style={{minWidth:'120px'}}
                   title="Manually cycle weather for preview"
                 >
@@ -1012,7 +1012,7 @@
             const statusMessage = loadingStatuses[statusIndex];
             return (
               <>
-                <nav className="flex justify-between items-center px-4 sm:px-8 py-6" style={{backgroundColor: '#504B81'}}>
+                <nav className="flex justify-between items-center px-4 sm:px-8 py-6 h-20 min-h-[80px] relative z-10" style={{backgroundColor: '#504B81'}}>
                   <div 
                     className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => setCurrentScreen('landing')}
@@ -1052,7 +1052,7 @@
 
           const renderResult = () => (
             <>
-              <nav className="flex justify-between items-center px-4 sm:px-8 py-6 relative z-10" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-6 h-20 min-h-[80px] relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
@@ -1179,7 +1179,7 @@
 
           const renderLocationError = () => (
             <>
-              <nav className="flex justify-between items-center px-4 sm:px-8 py-6" style={{backgroundColor: '#504B81'}}>
+              <nav className="flex justify-between items-center px-4 sm:px-8 py-6 h-20 min-h-[80px] relative z-10" style={{backgroundColor: '#504B81'}}>
                 <div 
                   className="text-white text-2xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setCurrentScreen('landing')}
