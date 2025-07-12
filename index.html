@@ -64,6 +64,32 @@
         .card-glow-sunny { box-shadow: 0 0 24px 4px rgba(251,191,36,0.25); border: 2px solid #FBBF24; }
         .card-glow-cloudy { box-shadow: 0 0 24px 4px rgba(107,114,128,0.25); border: 2px solid #6B7280; }
         .card-glow-clear { box-shadow: 0 0 32px 6px rgba(234,246,255,0.25); border: 2px solid #EAF6FF; }
+        .sf-tooltip {
+            position: absolute;
+            z-index: 30;
+            background: #1a202c;
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            border: 1px solid #374151;
+            width: 220px;
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 8px;
+        }
+        @media (max-width: 640px) {
+            .sf-tooltip {
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%);
+                min-width: 200px;
+                max-width: 90vw;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1317,13 +1343,8 @@
                                 </span>
                               </div>
                               {/* Compact multi-line tooltip that fits within card */}
-                              <div className="opacity-0 group-hover:opacity-100 absolute z-30 bg-gray-900 text-white p-3 rounded-lg text-xs transition-opacity duration-200 pointer-events-none shadow-xl border border-gray-700" 
-                                   style={{
-                                     width: '220px',
-                                     bottom: '100%',
-                                     right: '0',
-                                     marginBottom: '8px'
-                                   }}>
+                              <div className="opacity-0 group-hover:opacity-100 sf-tooltip"
+                                   >
                                 <div className="font-semibold mb-2 text-blue-300 text-xs">Weather Match</div>
                                 <div className="text-gray-200 leading-relaxed text-xs">
                                   {(() => {
@@ -1343,7 +1364,8 @@
                                   className="absolute border-4 border-transparent border-t-gray-900"
                                   style={{
                                     top: '100%',
-                                    right: '12px'
+                                    right: '12px',
+                                    left: 'auto',
                                   }}
                                 ></div>
                               </div>
