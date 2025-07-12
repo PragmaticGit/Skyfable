@@ -575,82 +575,7 @@
     const rendererRef = React.useRef(null);
     const weatherObjectRef = React.useRef(null);
     const animationIdRef = React.useRef(null);
-
-    function createCloudGroup({ color, count, scaleRange, spread }) {
-        const group = new THREE.Group();
-        const geometry = new THREE.SphereGeometry(1, 16, 16);
-        const material = new THREE.MeshLambertMaterial({ color, transparent: true, opacity: 0.8 });
-        for (let i = 0; i < count; i++) {
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(
-                (Math.random() - 0.5) * spread.x,
-                (Math.random() - 0.5) * spread.y,
-                (Math.random() - 0.5) * spread.z
-            );
-            const scale = scaleRange[0] + Math.random() * (scaleRange[1] - scaleRange[0]);
-            mesh.scale.setScalar(scale);
-            group.add(mesh);
-        }
-        return group;
-    }
-
-    const weather3DConfig = {
-        sunny: (THREE) => {
-            const sun = new THREE.Mesh(
-                new THREE.SphereGeometry(1.2, 32, 32),
-                new THREE.MeshLambertMaterial({ color: 0xFFD700, emissive: 0xFFAA00, emissiveIntensity: 0.3 })
-            );
-            const rayGroup = new THREE.Group();
-            const rayGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.8, 8);
-            const rayMaterial = new THREE.MeshLambertMaterial({ color: 0xFFE55C, emissive: 0xFFD700, emissiveIntensity: 0.2 });
-            for (let i = 0; i < 8; i++) {
-                const ray = new THREE.Mesh(rayGeometry, rayMaterial);
-                ray.position.set(Math.cos(i * Math.PI / 4) * 2, Math.sin(i * Math.PI / 4) * 2, 0);
-                ray.rotation.z = i * Math.PI / 4;
-                rayGroup.add(ray);
-            }
-            const group = new THREE.Group();
-            group.add(sun);
-            group.add(rayGroup);
-            group.userData = { animate: (g) => { g.children[1].rotation.z += 0.02; } };
-            return group;
-        },
-        rain: (THREE) => {
-            const group = createCloudGroup({ color: 0x87CEEB, count: 5, scaleRange: [0.6, 1.0], spread: { x: 2, y: 0.5, z: 0.5 } });
-            const dropGeometry = new THREE.CylinderGeometry(0.02, 0.02, 0.3, 8);
-            const dropMaterial = new THREE.MeshLambertMaterial({ color: 0x4A90E2, transparent: true, opacity: 0.7 });
-            for (let i = 0; i < 12; i++) {
-                const drop = new THREE.Mesh(dropGeometry, dropMaterial);
-                drop.position.set((Math.random() - 0.5) * 3, -1.5 - Math.random() * 2, (Math.random() - 0.5) * 0.5);
-                group.add(drop);
-            }
-            group.userData = { animate: (g) => { g.position.y = Math.sin(Date.now() * 0.001) * 0.1; } };
-            return group;
-        },
-        snow: (THREE) => {
-            const group = createCloudGroup({ color: 0xF0F8FF, count: 4, scaleRange: [0.7, 1.0], spread: { x: 1.5, y: 0.3, z: 0.3 } });
-            const flakeGeometry = new THREE.OctahedronGeometry(0.08, 0);
-            const flakeMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.8 });
-            for (let i = 0; i < 20; i++) {
-                const flake = new THREE.Mesh(flakeGeometry, flakeMaterial);
-                flake.position.set((Math.random() - 0.5) * 4, -1 - Math.random() * 3, (Math.random() - 0.5) * 1);
-                group.add(flake);
-            }
-            group.userData = { animate: (g) => { g.position.y = Math.sin(Date.now() * 0.001) * 0.1; } };
-            return group;
-        },
-        cloudy: (THREE) => {
-            const group = createCloudGroup({ color: 0x696969, count: 6, scaleRange: [0.5, 1.0], spread: { x: 2.5, y: 0.8, z: 0.8 } });
-            return group;
-        },
-        clear: (THREE) => {
-            const mesh = new THREE.Mesh(
-                new THREE.OctahedronGeometry(1.2, 1),
-                new THREE.MeshLambertMaterial({ color: 0x9370DB, transparent: true, opacity: 0.8, emissive: 0x4B0082, emissiveIntensity: 0.2 })
-            );
-            return mesh;
-        }
-    };
+    const canvasSizeRef = React.useRef(0);
 
     React.useEffect(() => {
         if (!mountRef.current) return;
@@ -658,11 +583,21 @@
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         const container = mountRef.current;
-        const size = Math.min(container.clientWidth, container.clientHeight, 300);
+        // Responsive sizing
+        const getResponsiveSize = () => {
+            const defaultSize = 220;
+            let width = container.clientWidth || defaultSize;
+            let height = container.clientHeight || defaultSize;
+            let size = Math.min(width, height, 400);
+            if (!size || size < 80) size = defaultSize;
+            return size;
+        };
+        let size = getResponsiveSize();
         renderer.setSize(size, size);
         renderer.setClearColor(0xff00ff, 1); // Bright magenta for debug
         container.appendChild(renderer.domElement);
-        console.log('Three.js canvas appended:', renderer.domElement);
+        canvasSizeRef.current = size;
+        console.log('Three.js canvas appended:', renderer.domElement, 'size:', size);
 
         sceneRef.current = scene;
         rendererRef.current = renderer;
@@ -692,16 +627,20 @@
         };
         animate();
 
+        // Responsive resize
         const handleResize = () => {
-            if (container && rendererRef.current) {
-                const size = Math.min(container.clientWidth, container.clientHeight, 300);
-                rendererRef.current.setSize(size, size);
-            }
+            let newSize = getResponsiveSize();
+            renderer.setSize(newSize, newSize);
+            canvasSizeRef.current = newSize;
         };
         window.addEventListener('resize', handleResize);
+        // Use ResizeObserver for container changes
+        let resizeObserver = new window.ResizeObserver(handleResize);
+        resizeObserver.observe(container);
 
         return () => {
             window.removeEventListener('resize', handleResize);
+            resizeObserver.disconnect();
             if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
             if (container && renderer.domElement && container.contains(renderer.domElement)) {
                 container.removeChild(renderer.domElement);
@@ -711,10 +650,10 @@
     }, [weatherType]);
 
     return (
-        <div className="h-auto min-h-[220px] max-w-[320px] sm:max-w-[400px] lg:max-w-[520px] lg:max-h-[340px] xl:max-w-[600px] xl:max-h-[400px] relative flex items-center justify-center border-2 border-dashed border-yellow-400">
+        <div className="w-full min-w-[120px] min-h-[180px] max-w-[400px] max-h-[400px] sm:min-w-[180px] sm:min-h-[220px] sm:max-w-[400px] sm:max-h-[340px] lg:max-w-[520px] lg:max-h-[340px] xl:max-w-[600px] xl:max-h-[400px] relative flex items-center justify-center border-2 border-dashed border-yellow-400 mx-auto">
             <div
                 ref={mountRef}
-                className="w-full h-[220px] sm:h-[280px] lg:h-[340px] xl:h-[400px]"
+                className="w-full h-[180px] sm:h-[220px] lg:h-[340px] xl:h-[400px]"
                 style={{ filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.3))' }}
             />
             <span className="absolute text-yellow-400 text-lg font-bold z-10">3D Weather Area</span>
