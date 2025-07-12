@@ -744,6 +744,8 @@
           const [currentScreen, setCurrentScreen] = useState('landing');
           const [weather, setWeather] = useState(null);
           const [location, setLocation] = useState(null);
+          const [manualLocation, setManualLocation] = useState("");
+          const [manualMode, setManualMode] = useState(false);
           const [gameRecommendation, setGameRecommendation] = useState(null);
           const [loadingProgress, setLoadingProgress] = useState(0);
           const [lastGameTitle, setLastGameTitle] = useState(null);
@@ -926,18 +928,26 @@
             return randomGame;
           };
 
-          const fetchWeather = async (lat, lon) => {
+          // Modified fetchWeather to accept city string or lat/lon
+          const fetchWeather = async (locationInput) => {
             try {
-              const response = await fetch(`https://wttr.in/${lat},${lon}?format=j1`);
+              let url;
+              if (typeof locationInput === 'string' && locationInput.trim() !== '') {
+                url = `https://wttr.in/${encodeURIComponent(locationInput)}?format=j1`;
+              } else if (locationInput && locationInput.lat && locationInput.lon) {
+                url = `https://wttr.in/${locationInput.lat},${locationInput.lon}?format=j1`;
+              } else {
+                url = `https://wttr.in/?format=j1`;
+              }
+              const response = await fetch(url);
               if (!response.ok) {
                 throw new Error('Weather fetch failed');
               }
               const data = await response.json();
               const current = data.current_condition[0];
-              const location = data.nearest_area[0];
-              // Compose city and region if available
-              const city = location.areaName[0].value;
-              const region = location.region && location.region[0] && location.region[0].value;
+              const loc = data.nearest_area[0];
+              const city = loc.areaName[0].value;
+              const region = loc.region && loc.region[0] && loc.region[0].value;
               const displayName = region && region !== city ? `${city}, ${region}` : city;
               return {
                 weather: [{
@@ -1078,19 +1088,25 @@
           useEffect(() => {
             const loadInitialWeather = async () => {
               try {
-                const userLocation = await getLocation();
-                setLocation(userLocation);
-                const weatherData = await fetchWeather(userLocation.lat, userLocation.lon);
-                setWeather(weatherData);
-                setWeatherLoaded(true);
+                if (manualMode && manualLocation) {
+                  const weatherData = await fetchWeather(manualLocation);
+                  setWeather(weatherData);
+                  setWeatherLoaded(true);
+                } else {
+                  const userLocation = await getLocation();
+                  setLocation(userLocation);
+                  const weatherData = await fetchWeather(userLocation);
+                  setWeather(weatherData);
+                  setWeatherLoaded(true);
+                }
               } catch (error) {
                 console.error('Failed to load initial weather:', error);
                 setWeatherLoaded(true);
               }
             };
-
             loadInitialWeather();
-          }, []);
+            // Only re-run when manualMode or manualLocation changes
+          }, [manualMode, manualLocation]);
 
           // Update weatherType when weather changes
           useEffect(() => {
@@ -1262,7 +1278,45 @@
 
                     {/* Right Content - Your Hero Image */}
                     <div className="flex-1 flex justify-center order-first lg:order-last">
-                      <SimpleWeatherHero weatherType={effectiveWeatherType} weather={weather} isLoaded={weatherLoaded} />
+                      <div className="w-full max-w-md">
+                        <SimpleWeatherHero weatherType={effectiveWeatherType} weather={weather} isLoaded={weatherLoaded} />
+                        <div className="flex flex-col items-center mt-4 gap-2">
+                          {!showLocationInput && (
+                            <>
+                              <button
+                                className="px-4 py-2 rounded bg-white/20 text-white font-semibold hover:bg-white/30 transition"
+                                onClick={() => setShowLocationInput(true)}
+                              >
+                                Change Location
+                              </button>
+                              {manualMode && (
+                                <button
+                                  className="px-4 py-2 rounded bg-white/10 text-white font-semibold hover:bg-white/20 transition"
+                                  onClick={handleUseMyLocation}
+                                >
+                                  Use My Location
+                                </button>
+                              )}
+                            </>
+                          )}
+                          {showLocationInput && (
+                            <form onSubmit={handleManualLocationSubmit} className="flex flex-col items-center gap-2 w-full">
+                              <input
+                                type="text"
+                                className="px-3 py-2 rounded border border-white/20 bg-white/10 text-white w-full"
+                                placeholder="Enter city or lat,lon"
+                                value={locationInputValue}
+                                onChange={e => setLocationInputValue(e.target.value)}
+                                autoFocus
+                              />
+                              <div className="flex gap-2">
+                                <button type="submit" className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition">OK</button>
+                                <button type="button" className="px-4 py-2 rounded bg-gray-500 text-white font-semibold hover:bg-gray-600 transition" onClick={() => setShowLocationInput(false)}>Cancel</button>
+                              </div>
+                            </form>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
