@@ -753,6 +753,9 @@
           const [gameCache, setGameCache] = useState({}); // Cache for loaded game databases
           const [weatherType, setWeatherType] = useState('clear');
           const [weatherLoaded, setWeatherLoaded] = useState(false);
+          // Add missing state for location input UI
+          const [showLocationInput, setShowLocationInput] = useState(false);
+          const [locationInputValue, setLocationInputValue] = useState("");
 
           // Extract Steam App ID from Steam URL
           const extractSteamAppId = (steamUrl) => {
