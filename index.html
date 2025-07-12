@@ -767,7 +767,7 @@
             setShowLocationInput(false);
             setLocationInputValue("");
             try {
-              const weatherData = await getWeatherWithAutoLocation();
+              const weatherData = await getWeatherQuickly();
               setWeather(weatherData);
               setWeatherLoaded(true);
             } catch (error) {
@@ -975,26 +975,113 @@
             return randomGame;
           };
 
-          // Get IP-based location as fallback
-          const getIPLocation = async () => {
+          // Simple fix: Just make location detection MUCH faster
+          // Keep using wttr.in (it already works great)
+
+          const getFastLocation = async () => {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile && navigator.geolocation) {
+              try {
+                console.log('Trying quick GPS (mobile)...');
+                
+                const position = await new Promise((resolve, reject) => {
+                  navigator.geolocation.getCurrentPosition(
+                    resolve,
+                    reject,
+                    {
+                      enableHighAccuracy: false,  // Much faster
+                      timeout: 2000,             // Only wait 2 seconds (was probably 10-30s)
+                      maximumAge: 300000          // Accept 5min old location
+                    }
+                  );
+                });
+                
+                return {
+                  lat: position.coords.latitude,
+                  lon: position.coords.longitude
+                };
+                
+              } catch (gpsError) {
+                console.log('GPS failed quickly, trying IP...');
+              }
+            }
+            
+            // IP fallback (fast and works globally)
             try {
               const response = await fetch('https://ipapi.co/json/');
               const data = await response.json();
-              console.log('IP-based location:', data.city, data.region);
+              
               return {
                 lat: data.latitude,
-                lon: data.longitude,
-                city: data.city,
-                region: data.region,
-                accuracy: 50000 // IP-based location is typically ~50km accurate
+                lon: data.longitude
               };
-            } catch (error) {
-              console.error('IP location failed:', error);
+            } catch (ipError) {
+              // No location available
               return null;
             }
           };
 
-          // Fast weather fetch for city-based approach
+          // Your existing fetchWeather function is fine, just call it faster
+          const fetchWeatherFast = async (lat, lon) => {
+            try {
+              const response = await fetch(`https://wttr.in/${lat},${lon}?format=j1`);
+              
+              if (!response.ok) {
+                throw new Error('Weather fetch failed');
+              }
+              
+              const data = await response.json();
+              const current = data.current_condition[0];
+              const location = data.nearest_area[0];
+              
+              return {
+                weather: [{ 
+                  main: current.weatherDesc[0].value,
+                  description: current.weatherDesc[0].value.toLowerCase()
+                }],
+                name: location.areaName[0].value,
+                main: { 
+                  temp: parseInt(current.temp_C)
+                }
+              };
+            } catch (error) {
+              console.error('wttr.in failed:', error);
+              throw error;
+            }
+          };
+
+          // Simple: Get location fast, then get weather
+          const getWeatherQuickly = async () => {
+            try {
+              // Get location with 3 second total timeout
+              const location = await Promise.race([
+                getFastLocation(),
+                new Promise((_, reject) => 
+                  setTimeout(() => reject(new Error('Location timeout')), 3000)
+                )
+              ]);
+              
+              if (location) {
+                console.log('Got location, fetching weather...');
+                return await fetchWeatherFast(location.lat, location.lon);
+              } else {
+                throw new Error('No location');
+              }
+              
+            } catch (error) {
+              console.log('Location failed, using fallback weather');
+              
+              // Generic fallback (no specific location)
+              return {
+                weather: [{ main: 'Clear', description: 'clear sky' }],
+                name: 'Your Location',
+                main: { temp: 20 }
+              };
+            }
+          };
+
+          // Keep the original fetchWeather for manual location input
           const fetchWeather = async (cityName) => {
             try {
               console.log('Fetching weather for city:', cityName);
@@ -1034,64 +1121,6 @@
                 name: 'Unknown Location',
                 main: { temp: 20 }
               };
-            }
-          };
-
-          // Use wttr.in's auto-detection with location validation
-          const getWeatherWithAutoLocation = async () => {
-            try {
-              console.log('Using wttr.in auto-detection...');
-              const url = 'https://wttr.in/?format=j1';
-              console.log('Weather API URL:', url);
-              
-              const response = await fetch(url);
-              if (!response.ok) {
-                throw new Error('Weather fetch failed');
-              }
-              
-              const data = await response.json();
-              const current = data.current_condition[0];
-              const loc = data.nearest_area[0];
-              const city = loc.areaName[0].value;
-              const region = loc.region && loc.region[0] && loc.region[0].value;
-              const country = loc.country && loc.country[0] && loc.country[0].value;
-              const displayName = region && region !== city ? `${city}, ${region}` : city;
-              
-              console.log('wttr.in auto-detected location:', displayName);
-              console.log('Country:', country);
-              console.log('Weather condition:', current.weatherDesc[0].value);
-              console.log('Temperature:', current.temp_C, '°C');
-              
-              // Check if location seems reasonable (not obviously wrong)
-              const suspiciousLocations = [
-                'Coffee', 'Unknown', 'Test', 'Local', 'Default'
-              ];
-              const suspiciousCountries = [
-                'United States of America', 'Unknown', 'Test'
-              ];
-              
-              const isSuspicious = suspiciousLocations.includes(city) || 
-                                 suspiciousCountries.includes(country) ||
-                                 displayName.includes('Coffee, California');
-              
-              if (isSuspicious) {
-                console.log('Suspicious location detected, showing manual input');
-                throw new Error('Location detection seems incorrect');
-              }
-              
-              return {
-                weather: [{
-                  main: current.weatherDesc[0].value,
-                  description: current.weatherDesc[0].value.toLowerCase()
-                }],
-                name: displayName,
-                main: {
-                  temp: parseInt(current.temp_C)
-                }
-              };
-            } catch (error) {
-              console.error('wttr.in auto-detection failed:', error);
-              throw error;
             }
           };
 
@@ -1187,14 +1216,14 @@
                   setWeather(weatherData);
                   setWeatherLoaded(true);
                 } else {
-                  // Use wttr.in's auto-detection (best practice)
+                  // Use the new fast weather detection
                   try {
-                    const weatherData = await getWeatherWithAutoLocation();
+                    setLocationError(false);
+                    const weatherData = await getWeatherQuickly();
                     setWeather(weatherData);
                     setWeatherLoaded(true);
                   } catch (error) {
-                    console.log('Auto-detection failed, showing manual input');
-                    setShowLocationInput(true);
+                    console.error('Weather loading failed:', error);
                     setWeatherLoaded(true);
                   }
                 }
