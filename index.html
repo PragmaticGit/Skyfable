@@ -1037,7 +1037,7 @@
             }
           };
 
-          // Use wttr.in's auto-detection (best practice)
+          // Use wttr.in's auto-detection with location validation
           const getWeatherWithAutoLocation = async () => {
             try {
               console.log('Using wttr.in auto-detection...');
@@ -1054,11 +1054,30 @@
               const loc = data.nearest_area[0];
               const city = loc.areaName[0].value;
               const region = loc.region && loc.region[0] && loc.region[0].value;
+              const country = loc.country && loc.country[0] && loc.country[0].value;
               const displayName = region && region !== city ? `${city}, ${region}` : city;
               
               console.log('wttr.in auto-detected location:', displayName);
+              console.log('Country:', country);
               console.log('Weather condition:', current.weatherDesc[0].value);
               console.log('Temperature:', current.temp_C, '°C');
+              
+              // Check if location seems reasonable (not obviously wrong)
+              const suspiciousLocations = [
+                'Coffee', 'Unknown', 'Test', 'Local', 'Default'
+              ];
+              const suspiciousCountries = [
+                'United States of America', 'Unknown', 'Test'
+              ];
+              
+              const isSuspicious = suspiciousLocations.includes(city) || 
+                                 suspiciousCountries.includes(country) ||
+                                 displayName.includes('Coffee, California');
+              
+              if (isSuspicious) {
+                console.log('Suspicious location detected, showing manual input');
+                throw new Error('Location detection seems incorrect');
+              }
               
               return {
                 weather: [{
