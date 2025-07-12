@@ -1650,31 +1650,31 @@
 
           const weatherStyles = {
             rain: {
-              gradient: 'from-slate-600/30 via-blue-700/20 to-slate-800/30',
+              gradient: 'from-indigo-700/30 via-blue-800/20 to-indigo-900/30',
               accent: 'text-blue-200',
               icon: '🌧️',
               mood: 'Cozy Gaming'
             },
             sunny: {
-              gradient: 'from-yellow-400/20 via-orange-500/15 to-yellow-600/25',
+              gradient: 'from-yellow-300/20 via-yellow-500/15 to-orange-400/25',
               accent: 'text-yellow-200',
               icon: '☀️',
               mood: 'Energetic Adventures'
             },
             snow: {
-              gradient: 'from-blue-200/25 via-white/10 to-blue-300/20',
+              gradient: 'from-blue-200/25 via-white/10 to-indigo-200/20',
               accent: 'text-blue-100',
               icon: '❄️',
               mood: 'Survival Challenges'
             },
             cloudy: {
-              gradient: 'from-gray-500/25 via-slate-600/15 to-gray-700/20',
+              gradient: 'from-gray-400/25 via-indigo-500/15 to-gray-700/20',
               accent: 'text-gray-200',
               icon: '☁️',
               mood: 'Mysterious Journeys'
             },
             clear: {
-              gradient: 'from-purple-500/20 via-indigo-600/15 to-purple-700/25',
+              gradient: 'from-purple-400/20 via-indigo-500/15 to-purple-700/25',
               accent: 'text-purple-200',
               icon: '✨',
               mood: 'Transcendent Experiences'
@@ -1717,12 +1717,6 @@
               React.createElement('div', { className: "mt-8 p-4 bg-black/30 rounded-lg backdrop-blur border border-white/20" },
                 React.createElement('div', { className: "text-white/90 text-sm font-medium mb-1" }, 'Perfect Weather For'),
                 React.createElement('div', { className: `text-lg font-bold ${style.accent}` }, style.mood)
-              ),
-              
-              // Live indicator
-              React.createElement('div', { className: "absolute top-4 right-4 flex items-center gap-2 text-xs text-white/70" },
-                React.createElement('div', { className: "w-2 h-2 bg-green-400 rounded-full animate-pulse" }),
-                'Live'
               )
             )
           );
