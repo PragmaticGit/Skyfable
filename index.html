@@ -1044,109 +1044,40 @@
             }
           };
 
-          // High Accuracy GPS + Timeout + Multiple Attempts
-          const getAccurateLocation = () => {
+          // Simplified location detection optimized for desktop
+          const getLocation = () => {
             return new Promise((resolve, reject) => {
-              const options = {
-                enableHighAccuracy: true,    // Use GPS instead of network location
-                timeout: 10000,             // Wait up to 10 seconds
-                maximumAge: 300000          // Don't use cached location older than 5 minutes
-              };
-              
-              let attempts = 0;
-              const maxAttempts = 3;
-              
-              const tryGetLocation = () => {
-                attempts++;
-                console.log(`GPS attempt ${attempts}/${maxAttempts}`);
-                
-                navigator.geolocation.getCurrentPosition(
-                  (position) => {
-                    const accuracy = position.coords.accuracy;
-                    console.log(`GPS accuracy: ${accuracy} meters`);
-                    
-                    // If accuracy is good enough (under 1000m) or we've tried enough times
-                    if (accuracy < 1000 || attempts >= maxAttempts) {
-                      resolve({
-                        lat: position.coords.latitude,
-                        lon: position.coords.longitude,
-                        accuracy: accuracy
-                      });
-                    } else {
-                      console.log(`Accuracy too poor (${accuracy}m), trying again...`);
-                      setTimeout(tryGetLocation, 2000); // Wait 2 seconds and try again
-                    }
-                  },
-                  (error) => {
-                    if (attempts < maxAttempts) {
-                      console.log(`GPS failed, trying again... (${error.message})`);
-                      setTimeout(tryGetLocation, 2000);
-                    } else {
-                      reject(error);
-                    }
-                  },
-                  options
-                );
-              };
-              
-              tryGetLocation();
+              if (!navigator.geolocation) {
+                console.log('Geolocation not supported');
+                reject(new Error('Geolocation not supported'));
+                return;
+              }
+
+              // Quick GPS attempt with shorter timeout
+              navigator.geolocation.getCurrentPosition(
+                (position) => {
+                  console.log('GPS location obtained');
+                  console.log('Coordinates:', position.coords.latitude, position.coords.longitude);
+                  console.log('Accuracy:', position.coords.accuracy, 'meters');
+                  
+                  setLocationError(false);
+                  resolve({
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude,
+                    accuracy: position.coords.accuracy
+                  });
+                },
+                (error) => {
+                  console.log('GPS failed, will try IP-based location');
+                  reject(error);
+                },
+                {
+                  enableHighAccuracy: false,  // Faster, less accurate (better for desktop)
+                  timeout: 5000,              // Shorter timeout
+                  maximumAge: 300000          // 5 minutes cache
+                }
+              );
             });
-          };
-
-          // Smart Fallback System
-          const getLocationWithFallbacks = async () => {
-            try {
-              // Try high-accuracy GPS first
-              console.log('Trying high-accuracy GPS...');
-              const location = await getAccurateLocation();
-              
-              if (location.accuracy < 5000) { // If accuracy is better than 5km
-                console.log(`Using GPS location (accuracy: ${location.accuracy}m)`);
-                return location;
-              } else {
-                throw new Error(`GPS accuracy too poor: ${location.accuracy}m`);
-              }
-            } catch (gpsError) {
-              console.log('GPS failed, trying IP-based location...');
-              
-              try {
-                // Fallback to IP-based location (often more accurate than poor GPS)
-                const ipResponse = await fetch('https://ipapi.co/json/');
-                const ipData = await ipResponse.json();
-                
-                console.log(`Using IP location: ${ipData.city}, ${ipData.country_name}`);
-                return {
-                  lat: ipData.latitude,
-                  lon: ipData.longitude,
-                  accuracy: 'IP-based',
-                  city: ipData.city
-                };
-              } catch (ipError) {
-                console.log('IP location failed, using generic fallback');
-                
-                // Ultimate fallback - generic coordinates (middle of ocean to force manual input)
-                return {
-                  lat: 0,   // Generic coordinates (middle of ocean)
-                  lon: 0,
-                  accuracy: 'Unknown',
-                  city: 'Unknown Location'
-                };
-              }
-            }
-          };
-
-          const getLocation = async () => {
-            try {
-              const location = await getLocationWithFallbacks();
-              console.log('Final location:', location);
-              setLocationError(false);
-              return location;
-            } catch (error) {
-              console.error('All location methods failed:', error);
-              setLocationError(true);
-              // Return generic fallback to force manual input
-              return { lat: 0, lon: 0, accuracy: 'Unknown' };
-            }
           };
 
           const handleForecastClick = async () => {
@@ -1241,22 +1172,37 @@
                   setWeather(weatherData);
                   setWeatherLoaded(true);
                 } else {
-                  // Use the improved location detection with fallbacks
-                  const userLocation = await getLocation();
-                  console.log('Final location accuracy:', userLocation.accuracy);
-                  
-                  // If location is unknown, show manual input option
-                  if (userLocation.accuracy === 'Unknown' || userLocation.lat === 0) {
-                    console.log('Location unknown, prompting for manual input');
-                    setShowLocationInput(true);
+                  // Try GPS first, then IP-based fallback
+                  try {
+                    const userLocation = await getLocation();
+                    console.log('GPS location obtained');
+                    setLocation(userLocation);
+                    const weatherData = await fetchWeather(userLocation);
+                    setWeather(weatherData);
                     setWeatherLoaded(true);
-                    return;
+                  } catch (gpsError) {
+                    console.log('GPS failed, trying IP-based location...');
+                    try {
+                      const ipResponse = await fetch('https://ipapi.co/json/');
+                      const ipData = await ipResponse.json();
+                      console.log('IP location:', ipData.city, ipData.country_name);
+                      
+                      const ipLocation = {
+                        lat: ipData.latitude,
+                        lon: ipData.longitude,
+                        accuracy: 'IP-based'
+                      };
+                      
+                      setLocation(ipLocation);
+                      const weatherData = await fetchWeather(ipLocation);
+                      setWeather(weatherData);
+                      setWeatherLoaded(true);
+                    } catch (ipError) {
+                      console.log('IP location failed, showing manual input');
+                      setShowLocationInput(true);
+                      setWeatherLoaded(true);
+                    }
                   }
-                  
-                  setLocation(userLocation);
-                  const weatherData = await fetchWeather(userLocation);
-                  setWeather(weatherData);
-                  setWeatherLoaded(true);
                 }
               } catch (error) {
                 console.error('Failed to load initial weather:', error);
