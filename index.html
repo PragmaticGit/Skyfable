@@ -983,11 +983,15 @@
               let url;
               if (typeof locationInput === 'string' && locationInput.trim() !== '') {
                 url = `https://wttr.in/${encodeURIComponent(locationInput)}?format=j1`;
+                console.log('Fetching weather for city:', locationInput);
               } else if (locationInput && locationInput.lat && locationInput.lon) {
                 url = `https://wttr.in/${locationInput.lat},${locationInput.lon}?format=j1`;
+                console.log('Fetching weather for coordinates:', locationInput.lat, locationInput.lon);
               } else {
                 url = `https://wttr.in/?format=j1`;
+                console.log('Fetching weather for default location');
               }
+              console.log('Weather API URL:', url);
               const response = await fetch(url);
               if (!response.ok) {
                 throw new Error('Weather fetch failed');
@@ -998,6 +1002,9 @@
               const city = loc.areaName[0].value;
               const region = loc.region && loc.region[0] && loc.region[0].value;
               const displayName = region && region !== city ? `${city}, ${region}` : city;
+              console.log('Weather API returned location:', displayName);
+              console.log('Weather condition:', current.weatherDesc[0].value);
+              console.log('Temperature:', current.temp_C, '°C');
               return {
                 weather: [{
                   main: current.weatherDesc[0].value,
@@ -1029,6 +1036,8 @@
               navigator.geolocation.getCurrentPosition(
                 (position) => {
                   console.log('Location permission granted');
+                  console.log('GPS Coordinates:', position.coords.latitude, position.coords.longitude);
+                  console.log('Accuracy:', position.coords.accuracy, 'meters');
                   setLocationError(false);
                   resolve({
                     lat: position.coords.latitude,
@@ -1045,6 +1054,11 @@
                     console.log('Location error, using fallback');
                     resolve({ lat: 59.9139, lon: 10.7522 });
                   }
+                },
+                {
+                  enableHighAccuracy: true,
+                  timeout: 10000,
+                  maximumAge: 60000
                 }
               );
             });
