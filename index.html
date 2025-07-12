@@ -91,6 +91,10 @@
                 max-width: 90vw;
             }
         }
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
     </style>
 </head>
 <body>
@@ -1257,7 +1261,7 @@
 
                     {/* Right Content - Your Hero Image */}
                     <div className="flex-1 flex justify-center order-first lg:order-last">
-                      <HeroWeather3D weatherType={effectiveWeatherType} weather={weather} />
+                      <SimpleWeatherHero weatherType={effectiveWeatherType} weather={weather} isLoaded={weatherLoaded} />
                     </div>
                   </div>
                 </div>
@@ -1631,6 +1635,97 @@
             default:
               return renderLanding();
           }
+        };
+
+        const SimpleWeatherHero = ({ weatherType, weather, isLoaded }) => {
+          if (!isLoaded) {
+            return React.createElement('div', {
+              className: "h-full flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-lg backdrop-blur-sm"
+            },
+              React.createElement('div', { className: "text-6xl mb-4 animate-pulse" }, '🌤️'),
+              React.createElement('div', { className: "text-white text-lg font-medium" }, 'Detecting weather...'),
+              React.createElement('div', { className: "text-white opacity-70 text-sm mt-2" }, 'Finding your perfect atmospheric match')
+            );
+          }
+
+          const weatherStyles = {
+            rain: {
+              gradient: 'from-slate-600/30 via-blue-700/20 to-slate-800/30',
+              accent: 'text-blue-200',
+              icon: '🌧️',
+              mood: 'Cozy Gaming'
+            },
+            sunny: {
+              gradient: 'from-yellow-400/20 via-orange-500/15 to-yellow-600/25',
+              accent: 'text-yellow-200',
+              icon: '☀️',
+              mood: 'Energetic Adventures'
+            },
+            snow: {
+              gradient: 'from-blue-200/25 via-white/10 to-blue-300/20',
+              accent: 'text-blue-100',
+              icon: '❄️',
+              mood: 'Survival Challenges'
+            },
+            cloudy: {
+              gradient: 'from-gray-500/25 via-slate-600/15 to-gray-700/20',
+              accent: 'text-gray-200',
+              icon: '☁️',
+              mood: 'Mysterious Journeys'
+            },
+            clear: {
+              gradient: 'from-purple-500/20 via-indigo-600/15 to-purple-700/25',
+              accent: 'text-purple-200',
+              icon: '✨',
+              mood: 'Transcendent Experiences'
+            }
+          };
+
+          const style = weatherStyles[weatherType] || weatherStyles.clear;
+
+          return React.createElement('div', {
+            className: `h-full relative rounded-lg bg-gradient-to-br ${style.gradient} backdrop-blur-sm border border-white/10 overflow-hidden`
+          },
+            // Subtle animated background
+            React.createElement('div', { className: "absolute inset-0 opacity-10" },
+              React.createElement('div', { className: "absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform skew-x-12 animate-pulse" })
+            ),
+            
+            // Main content
+            React.createElement('div', { className: "relative h-full flex flex-col justify-center items-center p-8 text-center" },
+              
+              // Large weather icon
+              React.createElement('div', { 
+                className: "text-8xl mb-6 filter drop-shadow-lg",
+                style: { animation: 'bounce-slow 3s ease-in-out infinite' }
+              }, style.icon),
+              
+              // Weather info
+              React.createElement('div', { className: "space-y-3" },
+                React.createElement('div', { className: `text-2xl font-bold ${style.accent} filter drop-shadow-md` },
+                  weather?.name || 'Your Location'
+                ),
+                React.createElement('div', { className: "text-white text-lg font-semibold capitalize" },
+                  weather?.weather?.[0]?.description || weatherType
+                ),
+                weather?.main?.temp && React.createElement('div', { className: "text-white/80 text-xl font-medium" },
+                  `${Math.round(weather.main.temp)}°C`
+                )
+              ),
+              
+              // Gaming mood
+              React.createElement('div', { className: "mt-8 p-4 bg-black/30 rounded-lg backdrop-blur border border-white/20" },
+                React.createElement('div', { className: "text-white/90 text-sm font-medium mb-1" }, 'Perfect Weather For'),
+                React.createElement('div', { className: `text-lg font-bold ${style.accent}` }, style.mood)
+              ),
+              
+              // Live indicator
+              React.createElement('div', { className: "absolute top-4 right-4 flex items-center gap-2 text-xs text-white/70" },
+                React.createElement('div', { className: "w-2 h-2 bg-green-400 rounded-full animate-pulse" }),
+                'Live'
+              )
+            )
+          );
         };
 
         ReactDOM.render(React.createElement(SkyFable), document.getElementById('root'));
