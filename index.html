@@ -1601,9 +1601,9 @@
                             {/* Game Rating */}
                             <div className="flex items-center gap-2">
                               <div className="flex items-center gap-1">
-                                <span className="text-green-400">🎮</span>
+                                <span className="text-yellow-400">⭐</span>
                                 <span className="text-white text-sm font-medium">
-                                  {gameRecommendation?.rating || 80}/100
+                                  {((gameRecommendation?.rating || 80) / 10).toFixed(1)}/10
                                 </span>
                               </div>
                             </div>
