@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkyFable - Weather-Based Game Discovery</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -562,6 +563,13 @@
         };
 
         const HeroWeather3D = ({ weatherType, weather }) => {
+    if (typeof window.THREE === "undefined") {
+        return (
+            <div className="flex items-center justify-center w-full h-[220px] sm:h-[280px] lg:h-[340px] xl:h-[400px] bg-black/10 rounded-lg">
+                <span className="text-white/70">3D Weather unavailable (Three.js not loaded)</span>
+            </div>
+        );
+    }
     const mountRef = React.useRef(null);
     const sceneRef = React.useRef(null);
     const rendererRef = React.useRef(null);
