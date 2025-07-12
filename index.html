@@ -99,6 +99,7 @@
 </head>
 <body>
     <div id="weather-particles-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
+    <div id="weather-overlay-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
     <div id="weather-special-root" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;"></div>
     <div id="root" style="position:relative;z-index:2;"></div>
     
@@ -756,6 +757,51 @@
           // Add missing state for location input UI
           const [showLocationInput, setShowLocationInput] = useState(false);
           const [locationInputValue, setLocationInputValue] = useState("");
+          // Add missing state for manual weather cycling
+          const [manualWeather, setManualWeather] = useState(null);
+
+          // Add missing functions for location handling
+          const handleUseMyLocation = async () => {
+            setManualMode(false);
+            setManualLocation("");
+            setShowLocationInput(false);
+            setLocationInputValue("");
+            try {
+              const userLocation = await getLocation();
+              setLocation(userLocation);
+              const weatherData = await fetchWeather(userLocation);
+              setWeather(weatherData);
+              setWeatherLoaded(true);
+            } catch (error) {
+              console.error('Failed to get user location:', error);
+              setLocationError(true);
+            }
+          };
+
+          const handleManualLocationSubmit = async (e) => {
+            e.preventDefault();
+            if (!locationInputValue.trim()) return;
+            
+            setManualMode(true);
+            setManualLocation(locationInputValue.trim());
+            setShowLocationInput(false);
+            setLocationInputValue("");
+            
+            try {
+              const weatherData = await fetchWeather(locationInputValue.trim());
+              setWeather(weatherData);
+              setWeatherLoaded(true);
+            } catch (error) {
+              console.error('Failed to fetch weather for manual location:', error);
+              // Use fallback weather
+              setWeather({
+                weather: [{ main: 'Clear', description: 'clear skies' }],
+                name: locationInputValue.trim(),
+                main: { temp: 20 }
+              });
+              setWeatherLoaded(true);
+            }
+          };
 
           // Extract Steam App ID from Steam URL
           const extractSteamAppId = (steamUrl) => {
@@ -1122,9 +1168,15 @@
           // Render particles and overlay globally
           useEffect(() => {
             const root = document.getElementById('weather-particles-root');
-            if (root) ReactDOM.render(<WeatherParticles weatherType={weatherType} />, root);
+            if (root) {
+              const rootElement = React.createElement(WeatherParticles, { weatherType: weatherType });
+              ReactDOM.render(rootElement, root);
+            }
             const overlayRoot = document.getElementById('weather-overlay-root');
-            if (overlayRoot) React.render(<WeatherOverlay weatherType={weatherType} />, overlayRoot);
+            if (overlayRoot) {
+              const overlayElement = React.createElement(WeatherOverlay, { weatherType: weatherType });
+              ReactDOM.render(overlayElement, overlayRoot);
+            }
             return () => {
               if (root) ReactDOM.unmountComponentAtNode(root);
               if (overlayRoot) ReactDOM.unmountComponentAtNode(overlayRoot);
@@ -1134,13 +1186,15 @@
           // Render special effects globally
           useEffect(() => {
             const root = document.getElementById('weather-special-root');
-            if (root) ReactDOM.render(<WeatherSpecialEffects weatherType={weatherType} />, root);
+            if (root) {
+              const specialElement = React.createElement(WeatherSpecialEffects, { weatherType: weatherType });
+              ReactDOM.render(specialElement, root);
+            }
             return () => { if (root) ReactDOM.unmountComponentAtNode(root); };
           }, [weatherType]);
 
           // In renderLanding, add a button to manually cycle weatherType
           const availableWeatherTypes = ['rain', 'sunny', 'cloudy', 'snow', 'clear'];
-          const [manualWeather, setManualWeather] = useState(null);
           const effectiveWeatherType = manualWeather || weatherType;
 
           // When manually cycling weather, also update the game recommendation and weather effects
@@ -1789,7 +1843,8 @@
           );
         };
 
-        ReactDOM.render(React.createElement(SkyFable), document.getElementById('root'));
+        const rootElement = React.createElement(SkyFable);
+        ReactDOM.render(rootElement, document.getElementById('root'));
     </script>
     <a href='https://ko-fi.com/H2H21HEPVU' target='_blank' id="kofi-float-btn">
       <img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' />
