@@ -660,8 +660,9 @@
         const container = mountRef.current;
         const size = Math.min(container.clientWidth, container.clientHeight, 300);
         renderer.setSize(size, size);
-        renderer.setClearColor(0x000000, 0);
+        renderer.setClearColor(0xff00ff, 1); // Bright magenta for debug
         container.appendChild(renderer.domElement);
+        console.log('Three.js canvas appended:', renderer.domElement);
 
         sceneRef.current = scene;
         rendererRef.current = renderer;
