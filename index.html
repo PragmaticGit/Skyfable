@@ -767,13 +767,11 @@
             setShowLocationInput(false);
             setLocationInputValue("");
             try {
-              const userCity = await getUserCity();
-              setLocation(userCity);
-              const weatherData = await fetchWeather(userCity.city);
+              const weatherData = await getWeatherWithAutoLocation();
               setWeather(weatherData);
               setWeatherLoaded(true);
             } catch (error) {
-              console.error('Failed to get user city:', error);
+              console.error('Failed to get auto-detected weather:', error);
               setLocationError(true);
             }
           };
@@ -1039,23 +1037,41 @@
             }
           };
 
-          // Fast city-based weather detection
-          const getUserCity = async () => {
+          // Use wttr.in's auto-detection (best practice)
+          const getWeatherWithAutoLocation = async () => {
             try {
-              console.log('Detecting user city from IP...');
-              const response = await fetch('https://ipapi.co/json/');
+              console.log('Using wttr.in auto-detection...');
+              const url = 'https://wttr.in/?format=j1';
+              console.log('Weather API URL:', url);
+              
+              const response = await fetch(url);
+              if (!response.ok) {
+                throw new Error('Weather fetch failed');
+              }
+              
               const data = await response.json();
-              console.log('Detected city:', data.city, data.country_name);
+              const current = data.current_condition[0];
+              const loc = data.nearest_area[0];
+              const city = loc.areaName[0].value;
+              const region = loc.region && loc.region[0] && loc.region[0].value;
+              const displayName = region && region !== city ? `${city}, ${region}` : city;
+              
+              console.log('wttr.in auto-detected location:', displayName);
+              console.log('Weather condition:', current.weatherDesc[0].value);
+              console.log('Temperature:', current.temp_C, '°C');
               
               return {
-                city: data.city,
-                country: data.country_name,
-                lat: data.latitude,
-                lon: data.longitude,
-                accuracy: 'IP-based'
+                weather: [{
+                  main: current.weatherDesc[0].value,
+                  description: current.weatherDesc[0].value.toLowerCase()
+                }],
+                name: displayName,
+                main: {
+                  temp: parseInt(current.temp_C)
+                }
               };
             } catch (error) {
-              console.error('IP city detection failed:', error);
+              console.error('wttr.in auto-detection failed:', error);
               throw error;
             }
           };
@@ -1152,17 +1168,13 @@
                   setWeather(weatherData);
                   setWeatherLoaded(true);
                 } else {
-                  // Fast city-based weather detection
+                  // Use wttr.in's auto-detection (best practice)
                   try {
-                    const userCity = await getUserCity();
-                    console.log('City detected:', userCity.city);
-                    
-                    setLocation(userCity);
-                    const weatherData = await fetchWeather(userCity.city);
+                    const weatherData = await getWeatherWithAutoLocation();
                     setWeather(weatherData);
                     setWeatherLoaded(true);
                   } catch (error) {
-                    console.log('City detection failed, showing manual input');
+                    console.log('Auto-detection failed, showing manual input');
                     setShowLocationInput(true);
                     setWeatherLoaded(true);
                   }
