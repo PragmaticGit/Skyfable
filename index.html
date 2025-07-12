@@ -1413,7 +1413,7 @@
                     </div>
 
                     {/* Right Content - Your Hero Image */}
-                    <div className="flex-1 flex justify-center order-first lg:order-last mt-6 lg:mt-0">
+                    <div className="flex-1 flex justify-center order-first lg:order-last mt-8 sm:mt-10 lg:mt-0">
                       <div className="w-full max-w-sm sm:max-w-md">
                         <SimpleWeatherHero
                           weatherType={effectiveWeatherType}
@@ -1946,11 +1946,7 @@
                   `${Math.round(weather.main.temp)}°C`
                 )
               ),
-              // Gaming mood
-              React.createElement('div', { className: "mt-4 sm:mt-8 p-3 sm:p-4 bg-black/30 rounded-lg backdrop-blur border border-white/20" },
-                React.createElement('div', { className: "text-white/90 text-xs sm:text-sm font-medium mb-1" }, 'Perfect Weather For'),
-                React.createElement('div', { className: `text-base sm:text-lg font-bold ${style.accent}` }, style.mood)
-              )
+
             )
           );
         };
