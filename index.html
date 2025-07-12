@@ -977,6 +977,25 @@
             return randomGame;
           };
 
+          // Get IP-based location as fallback
+          const getIPLocation = async () => {
+            try {
+              const response = await fetch('https://ipapi.co/json/');
+              const data = await response.json();
+              console.log('IP-based location:', data.city, data.region);
+              return {
+                lat: data.latitude,
+                lon: data.longitude,
+                city: data.city,
+                region: data.region,
+                accuracy: 50000 // IP-based location is typically ~50km accurate
+              };
+            } catch (error) {
+              console.error('IP location failed:', error);
+              return null;
+            }
+          };
+
           // Modified fetchWeather to accept city string or lat/lon
           const fetchWeather = async (locationInput) => {
             try {
@@ -1018,50 +1037,116 @@
             } catch (error) {
               console.error('Weather API failed, using fallback:', error);
               return {
-                weather: [{ main: 'Rain', description: 'rainy evening' }],
-                name: 'Stavanger',
-                main: { temp: 18 }
+                weather: [{ main: 'Clear', description: 'clear skies' }],
+                name: 'Unknown Location',
+                main: { temp: 20 }
               };
             }
           };
 
-          const getLocation = () => {
+          // High Accuracy GPS + Timeout + Multiple Attempts
+          const getAccurateLocation = () => {
             return new Promise((resolve, reject) => {
-              if (!navigator.geolocation) {
-                console.log('Geolocation not supported, using fallback');
-                resolve({ lat: 59.9139, lon: 10.7522 });
-                return;
-              }
-
-              navigator.geolocation.getCurrentPosition(
-                (position) => {
-                  console.log('Location permission granted');
-                  console.log('GPS Coordinates:', position.coords.latitude, position.coords.longitude);
-                  console.log('Accuracy:', position.coords.accuracy, 'meters');
-                  setLocationError(false);
-                  resolve({
-                    lat: position.coords.latitude,
-                    lon: position.coords.longitude
-                  });
-                },
-                (error) => {
-                  console.error('Geolocation error:', error);
-                  if (error.code === error.PERMISSION_DENIED) {
-                    console.log('Location permission denied by user');
-                    setLocationError(true);
-                    reject(new Error('Location permission denied'));
-                  } else {
-                    console.log('Location error, using fallback');
-                    resolve({ lat: 59.9139, lon: 10.7522 });
-                  }
-                },
-                {
-                  enableHighAccuracy: true,
-                  timeout: 10000,
-                  maximumAge: 60000
-                }
-              );
+              const options = {
+                enableHighAccuracy: true,    // Use GPS instead of network location
+                timeout: 10000,             // Wait up to 10 seconds
+                maximumAge: 300000          // Don't use cached location older than 5 minutes
+              };
+              
+              let attempts = 0;
+              const maxAttempts = 3;
+              
+              const tryGetLocation = () => {
+                attempts++;
+                console.log(`GPS attempt ${attempts}/${maxAttempts}`);
+                
+                navigator.geolocation.getCurrentPosition(
+                  (position) => {
+                    const accuracy = position.coords.accuracy;
+                    console.log(`GPS accuracy: ${accuracy} meters`);
+                    
+                    // If accuracy is good enough (under 1000m) or we've tried enough times
+                    if (accuracy < 1000 || attempts >= maxAttempts) {
+                      resolve({
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude,
+                        accuracy: accuracy
+                      });
+                    } else {
+                      console.log(`Accuracy too poor (${accuracy}m), trying again...`);
+                      setTimeout(tryGetLocation, 2000); // Wait 2 seconds and try again
+                    }
+                  },
+                  (error) => {
+                    if (attempts < maxAttempts) {
+                      console.log(`GPS failed, trying again... (${error.message})`);
+                      setTimeout(tryGetLocation, 2000);
+                    } else {
+                      reject(error);
+                    }
+                  },
+                  options
+                );
+              };
+              
+              tryGetLocation();
             });
+          };
+
+          // Smart Fallback System
+          const getLocationWithFallbacks = async () => {
+            try {
+              // Try high-accuracy GPS first
+              console.log('Trying high-accuracy GPS...');
+              const location = await getAccurateLocation();
+              
+              if (location.accuracy < 5000) { // If accuracy is better than 5km
+                console.log(`Using GPS location (accuracy: ${location.accuracy}m)`);
+                return location;
+              } else {
+                throw new Error(`GPS accuracy too poor: ${location.accuracy}m`);
+              }
+            } catch (gpsError) {
+              console.log('GPS failed, trying IP-based location...');
+              
+              try {
+                // Fallback to IP-based location (often more accurate than poor GPS)
+                const ipResponse = await fetch('https://ipapi.co/json/');
+                const ipData = await ipResponse.json();
+                
+                console.log(`Using IP location: ${ipData.city}, ${ipData.country_name}`);
+                return {
+                  lat: ipData.latitude,
+                  lon: ipData.longitude,
+                  accuracy: 'IP-based',
+                  city: ipData.city
+                };
+              } catch (ipError) {
+                console.log('IP location failed, using generic fallback');
+                
+                // Ultimate fallback - generic coordinates (middle of ocean to force manual input)
+                return {
+                  lat: 0,   // Generic coordinates (middle of ocean)
+                  lon: 0,
+                  accuracy: 'Unknown',
+                  city: 'Unknown Location'
+                };
+              }
+            }
+          };
+
+          const getLocation = async () => {
+            try {
+              const location = await getLocationWithFallbacks();
+              console.log('Final location:', location);
+              setLocationError(false);
+              return location;
+            } catch (error) {
+              console.error('All location methods failed:', error);
+              setLocationError(true);
+              // Return generic fallback to force manual input
+              return { lat: 0, lon: 0, accuracy: 'Unknown' };
+            }
           };
 
           const handleForecastClick = async () => {
@@ -1156,7 +1241,18 @@
                   setWeather(weatherData);
                   setWeatherLoaded(true);
                 } else {
+                  // Use the improved location detection with fallbacks
                   const userLocation = await getLocation();
+                  console.log('Final location accuracy:', userLocation.accuracy);
+                  
+                  // If location is unknown, show manual input option
+                  if (userLocation.accuracy === 'Unknown' || userLocation.lat === 0) {
+                    console.log('Location unknown, prompting for manual input');
+                    setShowLocationInput(true);
+                    setWeatherLoaded(true);
+                    return;
+                  }
+                  
                   setLocation(userLocation);
                   const weatherData = await fetchWeather(userLocation);
                   setWeather(weatherData);
