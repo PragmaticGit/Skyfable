@@ -1884,7 +1884,7 @@
           const style = weatherStyles[weatherType] || weatherStyles.clear;
 
           return React.createElement('div', {
-            className: `h-full relative rounded-lg bg-gradient-to-br ${style.gradient} backdrop-blur-sm border border-white/10 overflow-hidden`
+            className: `h-[280px] sm:h-[320px] lg:h-full relative rounded-lg bg-gradient-to-br ${style.gradient} backdrop-blur-sm border border-white/10 overflow-hidden`
           },
             // Subtle animated background
             React.createElement('div', { className: "absolute inset-0 opacity-10" },
@@ -1895,13 +1895,13 @@
             React.createElement('div', { className: "relative h-full flex flex-col justify-center items-center p-8 text-center" },
               // Large weather icon
               React.createElement('div', { 
-                className: "text-8xl mb-6 filter drop-shadow-lg",
+                className: "text-6xl sm:text-7xl lg:text-8xl mb-4 sm:mb-6 filter drop-shadow-lg",
                 style: { animation: 'bounce-slow 3s ease-in-out infinite' }
               }, style.icon),
               // Weather info
               React.createElement('div', { className: "space-y-3" },
                 // City name with inline change UI
-                React.createElement('div', { className: `text-2xl font-bold ${style.accent} filter drop-shadow-md flex items-center justify-center gap-2` },
+                React.createElement('div', { className: `text-lg sm:text-xl lg:text-2xl font-bold ${style.accent} filter drop-shadow-md flex items-center justify-center gap-2` },
                   showLocationInput ? (
                     React.createElement('form', { onSubmit: handleManualLocationSubmit, className: "flex items-center gap-2" },
                       React.createElement('input', {
@@ -1939,17 +1939,17 @@
                     </>
                   )
                 ),
-                React.createElement('div', { className: "text-white text-lg font-semibold capitalize" },
+                React.createElement('div', { className: "text-white text-base sm:text-lg font-semibold capitalize" },
                   weather?.weather?.[0]?.description || weatherType
                 ),
-                weather?.main?.temp && React.createElement('div', { className: "text-white/80 text-xl font-medium" },
+                weather?.main?.temp && React.createElement('div', { className: "text-white/80 text-lg sm:text-xl font-medium" },
                   `${Math.round(weather.main.temp)}°C`
                 )
               ),
               // Gaming mood
-              React.createElement('div', { className: "mt-8 p-4 bg-black/30 rounded-lg backdrop-blur border border-white/20" },
-                React.createElement('div', { className: "text-white/90 text-sm font-medium mb-1" }, 'Perfect Weather For'),
-                React.createElement('div', { className: `text-lg font-bold ${style.accent}` }, style.mood)
+              React.createElement('div', { className: "mt-4 sm:mt-8 p-3 sm:p-4 bg-black/30 rounded-lg backdrop-blur border border-white/20" },
+                React.createElement('div', { className: "text-white/90 text-xs sm:text-sm font-medium mb-1" }, 'Perfect Weather For'),
+                React.createElement('div', { className: `text-base sm:text-lg font-bold ${style.accent}` }, style.mood)
               )
             )
           );
