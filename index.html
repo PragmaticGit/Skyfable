@@ -1282,43 +1282,19 @@
                     {/* Right Content - Your Hero Image */}
                     <div className="flex-1 flex justify-center order-first lg:order-last">
                       <div className="w-full max-w-md">
-                        <SimpleWeatherHero weatherType={effectiveWeatherType} weather={weather} isLoaded={weatherLoaded} />
-                        <div className="flex flex-col items-center mt-4 gap-2">
-                          {!showLocationInput && (
-                            <>
-                              <button
-                                className="px-4 py-2 rounded bg-white/20 text-white font-semibold hover:bg-white/30 transition"
-                                onClick={() => setShowLocationInput(true)}
-                              >
-                                Change Location
-                              </button>
-                              {manualMode && (
-                                <button
-                                  className="px-4 py-2 rounded bg-white/10 text-white font-semibold hover:bg-white/20 transition"
-                                  onClick={handleUseMyLocation}
-                                >
-                                  Use My Location
-                                </button>
-                              )}
-                            </>
-                          )}
-                          {showLocationInput && (
-                            <form onSubmit={handleManualLocationSubmit} className="flex flex-col items-center gap-2 w-full">
-                              <input
-                                type="text"
-                                className="px-3 py-2 rounded border border-white/20 bg-white/10 text-white w-full"
-                                placeholder="Enter city or lat,lon"
-                                value={locationInputValue}
-                                onChange={e => setLocationInputValue(e.target.value)}
-                                autoFocus
-                              />
-                              <div className="flex gap-2">
-                                <button type="submit" className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition">OK</button>
-                                <button type="button" className="px-4 py-2 rounded bg-gray-500 text-white font-semibold hover:bg-gray-600 transition" onClick={() => setShowLocationInput(false)}>Cancel</button>
-                              </div>
-                            </form>
-                          )}
-                        </div>
+                        <SimpleWeatherHero
+                          weatherType={effectiveWeatherType}
+                          weather={weather}
+                          isLoaded={weatherLoaded}
+                          onChangeLocation={() => { setShowLocationInput(true); setLocationInputValue(""); }}
+                          onUseMyLocation={handleUseMyLocation}
+                          manualMode={manualMode}
+                          showLocationInput={showLocationInput}
+                          setShowLocationInput={setShowLocationInput}
+                          locationInputValue={locationInputValue}
+                          setLocationInputValue={setLocationInputValue}
+                          handleManualLocationSubmit={handleManualLocationSubmit}
+                        />
                       </div>
                     </div>
                   </div>
@@ -1695,7 +1671,7 @@
           }
         };
 
-        const SimpleWeatherHero = ({ weatherType, weather, isLoaded }) => {
+        const SimpleWeatherHero = ({ weatherType, weather, isLoaded, onChangeLocation, onUseMyLocation, manualMode, showLocationInput, setShowLocationInput, locationInputValue, setLocationInputValue, handleManualLocationSubmit }) => {
           if (!isLoaded) {
             return React.createElement('div', {
               className: "h-full flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-lg backdrop-blur-sm"
@@ -1751,17 +1727,51 @@
             
             // Main content
             React.createElement('div', { className: "relative h-full flex flex-col justify-center items-center p-8 text-center" },
-              
               // Large weather icon
               React.createElement('div', { 
                 className: "text-8xl mb-6 filter drop-shadow-lg",
                 style: { animation: 'bounce-slow 3s ease-in-out infinite' }
               }, style.icon),
-              
               // Weather info
               React.createElement('div', { className: "space-y-3" },
-                React.createElement('div', { className: `text-2xl font-bold ${style.accent} filter drop-shadow-md` },
-                  weather?.name || 'Your Location'
+                // City name with inline change UI
+                React.createElement('div', { className: `text-2xl font-bold ${style.accent} filter drop-shadow-md flex items-center justify-center gap-2` },
+                  showLocationInput ? (
+                    React.createElement('form', { onSubmit: handleManualLocationSubmit, className: "flex items-center gap-2" },
+                      React.createElement('input', {
+                        type: "text",
+                        className: "px-2 py-1 rounded border border-white/20 bg-white/10 text-white w-40 text-base",
+                        placeholder: "Enter city or lat,lon",
+                        value: locationInputValue,
+                        onChange: e => setLocationInputValue(e.target.value),
+                        autoFocus: true
+                      }),
+                      React.createElement('button', { type: "submit", className: "px-2 py-1 rounded bg-blue-500 text-white font-semibold hover:bg-blue-600 transition text-sm" }, "OK"),
+                      React.createElement('button', { type: "button", className: "px-2 py-1 rounded bg-gray-500 text-white font-semibold hover:bg-gray-600 transition text-sm", onClick: () => setShowLocationInput(false) }, "Cancel")
+                    )
+                  ) : (
+                    <>
+                      {weather?.name || 'Your Location'}
+                      <button
+                        className="ml-2 text-xs text-white/70 underline hover:text-white/90 transition"
+                        style={{ padding: 0, background: 'none', border: 'none', cursor: 'pointer' }}
+                        onClick={onChangeLocation}
+                        tabIndex={0}
+                      >
+                        Change
+                      </button>
+                      {manualMode && (
+                        <button
+                          className="ml-2 text-xs text-blue-200 underline hover:text-blue-400 transition"
+                          style={{ padding: 0, background: 'none', border: 'none', cursor: 'pointer' }}
+                          onClick={onUseMyLocation}
+                          tabIndex={0}
+                        >
+                          Use My Location
+                        </button>
+                      )}
+                    </>
+                  )
                 ),
                 React.createElement('div', { className: "text-white text-lg font-semibold capitalize" },
                   weather?.weather?.[0]?.description || weatherType
@@ -1770,7 +1780,6 @@
                   `${Math.round(weather.main.temp)}°C`
                 )
               ),
-              
               // Gaming mood
               React.createElement('div', { className: "mt-8 p-4 bg-black/30 rounded-lg backdrop-blur border border-white/20" },
                 React.createElement('div', { className: "text-white/90 text-sm font-medium mb-1" }, 'Perfect Weather For'),
